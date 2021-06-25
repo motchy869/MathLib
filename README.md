@@ -1,2 +1,2 @@
-# motchyDspLib
-my hobby DSP library
+# motchyMathLib
+my hobby Math library

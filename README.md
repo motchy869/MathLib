@@ -1,6 +1,6 @@
 # motchyMathLib
 
-My hobby Math library includes Linear Algebra, Signal Processing and so on.
+My hobby math library includes Linear Algebra, Signal Processing and so on.
 
 ## 1. Prerequisites
 
@@ -14,6 +14,7 @@ Following page and shell-script will help you install Google Test framework.
 
 |file|description|
 |:---|:---|
+|include/analysis.hpp|Analysis library|
 |include/linAlg.hpp|Linear Algebra library|
 |include/sigProc.hpp|Signal Processing library|
 |include/RlsFilter.hpp|Recursive Least Square filter|

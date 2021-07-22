@@ -17,9 +17,9 @@ namespace {
         }
     }
 
-    class MyRlsFilterTest : public ::testing::Test{};
+    class RlsFilterTest : public ::testing::Test{};
 
-    TEST_F(MyRlsFilterTest, case1_thinningRate_1) {
+    TEST_F(RlsFilterTest, case1_thinningRate_1) {
         const std::array<std::complex<double>, 10> vec_x = {{
             {0.06412935, 0.88332087}, {0.99244617, 0.12382741}, {0.64271018, 0.45058685},
             {0.99968758, 0.67847759}, {0.94431826, 0.48793753}, {0.4698219 , 0.01647779},

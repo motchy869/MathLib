@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # Set the project name and language.
-project(VariableSizeRlsFilter CXX)
+project(MotchyMathLib CXX)
 
 add_subdirectory(include)
 add_subdirectory(test)

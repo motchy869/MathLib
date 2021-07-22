@@ -4,9 +4,9 @@
 #include "../include/sigProc.hpp"
 
 namespace {
-    class MySigProcLibTest : public ::testing::Test{};
+    class SigProcLibTest : public ::testing::Test{};
 
-    TEST_F(MySigProcLibTest, convolve_d_1_case1) {
+    TEST_F(SigProcLibTest, convolve_d_1_case1) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         const std::complex<double> x1[5] = {-0.88, 0.61, 2.56, -2.57, 1.84};
         const std::complex<double> x2[10] = {2.11, -1.46, -4.71, -0.48, -1.31, 2.97, 2.81, 1.89, -0.86, -0.24};
@@ -16,7 +16,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_d_1_case2) {
+    TEST_F(SigProcLibTest, convolve_d_1_case2) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         const std::complex<double> x1[10] = {4.03, -4.44, -4.65, -3.77, -3.87, -3.62, -4.5, 0.5, -3.46, -2.63};
         const std::complex<double> x2[5] = {-1.36, 3.74, -3.97, 4.64, -3.88};
@@ -26,7 +26,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_c_m1_d_2_case1) {
+    TEST_F(SigProcLibTest, convolve_c_m1_d_2_case1) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         constexpr size_t d=2;
         constexpr size_t N1 = 3, N2 = 5;
@@ -39,7 +39,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(Ly, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_c_m1_d_2_case2) {
+    TEST_F(SigProcLibTest, convolve_c_m1_d_2_case2) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         constexpr size_t d=2;
         constexpr size_t N1 = 5, N2 = 3;
@@ -52,7 +52,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(Ly, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_c_m1_d_2_case3) {
+    TEST_F(SigProcLibTest, convolve_c_m1_d_2_case3) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         constexpr size_t d=2;
         constexpr size_t N1 = 5, N2 = 1;
@@ -65,7 +65,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(Ly, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_c_2_d_2_case4) {
+    TEST_F(SigProcLibTest, convolve_c_2_d_2_case4) {
         /* These test case numeric values are created using Julia, and tested by DSP.jl package. */
         constexpr size_t c=2, d=2;
         constexpr size_t N1 = 5, N2 = 1;
@@ -78,7 +78,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(Ly, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MySigProcLibTest, convolve_type2) {
+    TEST_F(SigProcLibTest, convolve_type2) {
         constexpr size_t d = 2;
         constexpr size_t L1 = 3;
         constexpr size_t N = 2;

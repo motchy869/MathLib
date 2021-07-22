@@ -3,9 +3,9 @@
 #include "../include/linAlg.hpp"
 
 namespace {
-    class MyLinAlgLibTest : public ::testing::Test{};
+    class LinAlgLibTest : public ::testing::Test{};
 
-    TEST_F(MyLinAlgLibTest, isEqualMat__equal_case) {
+    TEST_F(LinAlgLibTest, isEqualMat__equal_case) {
         const std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -19,7 +19,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(2, 3, &A[0][0], &B[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, isEqualMat__not_equal_case) {
+    TEST_F(LinAlgLibTest, isEqualMat__not_equal_case) {
         const std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -33,7 +33,7 @@ namespace {
         EXPECT_EQ(false, MotchyMathLib::LinAlg::isEqualMat(2, 3, &A[0][0], &B[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, isEqualVec__equal_case) {
+    TEST_F(LinAlgLibTest, isEqualVec__equal_case) {
         const std::complex<double> a[3] = {1,2,3,};
 
         const std::complex<double> b[3] = {1,2,3};
@@ -41,7 +41,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &a[0], &b[0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, isEqualVec__not_equal_case) {
+    TEST_F(LinAlgLibTest, isEqualVec__not_equal_case) {
         const std::complex<double> a[3] = {1,2,3,};
 
         const std::complex<double> b[3] = {1,2,4};
@@ -49,7 +49,7 @@ namespace {
         EXPECT_EQ(false, MotchyMathLib::LinAlg::isEqualVec(3, &a[0], &b[0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, transposeMat) {
+    TEST_F(LinAlgLibTest, transposeMat) {
         const std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -68,7 +68,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(3, 2, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, conjugateMat) {
+    TEST_F(LinAlgLibTest, conjugateMat) {
         const std::complex<double> A[2][3] = {
             {{1, 0.6}, {2, 0.5}, {3, 0.4}},
             {{4, -0.3}, {5, -0.2}, {6, -0.1}},
@@ -86,7 +86,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(2, 3, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, conjugateVec) {
+    TEST_F(LinAlgLibTest, conjugateVec) {
         const std::complex<double> x[3] = {{1, 0.6}, {2, 0.5}, {3, 0.4}};
         std::complex<double> y[3];
         const std::complex<double> y_ans[3] = {{1, -0.6}, {2, -0.5}, {3, -0.4}};
@@ -94,7 +94,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, addMat_inplace) {
+    TEST_F(LinAlgLibTest, addMat_inplace) {
         std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -115,7 +115,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(3, 2, &A[0][0], &A_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, addVec_inplace) {
+    TEST_F(LinAlgLibTest, addVec_inplace) {
         std::complex<double> x[3] = {1,2,3};
         const std::complex<double> y[3] = {0.1, 0.2, 0.3};
         const std::complex<double> y_ans[3] = {1.1, 2.2, 3.3};
@@ -123,7 +123,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &x[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, scaleMat) {
+    TEST_F(LinAlgLibTest, scaleMat) {
         std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -143,7 +143,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(3, 2, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, scaleVec) {
+    TEST_F(LinAlgLibTest, scaleVec) {
         const std::complex<double> a[3] = {1,2,3,};
 
         const std::complex<double> c(1, -0.5);
@@ -156,7 +156,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &b[0], &b_ans[0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, mulMat) {
+    TEST_F(LinAlgLibTest, mulMat) {
         const std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -180,7 +180,7 @@ namespace {
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualMat(2, 2, &C[0][0], &C_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(MyLinAlgLibTest, hermitianInnerProduct_2_other_strides) {
+    TEST_F(LinAlgLibTest, hermitianInnerProduct_2_other_strides) {
         const std::complex<double> a[6] = {1, -1, 2, -1.5, 3, -2};
         const std::complex<double> b[3] = {11, -10.5, 9};
         const std::complex<double> c = MotchyMathLib::LinAlg::hermitianInnerProduct(3, &a[0], &b[0], 2, 1);
@@ -188,7 +188,7 @@ namespace {
         EXPECT_EQ(true, std::abs(c_ans-c) < 1.0e-7l);
     }
 
-    TEST_F(MyLinAlgLibTest, hermitianInnerProduct_2_same_strides) {
+    TEST_F(LinAlgLibTest, hermitianInnerProduct_2_same_strides) {
         const std::complex<double> a[6] = {1, -1, 2, -1.5, 3, -2};
         const std::complex<double> b[6] = {11, -10.5, 10, -9.5, 9, -8.5};
         const std::complex<double> c = MotchyMathLib::LinAlg::hermitianInnerProduct(3, &a[0], &b[0], 2);
@@ -196,14 +196,14 @@ namespace {
         EXPECT_EQ(true, std::abs(c_ans-c) < 1.0e-7l);
     }
 
-    TEST_F(MyLinAlgLibTest, l2Norm) {
+    TEST_F(LinAlgLibTest, l2Norm) {
         const std::complex<double> a[6] = {1, -1, 2, -1.5, 3, -2};
         const std::complex<double> c = MotchyMathLib::LinAlg::l2Norm(3, &a[0], 2);
         const std::complex<double> c_ans = 3.7416573867739413;
         EXPECT_EQ(true, std::abs(c_ans-c) < 1.0e-7l);
     }
 
-    TEST_F(MyLinAlgLibTest, solveLinearEquation) {
+    TEST_F(LinAlgLibTest, solveLinearEquation) {
         const std::complex<double> A[3][3] = {
             {5, -4, 4},
             {5, 1, 4},

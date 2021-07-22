@@ -14,6 +14,7 @@ add_subdirectory(include)
 add_subdirectory(test)
 
 enable_testing()
+add_test(NAME test_analysis COMMAND test_analysis)
 add_test(NAME test_linAlg COMMAND test_linAlg)
 add_test(NAME test_sigProc COMMAND test_sigProc)
 add_test(NAME test_rlsFilter COMMAND test_rlsFilter)

@@ -1,5 +1,5 @@
-#ifndef __ANALYSIS_HPP__
-#define __ANALYSIS_HPP__
+#ifndef __MOTCHY_MATH_LIB__ANALYSIS_HPP__
+#define __MOTCHY_MATH_LIB__ANALYSIS_HPP__
 
 #include <type_traits>
 
@@ -76,4 +76,4 @@ namespace MotchyMathLib {
     }
 }
 
-#endif // __ANALYSIS_HPP__
+#endif // __MOTCHY_MATH_LIB__ANALYSIS_HPP__

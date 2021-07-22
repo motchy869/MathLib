@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <type_traits>
 
 namespace MotchyMathLib {
     namespace SigProc {
@@ -155,6 +156,55 @@ namespace MotchyMathLib {
                 y[n] = sum;
             }
         }
+
+        /**
+         * @brief Exponential weighted IIR filter.
+         * For input "x[n]", Output "y[n]" is calculated with a tracking coefficient "lambda" as follows:
+         *   y[n] = lambda*x[n] + (1-lambda)*y[n-1]
+         * where:
+         *   y[-1] := static_cast<T_signal>(0)
+         *   0 < lambda < 1.
+         *
+         * @details "y" can be set to any value in arbitrary time by calling a method "setState()".
+         * One typically set "y" to "x[0]" before start inputting the sequence "x[0], x[1], ... " so that the 1st output from the filter begins with "x[0]" rather than 0.
+         *
+         * @tparam T_lambda data type of lambda
+         * @tparam T_signal data type of x[n]
+         */
+        template <typename T_lambda, typename T_signal>
+        class ExpWeightedIirFilter {
+            private:
+                const T_lambda m_lambda, m_co_lambda;
+                T_signal m_y;
+            public:
+                /**
+                 * @brief Construct a new filter object
+                 *
+                 * @param[in] lambda a tracking factor, described in class docstring.
+                 */
+                ExpWeightedIirFilter(T_lambda lambda) : m_lambda(lambda), m_co_lambda(static_cast<T_lambda>(1) - lambda), m_y(static_cast<T_signal>(0)) {
+                    static_assert(std::is_floating_point<T_lambda>::value, "`lambda` must be a floating point number.");
+                    assert(lambda > 0 && lambda < 1);
+                }
+
+                /**
+                 * @brief Set the internal state "y" to a given value.
+                 *
+                 * @param[in] y the value to which "y" is set
+                 */
+                void setState(T_signal y) {m_y = y;}
+
+                /**
+                 * @brief Input a value to filter, and get output.
+                 *
+                 * @param[in] x input value, "x[n]"
+                 * @return filter output, "y[n]"
+                 */
+                T_signal apply(T_signal x) {
+                    m_y = m_lambda*x + m_co_lambda*m_y;
+                    return m_y;
+                }
+        };
     }
 }
 

@@ -11,11 +11,13 @@ link_directories(/usr/local/lib/gtest/)
 link_directories(/usr/local/lib/gmock/)
 
 # Generate executable file
+add_executable(test_analysis ${CMAKE_CURRENT_SOURCE_DIR}/test_analysis.cpp)
 add_executable(test_linAlg ${CMAKE_CURRENT_SOURCE_DIR}/test_linAlg.cpp)
 add_executable(test_sigProc ${CMAKE_CURRENT_SOURCE_DIR}/test_sigProc.cpp)
 add_executable(test_rlsFilter ${CMAKE_CURRENT_SOURCE_DIR}/test_rlsFilter.cpp)
 
 # Link libraries
+target_link_libraries(test_analysis gtest gtest_main pthread)
 target_link_libraries(test_linAlg gtest gtest_main pthread)
 target_link_libraries(test_sigProc gtest gtest_main pthread)
 target_link_libraries(test_rlsFilter gtest gtest_main pthread)

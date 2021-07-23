@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `ExpWeightedIirFilter` class
 - Add `printRealMat()` and `printRealVec()` functions
 - Add `sin_polyApprox()` function
+- Add `cos_polyApprox()` function
 
 ## [0.1.0] - 2021/7/22
 

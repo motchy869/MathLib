@@ -47,6 +47,21 @@ namespace MotchyMathLib {
         }
 
         /**
+         * @brief Calculates cos(x) using sin_polyApprox(x+pi/2).
+         * "x" must be a floating point real number.
+         *
+         * @tparam T the number type of the input value, x
+         * @param[in] x input value
+         * @return cos(x)
+         */
+        template <typename T>
+        T cos_polyApprox(T x) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            constexpr T HALF_PI = static_cast<T>(0.5*3.141592653589793);
+            return sin_polyApprox(x + HALF_PI);
+        }
+
+        /**
          * @brief Calculates arc tangent of input value "x", using 9 degree-polynomial approximation.
          * "x" must be in the range [-pi/4, pi/4], otherwise the calculation error increases.
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - atan(x))^2 \mathrm{d}x.

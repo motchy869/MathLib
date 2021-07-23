@@ -12,6 +12,13 @@ namespace MotchyMathLib {
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - sin(x))^2 \mathrm{d}x.
          * The maximal absolute error is less than 2.0*10^(-6)
          *
+         * Performance meas result:
+         *   CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB
+         *   iteration = 1e7 (1e7 random samples from [-10pi, 10pi])
+         *   std::sin: 352 ms
+         *   sin_polyApprox: 130 ms
+         *   max abs error: 1.89102e-06
+         *
          * @tparam T the number type of the input value, x
          * @param[in] x input value
          * @return sin(x)
@@ -44,6 +51,13 @@ namespace MotchyMathLib {
          * "x" must be in the range [-pi/4, pi/4], otherwise the calculation error increases.
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - atan(x))^2 \mathrm{d}x.
          * The maximal absolute error is less than 2.5*10^(-5) when 0<=x<=1.
+         *
+         * Performance meas result:
+         *   CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB
+         *   iteration = 1e7 (1e7 random samples from unit disc (not include (0,0)))
+         *   std::atan2: 861 ms
+         *   atan2_polyApprox: 317 ms
+         *   max abs error: 2.32363e-05
          *
          * @tparam T the number type of the input value
          * @param[in] x input value

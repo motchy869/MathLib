@@ -35,12 +35,12 @@ namespace MotchyMathLib {
             constexpr T a7 = -1.98048e-4;
             constexpr T a9 = 2.59811e-6;
 
-            const T sign1 = std::copysign(ONE, x);
+            const T sign1 = std::copysign(ONE, x); // When x<0, negate the final result.
             const T x2 = std::abs(x);
             const int n = static_cast<int>(x2/PI);
-            const T sign2 = 1 - 2*(n&0b1);
-            const T x3 = x2 - n*PI;
-            const T x4 = x3 <= HALF_PI ? x3 : PI - x3;
+            const T sign2 = 1 - 2*(n&0b1); // When |x| is in odd pi-length interval, negate the final result.
+            const T x3 = x2 - n*PI; // x3 in [0,pi)
+            const T x4 = x3 <= HALF_PI ? x3 : PI - x3; // x4 in [0,pi/2]
 
             const T y = x4*x4;
             return sign1*sign2*x4*(a1 + y*(a3 + y*(a5 + y*(a7 + a9*y))));

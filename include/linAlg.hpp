@@ -12,13 +12,52 @@ namespace MotchyMathLib {
     namespace LinAlg {
         namespace Debug { /* For only debug use. Not intended to be used in field environment. */
             /**
+             * @brief Prints real matrix "A" in standard output.
+             *
+             * @tparam T the number type of the elements of "A"
+             * @param[in] m the number of the rows in "A"
+             * @param[in] n the number of the columns in "A"
+             * @param[in] A the matrix "A"
+             * @param[in] format format string which is applied to each element in "A"
+             */
+            template <typename T>
+            void printRealMat(size_t m, size_t n, const T *A, const char *format) {
+                assert(m*n >= 1);
+                const T *ptr_A = A;
+                for (size_t i=0; i<m; ++i) {
+                    for (size_t j=0; j<n; ++j) {
+                        printf(format, *ptr_A);
+                        if (j < n-1) {
+                            printf(", ");
+                        }
+                        ++ptr_A;
+                    }
+                    puts("");
+                }
+            }
+
+            /**
+             * @brief Prints real vector in standard output.
+             *
+             * @tparam T the number type of the elements of the input vector
+             * @param[in] m the length of the input vector
+             * @param[in] vec the input vector
+             * @param[in] format format string which is applied to each element in the input vector
+             */
+            template <typename T>
+            void printRealVec(size_t m, const T *vec, const char *format) {
+                assert(m >= 1);
+                printRealMat(1, m, vec, format);
+            }
+
+            /**
              * @brief Prints complex matrix "A" in standard output.
              *
              * @tparam T the number type of the real and imaginary part of the elements of "A"
              * @param[in] m the number of the rows in "A"
              * @param[in] n the number of the columns in "A"
              * @param[in] A the matrix "A"
-             * @param[in] format format string which is applied to each element in the input vector
+             * @param[in] format format string which is applied to each element in "A"
              */
             template <typename T>
             void printComplexMat(size_t m, size_t n, const std::complex<T> *A, const char *format) {

@@ -28,6 +28,7 @@ namespace MotchyMathLib {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T ONE = static_cast<T>(1);
             constexpr T PI = static_cast<T>(3.141592653589793);
+            constexpr T INV_PI = ONE/PI;
             constexpr T HALF_PI = PI/2;
             constexpr T a1 = 1.0;
             constexpr T a3 = -0.166667;
@@ -37,7 +38,7 @@ namespace MotchyMathLib {
 
             const T sign1 = std::copysign(ONE, x); // When x<0, negate the final result.
             const T x2 = std::abs(x);
-            const int n = static_cast<int>(x2/PI);
+            const int n = static_cast<int>(INV_PI*x2);
             const T sign2 = 1 - 2*(n&0b1); // When |x| is in odd pi-length interval, negate the final result.
             const T x3 = x2 - n*PI; // x3 in [0,pi)
             const T x4 = x3 <= HALF_PI ? x3 : PI - x3; // x4 in [0,pi/2]

@@ -17,6 +17,8 @@ Following page and shell-script will help you install Google Test framework.
 ./doTest.sh
 ```
 
+You can clean output files by running `doClean.sh`.
+
 ## 3. files
 
 |file|description|

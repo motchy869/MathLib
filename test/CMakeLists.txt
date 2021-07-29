@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
 # Include files directory (for gtest)
 include_directories(/usr/local/include/gtest/)
 include_directories(/usr/local/include/gmock/)
@@ -17,7 +15,7 @@ add_executable(test_sigProc ${CMAKE_CURRENT_SOURCE_DIR}/test_sigProc.cpp)
 add_executable(test_rlsFilter ${CMAKE_CURRENT_SOURCE_DIR}/test_rlsFilter.cpp)
 
 # Link libraries
-target_link_libraries(test_analysis gtest gtest_main pthread)
-target_link_libraries(test_linAlg gtest gtest_main pthread)
-target_link_libraries(test_sigProc gtest gtest_main pthread)
-target_link_libraries(test_rlsFilter gtest gtest_main pthread)
+target_link_libraries(test_analysis motchyMathLib gtest gtest_main pthread)
+target_link_libraries(test_linAlg motchyMathLib gtest gtest_main pthread)
+target_link_libraries(test_sigProc motchyMathLib gtest gtest_main pthread)
+target_link_libraries(test_rlsFilter motchyMathLib gtest gtest_main pthread)

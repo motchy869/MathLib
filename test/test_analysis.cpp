@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "../include/analysis.hpp"
-#include "../include/linAlg.hpp"
+#include "analysis.hpp"
+#include "linAlg.hpp"
 
 namespace {
     class AnalysisLibTest : public ::testing::Test{};

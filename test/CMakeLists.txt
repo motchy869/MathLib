@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 # Include files directory (for gtest)
 include_directories(/usr/local/include/gtest/)
 include_directories(/usr/local/include/gmock/)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # Library directory (for gtest)
 link_directories(/usr/local/lib/gtest/)

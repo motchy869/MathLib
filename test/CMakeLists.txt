@@ -1,13 +1,21 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
-# Include files directory (for gtest)
-include_directories(/usr/local/include/gtest/)
-include_directories(/usr/local/include/gmock/)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-# Library directory (for gtest)
-link_directories(/usr/local/lib/gtest/)
-link_directories(/usr/local/lib/gmock/)
+# Include and link files directory (for googletest)
+# You may have to change path according to your environment.
+if (UNIX)
+    set(CMAKE_GOOGLE_TEST_INCLUDE_DIR "/usr/local/include/")
+    set(CMAKE_GTEST_LIB_DIR "/usr/local/lib/gtest/")
+    set(CMAKE_GMOCK_LIB_DIR "/usr/local/lib/gmock/")
+elseif (WIN32)
+    set(CMAKE_GOOGLE_TEST_INCLUDE_DIR "C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/include/")
+    set(CMAKE_GTEST_LIB_DIR "C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/lib/gtest/")
+    set(CMAKE_GMOCK_LIB_DIR "C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/lib/gmock/")
+endif ()
+include_directories(${CMAKE_GOOGLE_TEST_INCLUDE_DIR})
+link_directories(${CMAKE_GTEST_LIB_DIR})
+link_directories(${CMAKE_GMOCK_LIB_DIR})
 
 # Generate executable file
 add_executable(test_analysis ${CMAKE_CURRENT_SOURCE_DIR}/test_analysis.cpp)

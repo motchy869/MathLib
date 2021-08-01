@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Add Windows build support
 - Add cleaning shell script `doClean.sh`
 
 ## [0.2.0] - 2021/7/29

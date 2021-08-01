@@ -1,7 +1,7 @@
 #include <complex>
 #include <gtest/gtest.h>
-#include "linAlg.hpp"
-#include "sigProc.hpp"
+#include "../include/linAlg.hpp"
+#include "../include/sigProc.hpp"
 
 namespace {
     class SigProcLibTest : public ::testing::Test{};

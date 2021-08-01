@@ -1,7 +1,7 @@
 #include <array>
 #include <iostream>
 #include <gtest/gtest.h>
-#include "RlsFilter.hpp"
+#include "../include/RlsFilter.hpp"
 
 namespace {
     template <typename T>

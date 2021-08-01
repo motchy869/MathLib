@@ -1,6 +1,6 @@
 #include <complex>
 #include <gtest/gtest.h>
-#include "linAlg.hpp"
+#include "../include/linAlg.hpp"
 
 namespace {
     class LinAlgLibTest : public ::testing::Test{};

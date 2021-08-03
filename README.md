@@ -8,16 +8,25 @@ My hobby math library includes Linear Algebra, Signal Processing and so on.
 Following page and shell-script will help you install Google Test framework.
 
 * [Google Testを導入してみた](https://qiita.com/y-vectorfield/items/6238cfd2d9c34aefe364)
-* [install-googletest.sh](https://gist.github.com/motchy869/22d873415722a1c10bc77d3f761339dc)
+* [Setup GoogleTest on Windows.md](https://gist.github.com/motchy869/22d873415722a1c10bc77d3f761339dc)
 
 ## 2. Build & Run test
+
+On Linux
 
 ```sh
 ./doDebugBuild.sh
 ./doTest.sh
 ```
 
-You can clean output files by running `doClean.sh`.
+On Windows
+
+```bat
+./doDebugBuild.bat
+./doTest.bat
+```
+
+You can clean output files by running `doClean.sh` / `doClean.bat`.
 
 ## 3. files
 

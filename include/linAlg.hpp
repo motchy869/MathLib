@@ -135,6 +135,28 @@ namespace MotchyMathLib {
         }
 
         /**
+         * @brief Construct complex matrix "A" from real part "A_real" and imaginary part "A_imag".
+         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
+         *
+         * @tparam T the number type of "A_real" and "A_imag"
+         * @param[in] m the number of the rows in the input matrices
+         * @param[in] n the number of the columns in the input matrices
+         * @param[in] A_real the real part of "A"
+         * @param[in] A_imag the imaginary part of "A"
+         * @param[out] A output buffer for "A"
+         */
+        template <typename T>
+        void complexMat(size_t m, size_t n, const T *A_real, const T *A_imag, std::complex<T> *A) {
+            const T *ptr_A_real = A_real, *ptr_A_imag = A_imag;
+            std::complex<T> *ptr_A = A;
+            const size_t L = m*n;
+            for (size_t i=0; i<L; ++i) {
+                ptr_A->real(*ptr_A_real); ptr_A->imag(*ptr_A_imag);
+                ++ptr_A_real; ++ptr_A_imag; ++ptr_A;
+            }
+        }
+
+        /**
          * @brief Calculates transpose of a matrix "A" as "B".
          * @details It is assumed that the matrix's elements are aligned on memory in row-oriented order.
          *
@@ -242,6 +264,32 @@ namespace MotchyMathLib {
             for (size_t i=0; i<L; ++i) {
                 *ptr_B = c*(*ptr_A);
                 ++ptr_A; ++ptr_B;
+            }
+        }
+
+        /**
+         * @brief Multiply each row of a given "m x n" matrix "A", and store result to "B"
+         * Multiply c[i] to the i-th row of "A" where "c" is a vector with length "m".
+         *
+         * @tparam Tc the number type of the elements of "c"
+         * @tparam TA the number type of the elements of "A"
+         * @tparam TB the number type of the elements of "B"
+         * @param[in] m the number of the rows in the matrix "A"
+         * @param[in] n the number of the columns in the matrix "A"
+         * @param[in] c the vector "m"
+         * @param[in] A the matrix "A"
+         * @param[out] B the output matrix "B"
+         */
+        template <typename Tc, typename TA, typename TB>
+        void scaleMatEachRow(size_t m, size_t n, const Tc *c, const TA *A, TB *B) {
+            const TA *ptr_A = A;
+            TB *ptr_B = B;
+            for (size_t i=0; i<m; ++i) {
+                const Tc ci = c[i];
+                for (size_t j=0; j<n; ++j) {
+                    *ptr_B = ci*(*ptr_A);
+                    ++ptr_A; ++ptr_B;
+                }
             }
         }
 
@@ -435,6 +483,92 @@ namespace MotchyMathLib {
             }
 
             #undef MEM_OFFSET_E
+        }
+
+        /**
+         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
+         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
+         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
+         *
+         * @tparam T the number type of complex number's real and imaginary part
+         * @param[in] m the number of the rows and columns in the matrix "A"
+         * @param[in] A the matrix "A"
+         * @param[out] d the diagonal elements of D
+         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
+         * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
+         * @retval true The calculation is successfully done.
+         */
+        template <typename T>
+        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-6) {
+            #define MEM_OFFSET(row, col) ((row)*m+col)
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            constexpr std::complex<T> ONE = 1;
+            for (int i=0; i<m; ++i) {
+                auto di = A[MEM_OFFSET(i,i)].real();
+                for (int j=0; j<i; ++j) {
+                    const auto L_ij = L[MEM_OFFSET(i,j)];
+                    di -= d[j]*(std::conj(L_ij)*L_ij).real();
+                }
+                d[i] = di;
+                if (std::abs(di) < epsilon) {
+                    return false;
+                }
+                const T inv_di = 1/d[i];
+                L[MEM_OFFSET(i,i)] = ONE;
+                for (int k=i+1; k<m; ++k) {
+                    std::complex<T> L_ki = A[MEM_OFFSET(k,i)];
+                    for (int j=0; j<i; ++j) {
+                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*std::conj(L[MEM_OFFSET(i,j)]);
+                    }
+                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                }
+            }
+            return true;
+            #undef MEM_OFFSET
+        }
+
+        /**
+         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
+         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
+         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
+         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
+         *
+         * @tparam T the number type of matrix "A"
+         * @param[in] m the number of the rows and columns in the matrix "A"
+         * @param[in] A the matrix "A"
+         * @param[out] d the diagonal elements of D
+         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
+         * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
+         * @retval true The calculation is successfully done.
+         */
+        template <typename T>
+        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-6) {
+            #define MEM_OFFSET(row, col) ((row)*m+col)
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            for (int i=0; i<m; ++i) {
+                T di = A[MEM_OFFSET(i,i)];
+                for (int j=0; j<i; ++j) {
+                    const auto L_ij = L[MEM_OFFSET(i,j)];
+                    di -= d[j]*L_ij*L_ij;
+                }
+                d[i] = di;
+                if (std::abs(di) < epsilon) {
+                    return false;
+                }
+                const T inv_di = 1/d[i];
+                L[MEM_OFFSET(i,i)] = 1;
+                for (int k=i+1; k<m; ++k) {
+                    T L_ki = A[MEM_OFFSET(k,i)];
+                    for (int j=0; j<i; ++j) {
+                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*L[MEM_OFFSET(i,j)];
+                    }
+                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                }
+            }
+            return true;
+            #undef MEM_OFFSET
         }
     }
 }

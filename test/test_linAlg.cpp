@@ -219,4 +219,81 @@ namespace {
 
         EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(3, &x[0], &x_ans[0], 1.0e-7l));
     }
+
+    TEST_F(LinAlgLibTest, ldlDecomp_real) {
+        constexpr size_t m = 5;
+        const float A[m][m] = {
+            { 0.59198756,  0.5907925 , -0.12247961,  0.0801843 , -0.40894139},
+            { 0.5907925 , -0.86382306, -0.62571074,  0.11681897, -0.44449101},
+            {-0.12247961, -0.62571074,  0.97233429,  0.42309137,  0.90466214},
+            { 0.0801843 ,  0.11681897,  0.42309137,  0.54580854, -0.33315596},
+            {-0.40894139, -0.44449101,  0.90466214, -0.33315596, -0.20125677},
+        };
+
+        /* tested on Python */
+        const float d_true[m] = {0.59198756, -1.45342291,  1.12140311,  0.37333903, -2.05156301};
+        const float L_true[m][m] = {
+            { 1.        ,  0.        ,  0.        ,  0.        ,  0.        },
+            { 0.99798128,  1.        ,  0.        ,  0.        ,  0.        },
+            {-0.20689557,  0.34640873,  1.        ,  0.        ,  0.        },
+            { 0.13544929, -0.02531716,  0.38071457,  1.        ,  0.        },
+            {-0.69079389,  0.02502723,  0.74251145, -1.59557335,  1.        },
+        };
+
+        float d[m] = {};
+        float L[m][m] = {};
+        const bool noZeroDiv = MotchyMathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0]);
+        const bool isDiagOk = MotchyMathLib::LinAlg::isEqualVec(m, d, d_true, 1e-5);
+        const bool isLOk = MotchyMathLib::LinAlg::isEqualMat(m, m, &L[0][0], &L_true[0][0], 1e-5);
+
+        EXPECT_EQ(true, noZeroDiv && isDiagOk && isLOk);
+    }
+
+    TEST_F(LinAlgLibTest, ldlDecomp_complex) {
+        constexpr size_t m = 5;
+        const float A_real[m][m] = {
+            {-0.14583693, -0.07703409,  0.41802944,  0.12720957,  0.7996055 },
+            {-0.07703409, -0.95275531,  0.05454494, -0.13649376,  0.66307892},
+            { 0.41802944,  0.05454494,  0.67408461, -0.17179905, -0.16748154},
+            { 0.12720957, -0.13649376, -0.17179905, -0.16333842,  0.31039082},
+            { 0.7996055 ,  0.66307892, -0.16748154,  0.31039082, -0.31746929},
+        };
+        const float A_imag[m][m] = {
+            { 0.        , -0.55608743, -0.91554274, -0.01458005,  0.00506915},
+            { 0.55608743,  0.        , -0.2074604 , -0.20955483,  0.63859046},
+            { 0.91554274,  0.2074604 ,  0.        ,  0.19562549, -0.51800175},
+            { 0.01458005,  0.20955483, -0.19562549,  0.        , -0.26862068},
+            {-0.00506915, -0.63859046,  0.51800175,  0.26862068,  0.        },
+        };
+
+        /* tested on Python */
+        const float d_true[m] = {-0.14583693, 1.20833987, -4.42254581, -0.1202024 , 3.13005036};
+        const float L_true_real[m][m] = {
+            { 1.        ,  0.        ,  0.        ,  0.        ,  0.        },
+            { 0.5282207 ,  1.        ,  0.        ,  0.        ,  0.        },
+            {-2.86641689,  2.75151731,  1.        ,  0.        ,  0.        },
+            {-0.87227267, -0.12255959, -0.05732815,  1.        ,  0.        },
+            {-5.48287396,  0.18321145,  0.95407657,  0.03473893,  1.        },
+        };
+        const float L_true_imag[m][m] = {
+            { 0.        ,  0.        ,  0.        ,  0.        ,  0.        },
+            {-3.81307695,  0.        ,  0.        ,  0.        ,  0.        },
+            {-6.27785256, -1.54768265,  0.        ,  0.        ,  0.        },
+            {-0.099975  , -0.23437654, -0.01266549,  0.        ,  0.        },
+            { 0.034759  , -3.04953122, -1.19388732, -0.30690583,  0.        },
+        };
+        std::complex<float> L_true[m][m];
+        MotchyMathLib::LinAlg::complexMat(m, m, &L_true_real[0][0], &L_true_imag[0][0], &L_true[0][0]);
+
+        std::complex<float> A[m][m];
+        MotchyMathLib::LinAlg::complexMat(m, m, &A_real[0][0], &A_imag[0][0], &A[0][0]);
+
+        float d[m] = {};
+        std::complex<float> L[m][m] = {};
+        const bool noZeroDiv = MotchyMathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0]);
+        const bool isDiagOk = MotchyMathLib::LinAlg::isEqualVec(m, d, d_true, 1e-5);
+        const bool isLOk = MotchyMathLib::LinAlg::isEqualMat(m, m, &L[0][0], &L_true[0][0], 1e-5);
+
+        EXPECT_EQ(true, noZeroDiv && isDiagOk && isLOk);
+    }
 }

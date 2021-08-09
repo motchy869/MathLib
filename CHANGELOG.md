@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Add `ldlDecomp` function
 - Add Windows build support
 - Add cleaning shell script `doClean.sh`
 

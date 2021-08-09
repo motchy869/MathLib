@@ -119,7 +119,6 @@ namespace MotchyMathLib {
         /**
          * @brief Checks whether given two vectors "a" and "b" are equal or not.
          * @details "a" and "b" are considered to be equal if and only if the absolute value of all the element of "a-b" is strictly less than a given number, epsilon.
-         * It is assumed that the vector's elements are aligned on memory in row-oriented order.
          *
          * @tparam T1 the number type of the elements of "a" and "b"
          * @tparam T2 the number type of the elements of epsilon

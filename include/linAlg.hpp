@@ -363,7 +363,7 @@ namespace MotchyMathLib {
         }
 
         /**
-         * @brief Calculates Hermitian inner product of given 2 vectors "x", "y".
+         * @brief Calculates Hermitian inner product of given 2 complex vectors "x", "y".
          * Hermitian inner product of "x" and "y" is defined as "<x^*, y>", where "^*" represents conjugate and "<,>" represents inner product.
          *
          * @tparam T the number type of complex number's real and imaginary part

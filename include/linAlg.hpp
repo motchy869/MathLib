@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstring>
 #include <numeric>
+#include "analysis.hpp"
 
 namespace MotchyMathLib {
     namespace LinAlg {
@@ -154,6 +155,20 @@ namespace MotchyMathLib {
                 ptr_A->real(*ptr_A_real); ptr_A->imag(*ptr_A_imag);
                 ++ptr_A_real; ++ptr_A_imag; ++ptr_A;
             }
+        }
+
+        /**
+         * @brief Construct complex vector "x" from real part "x_real" and imaginary part "x_imag".
+         *
+         * @tparam T the number type of "x_real" and "x_imag"
+         * @param[in] m the length of the vector "x"
+         * @param[in] x_real the real part of "x"
+         * @param[in] x_imag the imaginary part of "x"
+         * @param[out] x output buffer for "x"
+         */
+        template <typename T>
+        void complexVec(size_t m, const T *x_real, const T *x_imag, std::complex<T> *x) {
+            complexMat(m, 1, x_real, x_imag, x);
         }
 
         /**
@@ -407,7 +422,7 @@ namespace MotchyMathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-6) {
+        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             constexpr std::complex<T> ONE = 1;
@@ -415,7 +430,7 @@ namespace MotchyMathLib {
                 auto di = A[MEM_OFFSET(i,i)].real();
                 for (int j=0; j<i; ++j) {
                     const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*sqAbs(L_ij);
+                    di -= d[j]*MotchyMathLib::Analysis::sqAbs(L_ij);
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -451,14 +466,14 @@ namespace MotchyMathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-6) {
+        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             for (int i=0; i<m; ++i) {
                 T di = A[MEM_OFFSET(i,i)];
                 for (int j=0; j<i; ++j) {
                     const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*sqAbs(L_ij);
+                    di -= d[j]*MotchyMathLib::Analysis::sqAbs(L_ij);
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -582,15 +597,51 @@ namespace MotchyMathLib {
          * @param[in] A the matrix "A"
          * @param[in] b the vector "b"
          * @param[out] x the vector "x"
-         * @param[out] workspace The pointer to a continuous memory space whose size is ??? bytes.
+         * @param[out] workspace The pointer to a continuous memory space. Its size is calculated as follows:@n
+         * - when A's type is floating-point T: (1+m)*m*sizeof(T)
+         * - when A's type is std::complex<T>: m*sizeof(T) + m*m*sizeof(std::complex<T>)
          * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool solveLinEqHermitian(size_t m, const T *A, const T *b, T *x, char *workspace) {
+        bool solveLinEqHermitian(size_t m, const T *const A, const T *const b, T *const x, char *workspace) {
+            #define MEM_OFFSET(row, col) ((row)*m+col)
             if (m == 0) {
                 return true;
             }
+
+            /* LDL decomposition */
+            typedef decltype(std::real(*A)) T_real; // floating-point type "A" is ok
+            T_real *d = reinterpret_cast<T_real *>(workspace);
+            workspace += m*sizeof(T_real);
+            T *L = reinterpret_cast<T *>(workspace);
+            workspace += m*m*sizeof(T);
+            const bool noZeroDiv = ldlDecomp(m, A, d, L);
+            if (!noZeroDiv) {
+                return false;
+            }
+
+            /* forward substitution (Ly == b) */
+            T *y = x; // Use "x" as a temporary buffer.
+            for (int i=0; i<m; ++i) {
+                T yi = b[i];
+                for (int j=0; j<i; ++j) {
+                    yi -= L[MEM_OFFSET(i,j)]*y[j];
+                }
+                y[i] = yi;
+            }
+
+            /* backward substitution (DL^*x == y) */
+            for (int i=m-1; i>=0; --i) {
+                T xi = y[i]/d[i];
+                for (int j=i+1; j<m; ++j) {
+                    xi -= MotchyMathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];
+                }
+                x[i] = xi;
+            }
+
+            return true;
+            #undef MEM_OFFSET
         }
     }
 }

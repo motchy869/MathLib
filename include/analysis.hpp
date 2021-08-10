@@ -2,20 +2,30 @@
 #define __MOTCHY_MATH_LIB__ANALYSIS_HPP__
 
 #include <cmath>
+#include <complex>
 #include <type_traits>
 
 namespace MotchyMathLib {
     namespace Analysis {
         /**
-         * @brief Calculate "|x|^2" for real number "x".
+         * @brief Take the conjugate of a complex number "x"
+         *
+         * @tparam T the number type of the real part of "x"
+         * @param[in] x "x"
+         * @return the conjugate of "x"
+         */
+        template <typename T>
+        inline std::complex<T> conj(std::complex<T> x) {return std::conj(x);}
+
+        /**
+         * @brief Take the conjugate of a REAL number "x"
          *
          * @tparam T the number type of "x"
          * @param[in] x "x"
+         * @return x
          */
         template <typename T>
-        T sqAbs(T x) {
-            return x*x;
-        }
+        inline T conj(T x) {return x;}
 
         /**
          * @brief Calculate "|x|^2 = Re(x.conj()*x)" for complex number "x".
@@ -26,6 +36,17 @@ namespace MotchyMathLib {
         template <typename T>
         T sqAbs(std::complex<T> x) {
             return (std::conj(x)*x).real();
+        }
+
+        /**
+         * @brief Calculate "|x|^2" for real number "x".
+         *
+         * @tparam T the number type of "x"
+         * @param[in] x "x"
+         */
+        template <typename T>
+        T sqAbs(T x) {
+            return x*x;
         }
 
         /**

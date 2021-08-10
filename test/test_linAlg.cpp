@@ -230,7 +230,7 @@ namespace {
             {-0.40894139, -0.44449101,  0.90466214, -0.33315596, -0.20125677},
         };
 
-        /* tested on Python */
+        /* tested on Numpy */
         const float d_true[m] = {0.59198756, -1.45342291,  1.12140311,  0.37333903, -2.05156301};
         const float L_true[m][m] = {
             { 1.        ,  0.        ,  0.        ,  0.        ,  0.        },
@@ -266,7 +266,7 @@ namespace {
             {-0.00506915, -0.63859046,  0.51800175,  0.26862068,  0.        },
         };
 
-        /* tested on Python */
+        /* tested on Numpy */
         const float d_true[m] = {-0.14583693, 1.20833987, -4.42254581, -0.1202024 , 3.13005036};
         const float L_true_real[m][m] = {
             { 1.        ,  0.        ,  0.        ,  0.        ,  0.        },
@@ -295,5 +295,67 @@ namespace {
         const bool isLOk = MotchyMathLib::LinAlg::isEqualMat(m, m, &L[0][0], &L_true[0][0], 1e-5);
 
         EXPECT_EQ(true, noZeroDiv && isDiagOk && isLOk);
+    }
+
+    TEST_F(LinAlgLibTest, solveLinEqHermitian_real) {
+        constexpr size_t m = 5;
+
+        const float A[m][m] = {
+            { 0.15582773, -0.21069345,  0.15042193, -0.46729612,  0.00596341},
+            {-0.21069345, -0.53092562, -0.044495  ,  0.39701956, -0.19034964},
+            { 0.15042193, -0.044495  , -0.53684812,  0.07480983,  0.2489673 },
+            {-0.46729612,  0.39701956,  0.07480983,  0.83141263,  0.04988819},
+            { 0.00596341, -0.19034964,  0.2489673 ,  0.04988819, -0.91536905},
+        };
+        const float b[m] = {0.72965851, 0.30325472, 0.40853002, 0.51387289, 0.19281199};
+        const float x_true[m] = {-74.32784309, 6.42575663, -33.99366676, -40.35903688, -13.47647763}; // tested on Numpy
+
+        float x[m];
+        char workSpace[(1+m)*m*sizeof(float)];
+
+        const bool noZeroDiv = MotchyMathLib::LinAlg::solveLinEqHermitian(m, &A[0][0], b, x, workSpace);
+        const bool isSolutionOk = MotchyMathLib::LinAlg::isEqualVec(m, x, x_true, 1e-3);
+
+        EXPECT_EQ(true, noZeroDiv && isSolutionOk);
+    }
+
+    TEST_F(LinAlgLibTest, solveLinEqHermitian_complex) {
+        constexpr size_t m = 5;
+
+        const float A_real[m][m] = {
+            { 0.38934498,  0.3323428 , -0.17064305, -0.93412886,  0.32600936},
+            { 0.3323428 , -0.27048964,  0.29548155,  0.35787475, -0.13053154},
+            {-0.17064305,  0.29548155,  0.2378897 ,  0.51834123,  0.29144506},
+            {-0.93412886,  0.35787475,  0.51834123,  0.08597033,  0.04272254},
+            { 0.32600936, -0.13053154,  0.29144506,  0.04272254, -0.28545381},
+        };
+        const float A_imag[m][m] = {
+            { 0.        ,  0.60230465, -0.47143342,  0.08291764,  0.72430698},
+            {-0.60230465,  0.        ,  0.20668524, -0.72295811, -0.05486585},
+            { 0.47143342, -0.20668524,  0.        , -0.14381023,  0.7543405 },
+            {-0.08291764,  0.72295811,  0.14381023,  0.        , -0.10504604},
+            {-0.72430698,  0.05486585, -0.7543405 ,  0.10504604,  0.        },
+        };
+        std::complex<float> A[m][m];
+        MotchyMathLib::LinAlg::complexMat(m, m, &A_real[0][0], &A_imag[0][0], &A[0][0]);
+
+        const float b_real[m] = {0.46009212, -0.17479708, 0.062278, 0.35397522, 0.46410087};
+        const float b_imag[m] = {0.29789619, 0.29789619, 0.29789619, 0.29789619, 0.29789619};
+        std::complex<float> b[m];
+        MotchyMathLib::LinAlg::complexVec(m, b_real, b_imag, b);
+
+        /* tested on Numpy */
+        const float x_true_real[m] = {-0.12165307, 0.21805922, 0.06650101, 0.08355123, 0.41089338};
+        const float x_true_imag[m] = {0.12005935, -0.24947381, 0.69593837, -0.00897475, 0.12241331};
+        std::complex<float> x_true[m];
+        MotchyMathLib::LinAlg::complexVec(m, x_true_real, x_true_imag, x_true);
+
+        std::complex<float> x[m];
+        char workSpace[m*sizeof(float) + m*m*sizeof(std::complex<float>)];
+
+        const bool noZeroDiv = MotchyMathLib::LinAlg::solveLinEqHermitian(m, &A[0][0], b, x, workSpace);
+        const bool isSolutionOk = MotchyMathLib::LinAlg::isEqualVec(m, x, x_true, 1e-3);
+
+        EXPECT_EQ(true, noZeroDiv && isSolutionOk);
     }
 }

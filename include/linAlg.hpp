@@ -393,8 +393,95 @@ namespace MotchyMathLib {
         }
 
         /**
+         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
+         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
+         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
+         *
+         * @tparam T the number type of complex number's real and imaginary part
+         * @param[in] m the number of the rows and columns in the matrix "A"
+         * @param[in] A the matrix "A"
+         * @param[out] d the diagonal elements of D
+         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
+         * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
+         * @retval true The calculation is successfully done.
+         */
+        template <typename T>
+        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-6) {
+            #define MEM_OFFSET(row, col) ((row)*m+col)
+            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            constexpr std::complex<T> ONE = 1;
+            for (int i=0; i<m; ++i) {
+                auto di = A[MEM_OFFSET(i,i)].real();
+                for (int j=0; j<i; ++j) {
+                    const auto L_ij = L[MEM_OFFSET(i,j)];
+                    di -= d[j]*sqAbs(L_ij);
+                }
+                d[i] = di;
+                if (std::abs(di) < epsilon) {
+                    return false;
+                }
+                const T inv_di = 1/d[i];
+                L[MEM_OFFSET(i,i)] = ONE;
+                for (int k=i+1; k<m; ++k) {
+                    std::complex<T> L_ki = A[MEM_OFFSET(k,i)];
+                    for (int j=0; j<i; ++j) {
+                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*std::conj(L[MEM_OFFSET(i,j)]);
+                    }
+                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                }
+            }
+            return true;
+            #undef MEM_OFFSET
+        }
+
+        /**
+         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
+         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
+         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
+         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
+         *
+         * @tparam T the number type of matrix "A"
+         * @param[in] m the number of the rows and columns in the matrix "A"
+         * @param[in] A the matrix "A"
+         * @param[out] d the diagonal elements of D
+         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
+         * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
+         * @retval true The calculation is successfully done.
+         */
+        template <typename T>
+        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-6) {
+            #define MEM_OFFSET(row, col) ((row)*m+col)
+            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            for (int i=0; i<m; ++i) {
+                T di = A[MEM_OFFSET(i,i)];
+                for (int j=0; j<i; ++j) {
+                    const auto L_ij = L[MEM_OFFSET(i,j)];
+                    di -= d[j]*sqAbs(L_ij);
+                }
+                d[i] = di;
+                if (std::abs(di) < epsilon) {
+                    return false;
+                }
+                const T inv_di = 1/d[i];
+                L[MEM_OFFSET(i,i)] = 1;
+                for (int k=i+1; k<m; ++k) {
+                    T L_ki = A[MEM_OFFSET(k,i)];
+                    for (int j=0; j<i; ++j) {
+                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*L[MEM_OFFSET(i,j)];
+                    }
+                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                }
+            }
+            return true;
+            #undef MEM_OFFSET
+        }
+
+        /**
          * @brief Solves linear equation "Ax = b" by Gaussian elimination, where "A" is a square invertible matrix of size "m", and "b" is a vector of length "m".
-         * @details The matrix "A" must be invertible, otherwise the behavior is undefined.
+         * The matrix "A" must be invertible, otherwise the behavior is undefined.
+         * When "A" is known to be Hermitian, use `solveLinEqHermitian` function rather than this function, to achieve higher performance.
          *
          * @tparam T the number type of the elements of the matrix "A", vector "b" and "x"
          * @param[in] m the number of the rows and columns in the matrix "A"
@@ -486,89 +573,24 @@ namespace MotchyMathLib {
         }
 
         /**
-         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
-         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
-         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
-         *
-         * @tparam T the number type of complex number's real and imaginary part
-         * @param[in] m the number of the rows and columns in the matrix "A"
-         * @param[in] A the matrix "A"
-         * @param[out] d the diagonal elements of D
-         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
-         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
-         * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
-         * @retval true The calculation is successfully done.
-         */
-        template <typename T>
-        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-6) {
-            #define MEM_OFFSET(row, col) ((row)*m+col)
-            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
-            constexpr std::complex<T> ONE = 1;
-            for (int i=0; i<m; ++i) {
-                auto di = A[MEM_OFFSET(i,i)].real();
-                for (int j=0; j<i; ++j) {
-                    const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*(std::conj(L_ij)*L_ij).real();
-                }
-                d[i] = di;
-                if (std::abs(di) < epsilon) {
-                    return false;
-                }
-                const T inv_di = 1/d[i];
-                L[MEM_OFFSET(i,i)] = ONE;
-                for (int k=i+1; k<m; ++k) {
-                    std::complex<T> L_ki = A[MEM_OFFSET(k,i)];
-                    for (int j=0; j<i; ++j) {
-                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*std::conj(L[MEM_OFFSET(i,j)]);
-                    }
-                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
-                }
-            }
-            return true;
-            #undef MEM_OFFSET
-        }
-
-        /**
-         * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
-         * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
-         * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
+         * @brief Solve linear equation "Ax = b" using LDL decomposition, where "A" is a Hermitian and invertible matrix of size "m", and "b" is a vector of length "m".
+         * The matrix "A" MUST be invertible.
          * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
          *
-         * @tparam T the number type of matrix "A"
+         * @tparam T the number type of the elements of the matrix "A", vector "b" and "x"
          * @param[in] m the number of the rows and columns in the matrix "A"
          * @param[in] A the matrix "A"
-         * @param[out] d the diagonal elements of D
-         * @param[out] L The matrix "L". The upper part is NOT modified by this function.
-         * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
+         * @param[in] b the vector "b"
+         * @param[out] x the vector "x"
+         * @param[out] workspace The pointer to a continuous memory space whose size is ??? bytes.
          * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-6) {
-            #define MEM_OFFSET(row, col) ((row)*m+col)
-            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
-            for (int i=0; i<m; ++i) {
-                T di = A[MEM_OFFSET(i,i)];
-                for (int j=0; j<i; ++j) {
-                    const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*L_ij*L_ij;
-                }
-                d[i] = di;
-                if (std::abs(di) < epsilon) {
-                    return false;
-                }
-                const T inv_di = 1/d[i];
-                L[MEM_OFFSET(i,i)] = 1;
-                for (int k=i+1; k<m; ++k) {
-                    T L_ki = A[MEM_OFFSET(k,i)];
-                    for (int j=0; j<i; ++j) {
-                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*L[MEM_OFFSET(i,j)];
-                    }
-                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
-                }
+        bool solveLinEqHermitian(size_t m, const T *A, const T *b, T *x, char *workspace) {
+            if (m == 0) {
+                return true;
             }
-            return true;
-            #undef MEM_OFFSET
         }
     }
 }

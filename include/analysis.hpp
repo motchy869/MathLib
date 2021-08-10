@@ -7,6 +7,28 @@
 namespace MotchyMathLib {
     namespace Analysis {
         /**
+         * @brief Calculate "|x|^2" for real number "x".
+         *
+         * @tparam T the number type of "x"
+         * @param[in] x "x"
+         */
+        template <typename T>
+        T sqAbs(T x) {
+            return x*x;
+        }
+
+        /**
+         * @brief Calculate "|x|^2 = Re(x.conj()*x)" for complex number "x".
+         *
+         * @tparam T the number type of the real part of "x"
+         * @param[in] x "x"
+         */
+        template <typename T>
+        T sqAbs(std::complex<T> x) {
+            return (std::conj(x)*x).real();
+        }
+
+        /**
          * @brief Calculates sin(x) using 9 degree-polynomial approximation.
          * "x" must be a floating point real number.
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - sin(x))^2 \mathrm{d}x.

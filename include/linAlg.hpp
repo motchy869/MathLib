@@ -422,7 +422,7 @@ namespace MotchyMathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(size_t m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-12) {
+        bool ldlDecomp(int m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             constexpr std::complex<T> ONE = 1;
@@ -466,7 +466,7 @@ namespace MotchyMathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(size_t m, const T *A, T *d, T *L, T epsilon=1e-12) {
+        bool ldlDecomp(int m, const T *A, T *d, T *L, T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             for (int i=0; i<m; ++i) {
@@ -604,9 +604,9 @@ namespace MotchyMathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool solveLinEqHermitian(size_t m, const T *const A, const T *const b, T *const x, char *workspace) {
+        bool solveLinEqHermitian(int m, const T *const A, const T *const b, T *const x, char *workspace) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
-            if (m == 0) {
+            if (m <= 0) {
                 return true;
             }
 

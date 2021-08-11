@@ -1,11 +1,11 @@
-#ifndef __MOTCHY_MATH_LIB__ANALYSIS_HPP__
-#define __MOTCHY_MATH_LIB__ANALYSIS_HPP__
+#ifndef __MATH_LIB__ANALYSIS_HPP__
+#define __MATH_LIB__ANALYSIS_HPP__
 
 #include <cmath>
 #include <complex>
 #include <type_traits>
 
-namespace MotchyMathLib {
+namespace MathLib {
     namespace Analysis {
         /**
          * @brief Take the conjugate of a complex number "x"
@@ -183,4 +183,4 @@ namespace MotchyMathLib {
     }
 }
 
-#endif // __MOTCHY_MATH_LIB__ANALYSIS_HPP__
+#endif // __MATH_LIB__ANALYSIS_HPP__

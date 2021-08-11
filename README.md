@@ -1,4 +1,4 @@
-# MotchyMathLib
+# MathLib
 
 My hobby math library includes Linear Algebra, Signal Processing and so on.
 

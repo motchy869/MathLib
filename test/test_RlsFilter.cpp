@@ -36,7 +36,7 @@ namespace {
 
         constexpr int p = 2;
         constexpr int thinningRate = 1;
-        MotchyMathLib::RlsFilter<std::complex<double>> rlsFilter(p, thinningRate);
+        MathLib::RlsFilter<std::complex<double>> rlsFilter(p, thinningRate);
 
         std::array<std::complex<double>, p+1> w_opt;
         rlsFilter.trainHard(vec_x.data(), vec_y.data(), vec_x.size(), w_opt.data());
@@ -44,6 +44,6 @@ namespace {
         const std::array<std::complex<double>, p+1> w_opt_ans = {{
             {1.0036556, -0.0025984}, {-0.2384301, 0.0000261}, {-0.0427164, 0.0031466}
         }};
-        EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(w_opt.size(), w_opt.data(), w_opt_ans.data(), 1.0e-7l));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(w_opt.size(), w_opt.data(), w_opt_ans.data(), 1.0e-7l));
     }
 }

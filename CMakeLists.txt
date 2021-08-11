@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
 # Set the project name and language.
-project(MotchyMathLib CXX)
+project(MathLib CXX)
 
 add_subdirectory(include)
 add_subdirectory(test)

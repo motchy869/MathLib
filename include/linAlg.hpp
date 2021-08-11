@@ -1,5 +1,5 @@
-#ifndef __MOTCHY_MATH_LIB__LINALG_HPP__
-#define __MOTCHY_MATH_LIB__LINALG_HPP__
+#ifndef __MATH_LIB__LINALG_HPP__
+#define __MATH_LIB__LINALG_HPP__
 
 #include <cassert>
 #include <cmath>
@@ -9,7 +9,7 @@
 #include <numeric>
 #include "analysis.hpp"
 
-namespace MotchyMathLib {
+namespace MathLib {
     namespace LinAlg {
         namespace Debug { /* For only debug use. Not intended to be used in field environment. */
             /**
@@ -430,7 +430,7 @@ namespace MotchyMathLib {
                 auto di = A[MEM_OFFSET(i,i)].real();
                 for (int j=0; j<i; ++j) {
                     const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*MotchyMathLib::Analysis::sqAbs(L_ij);
+                    di -= d[j]*MathLib::Analysis::sqAbs(L_ij);
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -473,7 +473,7 @@ namespace MotchyMathLib {
                 T di = A[MEM_OFFSET(i,i)];
                 for (int j=0; j<i; ++j) {
                     const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*MotchyMathLib::Analysis::sqAbs(L_ij);
+                    di -= d[j]*MathLib::Analysis::sqAbs(L_ij);
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -635,7 +635,7 @@ namespace MotchyMathLib {
             for (int i=m-1; i>=0; --i) {
                 T xi = y[i]/d[i];
                 for (int j=i+1; j<m; ++j) {
-                    xi -= MotchyMathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];
+                    xi -= MathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];
                 }
                 x[i] = xi;
             }
@@ -646,4 +646,4 @@ namespace MotchyMathLib {
     }
 }
 
-#endif // __MOTCHY_MATH_LIB__LINALG_HPP__
+#endif // __MATH_LIB__LINALG_HPP__

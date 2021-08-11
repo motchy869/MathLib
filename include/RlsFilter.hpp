@@ -1,5 +1,5 @@
-#ifndef __MOTCHY_MATH_LIB__RLS_FILTER_HPP__
-#define __MOTCHY_MATH_LIB__RLS_FILTER_HPP__
+#ifndef __MATH_LIB__RLS_FILTER_HPP__
+#define __MATH_LIB__RLS_FILTER_HPP__
 
 #define ENVIRONMENT_STANDARD 0
 #define ENVIRONMENT_TI_RTOS  1
@@ -18,7 +18,7 @@
 #include "linAlg.hpp"
 #include "sigProc.hpp"
 
-namespace MotchyMathLib {
+namespace MathLib {
     /**
      * @brief An extended implementation of RLS filter.
      * @details see: https://en.wikipedia.org/wiki/Recursive_least_squares_filter @n
@@ -43,7 +43,7 @@ namespace MotchyMathLib {
             T *m_x_conj;
             T *m_delta_R_x;
             T *m_delta_r_d;
-            char *m_workspace_solveLinEq; // workspace for `MotchyMathLib::LinAlg::solveLinearEquation` function
+            char *m_workspace_solveLinEq; // workspace for `MathLib::LinAlg::solveLinearEquation` function
 
         public:
             /**
@@ -148,14 +148,14 @@ namespace MotchyMathLib {
                     const char *format = "%9.6f + %9.6fj";
                     puts("before loop:");
                     puts("m_R_x:");
-                    MotchyMathLib::LinAlg::Debug::printComplexMat(m_p+1, m_p+1, m_R_x, format);
+                    MathLib::LinAlg::Debug::printComplexMat(m_p+1, m_p+1, m_R_x, format);
                     puts("m_r_d:");
-                    MotchyMathLib::LinAlg::Debug::printComplexVec(m_p+1, m_r_d, format);
+                    MathLib::LinAlg::Debug::printComplexVec(m_p+1, m_r_d, format);
                     puts("-----");
                 #endif
 
                 for (int n=0; n<Ld; ++n) {
-                    using namespace MotchyMathLib::LinAlg;
+                    using namespace MathLib::LinAlg;
                     std::reverse_copy(&vec_x[n*r_T - (Ld-1)], &vec_x[n*r_T+1], m_x);
                     conjugateVec(m_p+1, m_x, m_x_conj);
                     mulMat(m_p+1, 1, m_p+1, m_x_conj, m_x, m_delta_R_x);
@@ -166,15 +166,15 @@ namespace MotchyMathLib {
                     #if IS_DEBUGGING == true
                         printf("n == %d:\n", n);
                         puts("m_x:");
-                        MotchyMathLib::LinAlg::Debug::printComplexVec(m_p+1, m_x, format);
+                        MathLib::LinAlg::Debug::printComplexVec(m_p+1, m_x, format);
                         puts("-----");
                     #endif
                 }
-                MotchyMathLib::LinAlg::solveLinearEquation(m_p+1, m_R_x, m_r_d, w_opt, m_workspace_solveLinEq);
+                MathLib::LinAlg::solveLinearEquation(m_p+1, m_R_x, m_r_d, w_opt, m_workspace_solveLinEq);
 
                 #if IS_DEBUGGING == true
                     puts("w_opt:");
-                    MotchyMathLib::LinAlg::Debug::printComplexVec(m_p+1, w_opt, format);
+                    MathLib::LinAlg::Debug::printComplexVec(m_p+1, w_opt, format);
                 #endif
                 #undef IS_DEBUGGING
             }
@@ -185,4 +185,4 @@ namespace MotchyMathLib {
 #undef ENVIRONMENT_TI_RTOS
 #undef ENVIRONMENT
 
-#endif // __MOTCHY_MATH_LIB__RLS_FILTER_HPP__
+#endif // __MATH_LIB__RLS_FILTER_HPP__

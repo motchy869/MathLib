@@ -1,11 +1,11 @@
-#ifndef __MOTCHY_MATH_LIB__SIGPROC_HPP__
-#define __MOTCHY_MATH_LIB__SIGPROC_HPP__
+#ifndef __MATH_LIB__SIGPROC_HPP__
+#define __MATH_LIB__SIGPROC_HPP__
 
 #include <algorithm>
 #include <cstddef>
 #include <type_traits>
 
-namespace MotchyMathLib {
+namespace MathLib {
     namespace SigProc {
         /**
          * @brief Calculates the first "c(>=0)" elements of the convolution of 2 vectors "x1" and "x2" as "y", with stride "d(>=1)".
@@ -208,4 +208,4 @@ namespace MotchyMathLib {
     }
 }
 
-#endif // __MOTCHY_MATH_LIB__SIGPROC_HPP__
+#endif // __MATH_LIB__SIGPROC_HPP__

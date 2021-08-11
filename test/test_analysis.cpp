@@ -11,10 +11,10 @@ namespace {
         const double ans[N] = {0.7584299540206195, -0.8706512087514109, 0.8117748754722436, 0.7736053539586267, 0.5881305349111817, -0.4067883225567331, 0.843754111510663, 0.3703344119084007, -0.9999968521457114, -0.6508643030941429, 0.7820000033037139, -0.9329696480010395, -0.2832347454042438, 0.999661791926789, -0.3693502849318244, -0.04953466449150098, -0.972514059931373, -0.800513570965066, -0.4201483819628514, -0.14805364120001024};
         double result[N];
         for (size_t i=0; i<N; ++i) {
-            result[i] = MotchyMathLib::Analysis::sin_polyApprox(vec_x[i]);
+            result[i] = MathLib::Analysis::sin_polyApprox(vec_x[i]);
         }
 
-        EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
     }
 
     TEST_F(AnalysisLibTest, cos_polyApprox) {
@@ -23,10 +23,10 @@ namespace {
         const double ans[N] = {0.651754558744533, -0.49190087690479595, 0.5839705057209854, -0.633667701817402, -0.8087660192571688, -0.9135224467036808, -0.5367299128135599, 0.9288985000291792, 0.002509123087504593, 0.7591940851704363, -0.6232784248094839, -0.3599550470667362, 0.9590506133650054, -0.026005802462551894, -0.9292902490722584, 0.99877240501213, -0.2328441608368093, -0.5993146274710456, -0.9074554188135073, -0.9889793321032643};
         double result[N];
         for (size_t i=0; i<N; ++i) {
-            result[i] = MotchyMathLib::Analysis::cos_polyApprox(vec_x[i]);
+            result[i] = MathLib::Analysis::cos_polyApprox(vec_x[i]);
         }
 
-        EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
     }
 
     TEST_F(AnalysisLibTest, atan2_polyApprox) {
@@ -37,9 +37,9 @@ namespace {
 
         float result[N];
         for (size_t i=0; i<N; ++i) {
-            result[i] = MotchyMathLib::Analysis::atan2_polyApprox(vec_y[i], vec_x[i]);
+            result[i] = MathLib::Analysis::atan2_polyApprox(vec_y[i], vec_x[i]);
         }
 
-        EXPECT_EQ(true, MotchyMathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.5e-5f));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.5e-5f));
     }
 }

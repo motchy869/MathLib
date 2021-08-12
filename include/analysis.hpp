@@ -180,6 +180,37 @@ namespace MathLib {
                 }
             }
         }
+
+        #if false
+        /**
+         * @brief simpler-but-slow version of `atan2_polyApprox` function
+         *
+         * @tparam T the number type of the input value
+         * @param y "y"
+         * @param x "x"
+         * @return "atan2(y,x)"
+         */
+        template <typename T>
+        T atan2_polyApprox_v2(T const y, T const x) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            constexpr T pi = 3.14159265358979323846;
+            constexpr T half_pi = pi/2;
+            constexpr T double_pi = 2*pi;
+            const T abs_x = std::abs(x);
+            const T abs_y = std::abs(y);
+
+            if (x>=0 && abs_y<=x) { // region 1
+                return atan_polyApprox(y/x);
+            }
+            if (y>=0 && abs_x<=y) { // region 2
+                return half_pi + atan_polyApprox(-x/y);
+            }
+            if (x<=0 && abs_y<=abs_x) { // region 3
+                return atan_polyApprox(y/x) + (y>0 ? pi : -pi);
+            }
+            return atan_polyApprox(-x/y) - half_pi; // region 4
+        }
+        #endif
     }
 }
 

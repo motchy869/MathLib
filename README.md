@@ -1,6 +1,6 @@
 # MathLib
 
-My hobby math library includes Linear Algebra, Signal Processing and so on.
+My hobby math library including Linear Algebra, Signal Processing and so on.
 
 ## 1. Prerequisites
 

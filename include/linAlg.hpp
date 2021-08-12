@@ -323,6 +323,53 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculate an outer product of a given real/complex vector "x".
+         * The result matrix's elements are aligned on memory in row-oriented order.
+         *
+         * @tparam T the number type of the entries of "x"
+         * @param[in] M the length of "x"
+         * @param[in] x "x"
+         * @param[out] X the output buffer
+         * @param[in] LUA An option for calculation. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
+         * - 'L' only diagonal and lower elements are calculated
+         * - 'U' only diagonal and upper elements are calculated
+         * - 'A' all elements are calculated
+         * - other do nothing
+         */
+        template <typename T>
+        void vecOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
+            #define MEM_OFFSET(row,col) ((row)*M+col)
+
+            /* Calculate diagonal part. */
+            auto inputPtr = x;
+            auto outputPtr = X;
+            for (size_t m=0; m<M; ++m) {
+                *outputPtr = Analysis::sqAbs(*inputPtr++);
+                outputPtr += M+1;
+            }
+
+            /* Calculate lower part. */
+            if (LUA == 'L' || LUA == 'A') {
+                for (size_t r=1; r<M; ++r) {
+                    for (size_t c=0; c<r; ++c) {
+                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                    }
+                }
+            }
+
+            /* Calculate upper part. */
+            if (LUA == 'U' || LUA == 'A') {
+                for (size_t r=0; r<M-1; ++r) {
+                    for (size_t c=r+1; c<M; ++c) {
+                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                    }
+                }
+            }
+
+            #undef MEM_OFFSET
+        }
+
+        /**
          * @brief Calculates matrix multiplication "AB" as "C" where "A", "B", "C" are compatible matrices.
          *
          * @tparam T the number type of the elements of the matrices

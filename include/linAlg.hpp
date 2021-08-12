@@ -358,14 +358,19 @@ namespace MathLib {
             }
 
             /* Calculate upper part. */
-            if (LUA == 'U' || LUA == 'A') {
+            if (LUA == 'U') {
                 for (int r=0; r<M-1; ++r) {
                     for (int c=r+1; c<M; ++c) {
                         X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
                     }
                 }
+            } else if (LUA == 'A') { // The lower part is already calculated.
+                for (int r=0; r<M-1; ++r) {
+                    for (int c=r+1; c<M; ++c) {
+                        X[MEM_OFFSET(r,c)] = Analysis::conj(X[MEM_OFFSET(c,r)]);
+                    }
+                }
             }
-
             #undef MEM_OFFSET
         }
 

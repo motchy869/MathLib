@@ -148,13 +148,14 @@ namespace MathLib {
             constexpr T POSITIVE_ZERO = +0.0;
             constexpr T NEGATIVE_ZERO = -0.0;
             constexpr T pi = 3.14159265358979323846;
+            constexpr T half_pi = pi/2;
 
             if (x == NEGATIVE_ZERO || x == POSITIVE_ZERO) {
                 if (y >= POSITIVE_ZERO) {
-                    return pi/2;
+                    return half_pi;
                 }
                 if (y <= NEGATIVE_ZERO) {
-                    return -pi/2;
+                    return -half_pi;
                 }
             }
             if (x > POSITIVE_ZERO) {
@@ -162,21 +163,21 @@ namespace MathLib {
                     return atan_polyApprox(y/x);
                 }
                 if (y > x) {
-                    return pi/2 - atan_polyApprox(x/y);
+                    return half_pi - atan_polyApprox(x/y);
                 } else { // y < -x
-                    return -pi/2 - atan_polyApprox(x/y);
+                    return -half_pi - atan_polyApprox(x/y);
                 }
             } else { // x < NEGATIVE_ZERO
                 if (POSITIVE_ZERO <= y && y <= -x) {
                     return pi + atan_polyApprox(y/x);
                 }
                 if (-x < y) {
-                    return pi/2 - atan_polyApprox(x/y);
+                    return half_pi - atan_polyApprox(x/y);
                 }
                 if (x <= y && y <= NEGATIVE_ZERO) {
                     return atan_polyApprox(y/x) - pi;
                 } else { // y < x
-                    return -pi/2 - atan_polyApprox(x/y);
+                    return -half_pi - atan_polyApprox(x/y);
                 }
             }
         }

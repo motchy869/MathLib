@@ -343,15 +343,15 @@ namespace MathLib {
             /* Calculate diagonal part. */
             auto inputPtr = x;
             auto outputPtr = X;
-            for (size_t m=0; m<M; ++m) {
+            for (int m=0; m<M; ++m) {
                 *outputPtr = Analysis::sqAbs(*inputPtr++);
                 outputPtr += M+1;
             }
 
             /* Calculate lower part. */
             if (LUA == 'L' || LUA == 'A') {
-                for (size_t r=1; r<M; ++r) {
-                    for (size_t c=0; c<r; ++c) {
+                for (int r=1; r<M; ++r) {
+                    for (int c=0; c<r; ++c) {
                         X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
                     }
                 }
@@ -359,8 +359,8 @@ namespace MathLib {
 
             /* Calculate upper part. */
             if (LUA == 'U' || LUA == 'A') {
-                for (size_t r=0; r<M-1; ++r) {
-                    for (size_t c=r+1; c<M; ++c) {
+                for (int r=0; r<M-1; ++r) {
+                    for (int c=r+1; c<M; ++c) {
                         X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
                     }
                 }

@@ -180,7 +180,8 @@ namespace {
             {{ 146, -20}, {-162, +10}, { 178,  +0}, {-194, -10}},
             {{-158, +30}, { 176, -20}, {-194, +10}, { 212,  +0}},
         };
-        MathLib::LinAlg::vecSelfOuterProd(M, x, &X[0][0]);
+        std::complex<float> workspace[M];
+        MathLib::LinAlg::vecSelfOuterProd(M, x, &X[0][0], workspace);
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(M, M, &X[0][0], &X_true[0][0], 1.0e-7l));
     }
 

@@ -340,11 +340,13 @@ namespace MathLib {
         void vecSelfOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
             #define MEM_OFFSET(row,col) ((row)*M+col)
             /* Calculate diagonal part. */
-            auto inputPtr = x;
-            auto outputPtr = X;
-            for (int m=0; m<M; ++m) {
-                *outputPtr = Analysis::sqAbs(*inputPtr++);
-                outputPtr += M+1;
+            {
+                auto inputPtr = x;
+                auto outputPtr = X;
+                for (int m=0; m<M; ++m) {
+                    *outputPtr = Analysis::sqAbs(*inputPtr++);
+                    outputPtr += M+1;
+                }
             }
 
             /* Calculate lower part. */

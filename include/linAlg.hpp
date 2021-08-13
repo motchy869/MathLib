@@ -323,14 +323,14 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculate a self outer product of a given real/complex vector "x".
+         * @brief Calculate a self outer product of a given real vector "x".
          * The result matrix's elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of the entries of "x"
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer
-         * @param[in] LUA An option for calculation, defaults to 'A'. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
+         * @param[in] LUA An option for calculation, defaults to 'A'. Due to the symmetry of "X", there is 3 way to calculate "X":
          * - 'L' only diagonal and lower elements are calculated
          * - 'U' only diagonal and upper elements are calculated
          * - 'A' all elements are calculated
@@ -338,6 +338,62 @@ namespace MathLib {
          */
         template <typename T>
         void vecSelfOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
+            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            #define MEM_OFFSET(row,col) ((row)*M+col)
+            /* Calculate diagonal part. */
+            {
+                auto inputPtr = x;
+                auto outputPtr = X;
+                for (int m=0; m<M; ++m) {
+                    *outputPtr = (*inputPtr)*(*inputPtr);
+                    ++inputPtr;
+                    outputPtr += M+1;
+                }
+            }
+
+            /* Calculate lower part. */
+            if (LUA == 'L' || LUA == 'A') {
+                for (int r=1; r<M; ++r) {
+                    for (int c=0; c<r; ++c) {
+                        X[MEM_OFFSET(r,c)] = x[r]*x[c];
+                    }
+                }
+            }
+
+            /* Calculate upper part. */
+            if (LUA == 'U') {
+                for (int r=0; r<M-1; ++r) {
+                    for (int c=r+1; c<M; ++c) {
+                        X[MEM_OFFSET(r,c)] = x[r]*x[c];
+                    }
+                }
+            } else if (LUA == 'A') { // The lower part is already calculated.
+                for (int r=0; r<M-1; ++r) {
+                    for (int c=r+1; c<M; ++c) {
+                        X[MEM_OFFSET(r,c)] = X[MEM_OFFSET(c,r)];
+                    }
+                }
+            }
+            #undef MEM_OFFSET
+        }
+
+        /**
+         * @brief Calculate a self outer product of a given complex vector "x".
+         * The result matrix's elements are aligned on memory in row-oriented order.
+         *
+         * @tparam T the number type of the entries of "x"
+         * @param[in] M the length of "x"
+         * @param[in] x "x"
+         * @param[out] X the output buffer
+         * @param[inout] workspace a buffer to temporarily store conj(x).
+         * @param[in] LUA An option for calculation, defaults to 'A'. Due to the Hermitian symmetry of "X", there is 3 way to calculate "X":
+         * - 'L' only diagonal and lower elements are calculated
+         * - 'U' only diagonal and upper elements are calculated
+         * - 'A' all elements are calculated
+         * - other do nothing
+         */
+        template <typename T>
+        void vecSelfOuterProd(const int M, const std::complex<T> *const x, std::complex<T> *const X, std::complex<T> *const workspace, const char LUA='A') {
             #define MEM_OFFSET(row,col) ((row)*M+col)
             /* Calculate diagonal part. */
             {
@@ -349,11 +405,17 @@ namespace MathLib {
                 }
             }
 
+            /* Pre-calculate conj(x) */
+            std::complex<T> *const conj_x = workspace;
+            for (int i=0; i<M; ++i) {
+                conj_x[i] = std::conj(x[i]);
+            }
+
             /* Calculate lower part. */
             if (LUA == 'L' || LUA == 'A') {
                 for (int r=1; r<M; ++r) {
                     for (int c=0; c<r; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                        X[MEM_OFFSET(r,c)] = x[r]*conj_x[c];
                     }
                 }
             }
@@ -362,7 +424,7 @@ namespace MathLib {
             if (LUA == 'U') {
                 for (int r=0; r<M-1; ++r) {
                     for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                        X[MEM_OFFSET(r,c)] = x[r]*conj_x[c];
                     }
                 }
             } else if (LUA == 'A') { // The lower part is already calculated.

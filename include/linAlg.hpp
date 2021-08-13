@@ -330,7 +330,7 @@ namespace MathLib {
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer
-         * @param[in] LUA An option for calculation defaults to 'A'. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
+         * @param[in] LUA An option for calculation, defaults to 'A'. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
          * - 'L' only diagonal and lower elements are calculated
          * - 'U' only diagonal and upper elements are calculated
          * - 'A' all elements are calculated

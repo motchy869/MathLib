@@ -156,7 +156,7 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &b[0], &b_ans[0], 1.0e-7l));
     }
 
-    TEST_F(LinAlgLibTest, vecOuterProd_real) {
+    TEST_F(LinAlgLibTest, vecSelfOuterProd_real) {
         const size_t M = 4;
         const float x[M] = {1, -2, 3, -4};
         float X[M][M];
@@ -166,11 +166,11 @@ namespace {
             { 3,  -6,    9,  -12},
             {-4,   8,  -12,   16},
         };
-        MathLib::LinAlg::vecOuterProd(M, x, &X[0][0]);
+        MathLib::LinAlg::vecSelfOuterProd(M, x, &X[0][0]);
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(M, M, &X[0][0], &X_true[0][0], 1.0e-7l));
     }
 
-    TEST_F(LinAlgLibTest, vecOuterProd_complex) {
+    TEST_F(LinAlgLibTest, vecSelfOuterProd_complex) {
         const size_t M = 4;
         const std::complex<float> x[M] = {{1, 11}, {-2, -12}, {3, 13}, {-4, -14}};
         std::complex<float> X[M][M];
@@ -180,7 +180,7 @@ namespace {
             {{ 146, -20}, {-162, +10}, { 178,  +0}, {-194, -10}},
             {{-158, +30}, { 176, -20}, {-194, +10}, { 212,  +0}},
         };
-        MathLib::LinAlg::vecOuterProd(M, x, &X[0][0]);
+        MathLib::LinAlg::vecSelfOuterProd(M, x, &X[0][0]);
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(M, M, &X[0][0], &X_true[0][0], 1.0e-7l));
     }
 

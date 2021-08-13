@@ -330,44 +330,74 @@ namespace MathLib {
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer
-         * @param[in] LUA An option for calculation. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
+         * @param[in] LUA An option for calculation defaults to 'A'. Due to the (Hermitian-)symmetry of "X", there is 3 way to calculate "X":
          * - 'L' only diagonal and lower elements are calculated
          * - 'U' only diagonal and upper elements are calculated
          * - 'A' all elements are calculated
          * - other do nothing
+         * @param[in] increment An option to control how "X" is updated. Defaults to false
+         * - false "X" is overwritten with calculation result
+         * - true Add calculation result to "X".
          */
         template <typename T>
-        void vecOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
+        void vecOuterProd(const int M, const T *const x, T *const X, const char LUA='A', const bool increment=false) {
             #define MEM_OFFSET(row,col) ((row)*M+col)
+            if (!increment) { // overwriting mode
+                /* Calculate diagonal part. */
+                auto inputPtr = x;
+                auto outputPtr = X;
+                for (int m=0; m<M; ++m) {
+                    *outputPtr = Analysis::sqAbs(*inputPtr++);
+                    outputPtr += M+1;
+                }
 
-            /* Calculate diagonal part. */
-            auto inputPtr = x;
-            auto outputPtr = X;
-            for (int m=0; m<M; ++m) {
-                *outputPtr = Analysis::sqAbs(*inputPtr++);
-                outputPtr += M+1;
-            }
-
-            /* Calculate lower part. */
-            if (LUA == 'L' || LUA == 'A') {
-                for (int r=1; r<M; ++r) {
-                    for (int c=0; c<r; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                /* Calculate lower part. */
+                if (LUA == 'L' || LUA == 'A') {
+                    for (int r=1; r<M; ++r) {
+                        for (int c=0; c<r; ++c) {
+                            X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                        }
                     }
                 }
-            }
 
-            /* Calculate upper part. */
-            if (LUA == 'U') {
-                for (int r=0; r<M-1; ++r) {
-                    for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                /* Calculate upper part. */
+                if (LUA == 'U') {
+                    for (int r=0; r<M-1; ++r) {
+                        for (int c=r+1; c<M; ++c) {
+                            X[MEM_OFFSET(r,c)] = x[r]*Analysis::conj(x[c]);
+                        }
+                    }
+                } else if (LUA == 'A') { // The lower part is already calculated.
+                    for (int r=0; r<M-1; ++r) {
+                        for (int c=r+1; c<M; ++c) {
+                            X[MEM_OFFSET(r,c)] = Analysis::conj(X[MEM_OFFSET(c,r)]);
+                        }
                     }
                 }
-            } else if (LUA == 'A') { // The lower part is already calculated.
-                for (int r=0; r<M-1; ++r) {
-                    for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = Analysis::conj(X[MEM_OFFSET(c,r)]);
+            } else { // increment mode
+                /* Calculate diagonal part. */
+                auto inputPtr = x;
+                auto outputPtr = X;
+                for (int m=0; m<M; ++m) {
+                    *outputPtr += Analysis::sqAbs(*inputPtr++);
+                    outputPtr += M+1;
+                }
+
+                /* Calculate lower part. */
+                if (LUA == 'L' || LUA == 'A') {
+                    for (int r=1; r<M; ++r) {
+                        for (int c=0; c<r; ++c) {
+                            X[MEM_OFFSET(r,c)] += x[r]*Analysis::conj(x[c]);
+                        }
+                    }
+                }
+
+                /* Calculate upper part. */
+                if (LUA == 'U' || LUA == 'A') {
+                    for (int r=0; r<M-1; ++r) {
+                        for (int c=r+1; c<M; ++c) {
+                            X[MEM_OFFSET(r,c)] += x[r]*Analysis::conj(x[c]);
+                        }
                     }
                 }
             }

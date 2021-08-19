@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstring>
 #include <numeric>
+#include "common.hpp"
 #include "analysis.hpp"
 
 namespace MathLib {

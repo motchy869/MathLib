@@ -4,6 +4,7 @@
 #include <cmath>
 #include <complex>
 #include <type_traits>
+#include "common.hpp"
 
 namespace MathLib {
     namespace Analysis {

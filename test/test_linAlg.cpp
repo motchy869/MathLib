@@ -94,6 +94,19 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, setDiag) {
+        constexpr size_t m = 3;
+        int A[m][m] = {}; // initialize with 0
+        const int d[m] = {1,2,3};
+        const int A_true[m][m] = {
+            {1,0,0},
+            {0,2,0},
+            {0,0,3}
+        };
+        MathLib::LinAlg::setDiag(m, d, &A[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, dropSubMat) {
         constexpr size_t m = 3, n = 4;
         const int A[m][n] = {

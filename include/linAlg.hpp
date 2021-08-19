@@ -229,6 +229,29 @@ namespace MathLib {
         }
 
         /**
+         * @brief Drop contiguous rows and columns from a given "m"-by-"n" matrix "A" and store the result to "B".
+         * The "r1, r1+1, ..., r2"-th rows and "c1, c1+1, ..., c2"-th columns are dropped, where "0<=r1<=r2<=m-1, 0<=c1<=c2<=n-1".
+         * It is assumed that the matrix's elements are aligned on memory in row-oriented order.
+         *
+         * @param[in] m the number of the rows in the matrices "A"
+         * @param[in] n the number of the columns in the matrices "A"
+         * @param[in] r1 "r1"
+         * @param[in] r2 "r2"
+         * @param[in] c1 "c1"
+         * @param[in] c2 "c2"
+         * @param[in] A "A"
+         * @param[out] B the output buffer, "B"
+         */
+        void dropSubMat(size_t m, size_t n, const size_t r1, const size_t r2, const size_t c1, const size_t c2, const T *const A, T *const B) {
+            assert(0 <= r1 && r1 <= r2 && r2 <= m-1);
+            assert(0 <= c1 && c1 <= c2 && c2 <= n-1);
+
+            for (size_t r=r1; r<=r2; ++r) {
+                //
+            }
+        }
+
+        /**
          * @brief Calculates the sum of given two matrices "A" and "B". The result is stored in "A".
          *
          * @tparam T the number type of the elements of the matrices "A" and "B"

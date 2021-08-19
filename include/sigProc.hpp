@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <type_traits>
+#include "common.hpp"
 
 namespace MathLib {
     namespace SigProc {

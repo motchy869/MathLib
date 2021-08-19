@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Wfatal",
         "Wundef",
+        "cerr",
         "gmock",
         "googletest",
         "gtest",

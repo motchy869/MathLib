@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added `dropSubMat` function.
+- Added bug hunting mode.
 - Added `vecSelfOuterProd` function.
 - Optimized `atan2_polyApprox` function to speed up on Texas Instruments DSP TMS320C6748.
   - There is no effect on modern PC processors because the compilers for them are clever enough to perform above easy hand-optimization.

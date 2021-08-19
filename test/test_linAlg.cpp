@@ -94,6 +94,24 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, dropSubMat) {
+        constexpr size_t m = 3, n = 4;
+        const int A[m][n] = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9,10,11,12},
+        };
+        constexpr size_t r1=1, r2=1, c1=1, c2=2;
+        constexpr size_t m2=m-1, n2=n-2;
+        const int B_true[m2][n2] = {
+            {1,4},
+            {9,12},
+        };
+        int B[m2][n2];
+        MathLib::LinAlg::dropSubMat(m, n, r1, r2, c1, c2, &A[0][0], &B[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m2, n2, &B[0][0], &B_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, addMat_inplace) {
         std::complex<double> A[2][3] = {
             {1,2,3},

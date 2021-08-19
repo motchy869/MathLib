@@ -15,6 +15,7 @@
     #include <xdc/runtime/IHeap.h>
     #include <xdc/runtime/Memory.h>
 #endif
+#include "common.hpp"
 #include "linAlg.hpp"
 #include "sigProc.hpp"
 

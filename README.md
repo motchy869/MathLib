@@ -44,7 +44,7 @@ You can clean output files by running `doClean.sh` / `doClean.bat`.
 
 ## 5. Bug Hunting Mode
 
-`include/common.hpp` has a macro constant `ENABLE_BUG_HUNTING_MODE`, which is defined as `false` in default.
+`include/common.hpp` has a macro constant `MATH_LIB_ENABLE_BUG_HUNTING_MODE`, which is defined as `false` in default.
 When this macro is defined as `true`, the functions in MathLib performs costly parameter validations such as range check, and when encounter invalid parameters, the functions print error message to `std::cerr` and exit with `EXIT_FAILURE`.
 
 When the validity of parameters are guaranteed, parameter validations are just waste of time.

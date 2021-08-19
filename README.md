@@ -32,7 +32,7 @@ You can clean output files by running `doClean.sh` / `doClean.bat`.
 
 |file|description|
 |:---|:---|
-|include/common.hpp|common settings<ul><li>switch for bug hunting mode (default is ON)</li></ul>|
+|include/common.hpp|common settings<ul><li>switch for bug hunting mode (default is OFF)</li></ul>|
 |include/analysis.hpp|Analysis library<ul><li>fast version of `sin`, `cos`, `atan2` with 5-coefficients polynomial approximation</li></ul>|
 |include/linAlg.hpp|Linear Algebra library<ul><li>real and complex number type are supported</li><li>matrix and vector addition, multiplication</li><li>vector inner/outer product</li><li>LDL decomposition</li><li>linear equation solver (using Gaussian elimination, LDL decomposition)</li><li>functions to print real/complex vector/matrix on console. `printRealVec`, `printComplexVec`, `printRealMat`, `printComplexMat` are useful in debug.</li></ul>|
 |include/sigProc.hpp|Signal Processing library<ul><li>convolution</li><li>exponential weighted 1degree-IIR filter</li></ul>|

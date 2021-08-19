@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added bug hunting mode.
 - Added `dropSubMat` function.
 - Added `setDiag` function.
+- Added `addDiag` function.
 
 ## [0.3.0] - 2021/8/10
 

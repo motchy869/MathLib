@@ -187,6 +187,20 @@ namespace MathLib {
         }
 
         /**
+         * @brief Add a given vector "d" to the diagonal entries of a given square matrix "A".
+         *
+         * @tparam T the number type of the elements of "d, A".
+         * @param[in] m the number of the rows in the matrices "A"
+         * @param[in] d "d"
+         * @param[out] A "A"
+         */
+        template <typename T>
+        void addDiag(const size_t m, const T *const d, T *const A) {
+            const T *d_ptr = d; T *A_ptr = A;
+            for (size_t r=0; r<m; ++r) {*A_ptr += *d_ptr++; A_ptr += m+1;}
+        }
+
+        /**
          * @brief Drop contiguous rows and columns from a given "m"-by-"n" matrix "A" and store the result to "B".
          * The "r1, r1+1, ..., r2"-th rows and "c1, c1+1, ..., c2"-th columns are dropped, where "0<=r1<=r2<=m-1, 0<=c1<=c2<=n-1".
          * Parameter check for "r1, r2, c1, c2" is performed ONLY under bug hunting mode.

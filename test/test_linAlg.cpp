@@ -107,6 +107,23 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
     }
 
+    TEST_F(LinAlgLibTest, addDiag) {
+        constexpr size_t m = 3;
+        int A[m][m] = {
+            {1,2,3},
+            {4,5,6},
+            {7,8,9}
+        };
+        const int d[m] = {1,-2,3};
+        const int A_true[m][m] = {
+            {2,2,3},
+            {4,3,6},
+            {7,8,12}
+        };
+        MathLib::LinAlg::addDiag(m, d, &A[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, dropSubMat) {
         constexpr size_t m = 3, n = 4;
         const int A[m][n] = {

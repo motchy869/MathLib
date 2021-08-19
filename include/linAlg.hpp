@@ -187,7 +187,7 @@ namespace MathLib {
          * @param[out] B the output buffer, "B"
          */
         template <typename T>
-        void dropSubMat(size_t m, size_t n, const size_t r1, const size_t r2, const size_t c1, const size_t c2, const T *const A, T *const B) {
+        void dropSubMat(const size_t m, const size_t n, const size_t r1, const size_t r2, const size_t c1, const size_t c2, const T *const A, T *const B) {
             #if ENABLE_BUG_HUNTING_MODE
                 if (!(0 <= r1 && r1 <= r2 && r2 < m && 0 <= c1 && c1 <= c2 && c2 < n)) {
                     std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;

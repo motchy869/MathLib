@@ -96,7 +96,6 @@ namespace MathLib {
         /**
          * @brief Checks whether given two matrices "A" and "B" are equal or not.
          * @details "A" and "B" are considered to be equal if and only if the absolute value of all the element of "A-B" is strictly less than a given number, epsilon.
-         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
          *
          * @tparam T1 the number type of the elements of A and B
          * @tparam T2 the number type of the elements of epsilon
@@ -139,7 +138,6 @@ namespace MathLib {
 
         /**
          * @brief Construct complex matrix "A" from real part "A_real" and imaginary part "A_imag".
-         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of "A_real" and "A_imag"
          * @param[in] m the number of the rows in the input matrices
@@ -176,7 +174,6 @@ namespace MathLib {
         /**
          * @brief Drop contiguous rows and columns from a given "m"-by-"n" matrix "A" and store the result to "B".
          * The "r1, r1+1, ..., r2"-th rows and "c1, c1+1, ..., c2"-th columns are dropped, where "0<=r1<=r2<=m-1, 0<=c1<=c2<=n-1".
-         * It is assumed that the matrix's elements are aligned on memory in row-oriented order.@n
          * Parameter check for "r1, r2, c1, c2" is performed ONLY under bug hunting mode.
          *
          * @tparam T the number type of the elements of "A".
@@ -214,7 +211,6 @@ namespace MathLib {
 
         /**
          * @brief Calculates transpose of a matrix "A" as "B".
-         * @details It is assumed that the matrix's elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of the elements of input matrix
          * @param[in] m the number of the rows in the input matrix "A"
@@ -365,7 +361,6 @@ namespace MathLib {
 
         /**
          * @brief Calculate a self outer product of a given real vector "x".
-         * The result matrix's elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of the entries of "x"
          * @param[in] M the length of "x"
@@ -420,7 +415,6 @@ namespace MathLib {
 
         /**
          * @brief Calculate a self outer product of a given complex vector "x".
-         * The result matrix's elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of the entries of "x"
          * @param[in] M the length of "x"
@@ -610,7 +604,6 @@ namespace MathLib {
          * @brief Calculates the LDL decomposition of a given Hermitian-and-invertible matrix "A".
          * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
          * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
-         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of matrix "A"
          * @param[in] m the number of the rows and columns in the matrix "A"
@@ -746,7 +739,6 @@ namespace MathLib {
         /**
          * @brief Solve linear equation "Ax = b" using LDL decomposition, where "A" is a Hermitian and invertible matrix of size "m", and "b" is a vector of length "m".
          * The matrix "A" MUST be invertible.
-         * It is assumed that the matrices' elements are aligned on memory in row-oriented order.
          *
          * @tparam T the number type of the elements of the matrix "A", vector "b" and "x"
          * @param[in] m the number of the rows and columns in the matrix "A"

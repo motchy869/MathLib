@@ -38,7 +38,11 @@ You can clean output files by running `doClean.sh` / `doClean.bat`.
 |include/sigProc.hpp|Signal Processing library<ul><li>convolution</li><li>exponential weighted 1degree-IIR filter</li></ul>|
 |include/RlsFilter.hpp|Recursive Least Square filter|
 
-## 4. Bug Hunting Mode
+## 4. Assumptions
+
+* It is assumed that the entries of any matrix are aligned on memory in row-oriented order (so called C-style array).
+
+## 5. Bug Hunting Mode
 
 `include/common.hpp` has a macro constant `ENABLE_BUG_HUNTING_MODE`, which is defined as `false` in default.
 When this macro is defined as `true`, the functions in MathLib performs costly parameter validations such as range check, and when encounter invalid parameters, the functions print error message to `std::cerr` and exit with `EXIT_FAILURE`.

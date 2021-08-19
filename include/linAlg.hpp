@@ -6,6 +6,7 @@
 #include <complex>
 #include <cstddef>
 #include <cstring>
+#include <iostream>
 #include <numeric>
 #include "common.hpp"
 #include "analysis.hpp"
@@ -232,8 +233,10 @@ namespace MathLib {
         /**
          * @brief Drop contiguous rows and columns from a given "m"-by-"n" matrix "A" and store the result to "B".
          * The "r1, r1+1, ..., r2"-th rows and "c1, c1+1, ..., c2"-th columns are dropped, where "0<=r1<=r2<=m-1, 0<=c1<=c2<=n-1".
-         * It is assumed that the matrix's elements are aligned on memory in row-oriented order.
+         * It is assumed that the matrix's elements are aligned on memory in row-oriented order.@n
+         * Parameter check for "r1, r2, c1, c2" is performed ONLY under bug hunting mode.
          *
+         * @tparam T the number type of the elements of "A".
          * @param[in] m the number of the rows in the matrices "A"
          * @param[in] n the number of the columns in the matrices "A"
          * @param[in] r1 "r1"
@@ -243,12 +246,26 @@ namespace MathLib {
          * @param[in] A "A"
          * @param[out] B the output buffer, "B"
          */
+        template <typename T>
         void dropSubMat(size_t m, size_t n, const size_t r1, const size_t r2, const size_t c1, const size_t c2, const T *const A, T *const B) {
-            assert(0 <= r1 && r1 <= r2 && r2 <= m-1);
-            assert(0 <= c1 && c1 <= c2 && c2 <= n-1);
-
-            for (size_t r=r1; r<=r2; ++r) {
-                //
+            #if ENABLE_BUG_HUNTING_MODE
+                if (!(0 <= r1 && r1 <= r2 && r2 < m && 0 <= c1 && c1 <= c2 && c2 < n)) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
+            const T *A_ptr = A; T *B_ptr = B;
+            const size_t rowGap = r2-r1+1, colGap = c2-c1+1;
+            for (size_t r=0; r<r1; ++r) {
+                for (size_t c=0; c<c1; ++c) {*B_ptr++ = *A_ptr++;} // upper left part
+                A_ptr += colGap;
+                for (size_t c=c2+1; c<n; ++c) {*B_ptr++ = *A_ptr++;} // upper right part
+            }
+            A_ptr += rowGap*n;
+            for (size_t r=r2+1; r<m; ++r) {
+                for (size_t c=0; c<c1; ++c) {*B_ptr++ = *A_ptr++;} // lower left part
+                A_ptr += colGap;
+                for (size_t c=c2+1; c<n; ++c) {*B_ptr++ = *A_ptr++;} // lower right part
             }
         }
 

@@ -1,3 +1,7 @@
+/**
+ * @author motchy (motchy869[at]gmail.com)
+ * @brief Recursive Least Square filter
+ */
 #ifndef __MATH_LIB__RLS_FILTER_HPP__
 #define __MATH_LIB__RLS_FILTER_HPP__
 

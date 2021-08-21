@@ -1,12 +1,18 @@
 {
     "cSpell.words": [
+        "Doxywizard",
+        "Javadoc",
+        "SUBDIRS",
+        "UNDOC",
         "Wfatal",
         "Wundef",
         "cerr",
         "gmock",
         "googletest",
         "gtest",
-        "libgtest"
+        "libc",
+        "libgtest",
+        "libiconv"
     ],
     "files.associations": {
         "cmath": "cpp",

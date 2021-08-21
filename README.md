@@ -15,15 +15,15 @@ Following page and shell-script will help you install Google Test framework.
 On Linux
 
 ```sh
-./doDebugBuild.sh
-./doTest.sh
+./scripts/doDebugBuild.sh
+./scripts/doTest.sh
 ```
 
-On Windows
+On Windows Power Shell
 
 ```bat
-./doDebugBuild.bat
-./doTest.bat
+./scripts/doDebugBuild.bat
+./scripts/doTest.bat
 ```
 
 You can clean output files by running `doClean.sh` / `doClean.bat`.

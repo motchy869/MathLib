@@ -306,6 +306,7 @@ namespace {
             { 0.0801843 ,  0.11681897,  0.42309137,  0.54580854, -0.33315596},
             {-0.40894139, -0.44449101,  0.90466214, -0.33315596, -0.20125677},
         };
+        float workspace[m];
 
         /* tested on Numpy */
         const float d_true[m] = {0.59198756, -1.45342291,  1.12140311,  0.37333903, -2.05156301};
@@ -319,7 +320,7 @@ namespace {
 
         float d[m] = {};
         float L[m][m] = {};
-        const bool noZeroDiv = MathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0]);
+        const bool noZeroDiv = MathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0], workspace);
         const bool isDiagOk = MathLib::LinAlg::isEqualVec(m, d, d_true, 1e-5);
         const bool isLOk = MathLib::LinAlg::isEqualMat(m, m, &L[0][0], &L_true[0][0], 1e-5);
 
@@ -342,6 +343,7 @@ namespace {
             { 0.01458005,  0.20955483, -0.19562549,  0.        , -0.26862068},
             {-0.00506915, -0.63859046,  0.51800175,  0.26862068,  0.        },
         };
+        std::complex<float> workspace[m];
 
         /* tested on Numpy */
         const float d_true[m] = {-0.14583693, 1.20833987, -4.42254581, -0.1202024 , 3.13005036};
@@ -367,7 +369,7 @@ namespace {
 
         float d[m] = {};
         std::complex<float> L[m][m] = {};
-        const bool noZeroDiv = MathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0]);
+        const bool noZeroDiv = MathLib::LinAlg::ldlDecomp(m, &A[0][0], d, &L[0][0], workspace);
         const bool isDiagOk = MathLib::LinAlg::isEqualVec(m, d, d_true, 1e-5);
         const bool isLOk = MathLib::LinAlg::isEqualMat(m, m, &L[0][0], &L_true[0][0], 1e-5);
 
@@ -388,7 +390,7 @@ namespace {
         const float x_true[m] = {-74.32784309, 6.42575663, -33.99366676, -40.35903688, -13.47647763}; // tested on Numpy
 
         float x[m];
-        char workSpace[(1+m)*m*sizeof(float)];
+        char workSpace[(m*m+2*m-1)*sizeof(float)];
 
         const bool noZeroDiv = MathLib::LinAlg::solveLinEqHermitian(m, &A[0][0], b, x, workSpace);
         const bool isSolutionOk = MathLib::LinAlg::isEqualVec(m, x, x_true, 1e-3);
@@ -428,7 +430,7 @@ namespace {
         MathLib::LinAlg::complexVec(m, x_true_real, x_true_imag, x_true);
 
         std::complex<float> x[m];
-        char workSpace[m*sizeof(float) + m*m*sizeof(std::complex<float>)];
+        char workSpace[m*sizeof(float) + (m*m+m-1)*sizeof(std::complex<float>)];
 
         const bool noZeroDiv = MathLib::LinAlg::solveLinEqHermitian(m, &A[0][0], b, x, workSpace);
         const bool isSolutionOk = MathLib::LinAlg::isEqualVec(m, x, x_true, 1e-3);

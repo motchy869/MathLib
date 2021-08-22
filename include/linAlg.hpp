@@ -600,20 +600,22 @@ namespace MathLib {
          * @param[in] A the matrix "A"
          * @param[out] d the diagonal elements of D
          * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[inout] workspace The pointer to a continuous memory space whose size is "(m-1)*sizeof(std::complex<T>)" bytes. This space is used during calculation.
          * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
          * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(int m, const std::complex<T> *A, T *d, std::complex<T> *L, T epsilon=1e-12) {
+        bool ldlDecomp(const int m, const std::complex<T> *const A, T *const d, std::complex<T> *const L, std::complex<T> *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             constexpr std::complex<T> ONE = 1;
+            const std::complex<T> *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
-                auto di = A[MEM_OFFSET(i,i)].real();
-                for (int j=0; j<i; ++j) {
-                    const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*MathLib::Analysis::sqAbs(L_ij);
+                T di = A_diag_ptr->real(); A_diag_ptr += m+1; // d[i] <- Re(A[i,i])
+                {
+                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(*(L_row_ptr++));} // d[i] <- d[i] - d[j]*|L[i,j]|^2
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -621,12 +623,24 @@ namespace MathLib {
                 }
                 const T inv_di = 1/d[i];
                 L[MEM_OFFSET(i,i)] = ONE;
+
+                /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
+                std::complex<T> *dL_ptr = workspace;
+                {
+                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {*dL_ptr++ = d[j]*std::conj(*L_row_ptr++);}
+                }
+
+                const std::complex<T> *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
+                std::complex<T> *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
                 for (int k=i+1; k<m; ++k) {
-                    std::complex<T> L_ki = A[MEM_OFFSET(k,i)];
+                    std::complex<T> L_ki = *A_col_ptr; A_col_ptr += m; // L[k,i] <- A[k,i]
+                    dL_ptr = workspace;
+                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(k,0)];
                     for (int j=0; j<i; ++j) {
-                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*std::conj(L[MEM_OFFSET(i,j)]);
+                        L_ki -= (*L_row_ptr++)*(*dL_ptr++); // L[k,i] <- L[k,i] - L[k,j]d[j]*conj(L[i,j])
                     }
-                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                    *L_col_ptr = inv_di*L_ki; L_col_ptr += m; // L[k,i] <- L[k,i]/d[i]
                 }
             }
             return true;
@@ -643,19 +657,21 @@ namespace MathLib {
          * @param[in] A the matrix "A"
          * @param[out] d the diagonal elements of D
          * @param[out] L The matrix "L". The upper part is NOT modified by this function.
+         * @param[inout] workspace The pointer to a continuous memory space whose size is "(m-1)*sizeof(T)" bytes. This space is used during calculation.
          * @param[in] epsilon The threshold used for zero-division detection. Zero-division is detected when the absolute value of a divider is smaller than "epsilon".
          * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool ldlDecomp(int m, const T *A, T *d, T *L, T epsilon=1e-12) {
+        bool ldlDecomp(const int m, const T *const A, T *const d, T *const L, T *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            const T *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
-                T di = A[MEM_OFFSET(i,i)];
-                for (int j=0; j<i; ++j) {
-                    const auto L_ij = L[MEM_OFFSET(i,j)];
-                    di -= d[j]*MathLib::Analysis::sqAbs(L_ij);
+                T di = *A_diag_ptr; A_diag_ptr += m+1; // d[i] <- A[i,i]
+                {
+                    T *L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(*L_row_ptr++);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -663,12 +679,24 @@ namespace MathLib {
                 }
                 const T inv_di = 1/d[i];
                 L[MEM_OFFSET(i,i)] = 1;
+
+                /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
+                T *dL_ptr = workspace;
+                {
+                    T *L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {*dL_ptr++ = d[j]*(*L_row_ptr++);}
+                }
+
+                const T *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
+                T *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
                 for (int k=i+1; k<m; ++k) {
-                    T L_ki = A[MEM_OFFSET(k,i)];
+                    T L_ki = *A_col_ptr; A_col_ptr += m; // L[k,i] <- A[k,i]
+                    dL_ptr = workspace;
+                    T *L_row_ptr = &L[MEM_OFFSET(k,0)];
                     for (int j=0; j<i; ++j) {
-                        L_ki -= L[MEM_OFFSET(k,j)]*d[j]*L[MEM_OFFSET(i,j)];
+                        L_ki -= (*L_row_ptr++)*(*dL_ptr++); // L[k,i] <- L[k,i] - L[k,j]d[j]*L[i,j]
                     }
-                    L[MEM_OFFSET(k,i)] = inv_di*L_ki;
+                    *L_col_ptr = inv_di*L_ki; L_col_ptr += m; // L[k,i] <- L[k,i]/d[i]
                 }
             }
             return true;
@@ -779,8 +807,8 @@ namespace MathLib {
          * @param[in] b the vector "b"
          * @param[out] x the vector "x"
          * @param[out] workspace The pointer to a continuous memory space. Its size is calculated as follows:@n
-         * - when A's type is floating-point T: (1+m)*m*sizeof(T)
-         * - when A's type is std::complex<T>: m*sizeof(T) + m*m*sizeof(std::complex<T>)
+         * - when A's type is floating-point T: (m*m+2*m-1)*sizeof(T)
+         * - when A's type is std::complex<T>: m*sizeof(T) + (m*m+m-1)*sizeof(std::complex<T>)
          * @retval false A zero-division is detected and calculation is aborted. Maybe "A" is non-invertible.
          * @retval true The calculation is successfully done.
          */
@@ -793,11 +821,9 @@ namespace MathLib {
 
             /* LDL decomposition */
             typedef decltype(std::real(*A)) T_real; // floating-point type "A" is ok
-            T_real *d = reinterpret_cast<T_real *>(workspace);
-            workspace += m*sizeof(T_real);
-            T *L = reinterpret_cast<T *>(workspace);
-            workspace += m*m*sizeof(T);
-            const bool noZeroDiv = ldlDecomp(m, A, d, L);
+            T_real *d = reinterpret_cast<T_real *>(workspace); workspace += m*sizeof(T_real);
+            T *L = reinterpret_cast<T *>(workspace); workspace += m*m*sizeof(T);
+            const bool noZeroDiv = ldlDecomp(m, A, d, L, reinterpret_cast<T *>(workspace));
             if (!noZeroDiv) {
                 return false;
             }

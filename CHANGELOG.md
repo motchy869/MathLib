@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `dropSubMat` function.
 - Added `setDiag` function.
 - Added `addDiag` function.
+- Speeded up `ldlDecomp` function, and consequently `solveLinEqHermitian` function is speeded up.
 
 ## [0.3.0] - 2021/8/10
 

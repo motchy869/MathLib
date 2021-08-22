@@ -550,7 +550,7 @@ namespace MathLib {
          *
          * @tparam T the number type of complex number's real and imaginary part
          * @param[in] m the number of the rows and columns in the matrix "A"
-         * @param[in] A the matrix "A"
+         * @param[in] A the matrix "A". Only diagonal and lower parts are needed, and upper part is not accessed.
          * @param[out] d the diagonal elements of D
          * @param[out] L The matrix "L". The upper part is NOT modified by this function.
          * @param[inout] workspace The pointer to a continuous memory space whose size is "(m-1)*sizeof(std::complex<T>)" bytes. This space is used during calculation.
@@ -602,7 +602,7 @@ namespace MathLib {
          *
          * @tparam T the number type of matrix "A"
          * @param[in] m the number of the rows and columns in the matrix "A"
-         * @param[in] A the matrix "A"
+         * @param[in] A the matrix "A". Only diagonal and lower parts are needed, and upper part is not accessed.
          * @param[out] d the diagonal elements of D
          * @param[out] L The matrix "L". The upper part is NOT modified by this function.
          * @param[inout] workspace The pointer to a continuous memory space whose size is "(m-1)*sizeof(T)" bytes. This space is used during calculation.

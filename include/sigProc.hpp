@@ -84,52 +84,7 @@ namespace MathLib {
          */
         template <typename T>
         void convolve(size_t N1, size_t N2, const T *x1, const T *x2, T *y) {
-            #if true
-                convolve(N1, N2, x1, x2, y, -1, 1);
-            #else // Replaced by `void convolve(size_t N1, size_t N2, const T *x1, const T *x2, T *y, int c, size_t d)`.
-                constexpr T ZERO = static_cast<T>(0);
-
-                /* Assigns shorter to "v1", longer to "v2". */
-                const T *v1 = x1, *v2 = x2;
-                if (N1 > N2) {
-                    v1 = x2; v2 = x1;
-                    std::swap(N1,N2);
-                }
-                // Now, length(v1) == N1 <= N2 == length(v2).
-
-                if (0 == N1) {
-                    *y = ZERO;
-                    return;
-                }
-
-                const T *const v1_end = v1+N1;
-                const T *const v2_end = v2+N2;
-                T *ptr_y = y;
-
-                /* stage 1: y[0] ... y[N2-1] */
-                for (size_t i=0; i<N2; ++i) {
-                    const T *ptr_v1 = v1, *ptr_v2 = v2+i;
-                    T sum = ZERO;
-                    while (ptr_v1 < v1_end && ptr_v2 >= v2) {
-                        sum += (*ptr_v1)*(*ptr_v2);
-                        ++ptr_v1; --ptr_v2;
-                    }
-                    *ptr_y = sum;
-                    ++ptr_y;
-                }
-
-                /* stage 2  y[N2] ... y[N1+N2-2] if N1 >= 2 */
-                for (size_t i=1; i<N1; ++i) {
-                    const T *ptr_v1 = v1+i, *ptr_v2 = v2_end-1;
-                    T sum = ZERO;
-                    while (ptr_v1 < v1_end) {
-                        sum += (*ptr_v1)*(*ptr_v2);
-                        ++ptr_v1; --ptr_v2;
-                    }
-                    *ptr_y = sum;
-                    ++ptr_y;
-                }
-            #endif
+            convolve(N1, N2, x1, x2, y, -1, 1);
         }
 
         /**

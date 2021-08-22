@@ -566,9 +566,14 @@ namespace MathLib {
             const std::complex<T> *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = A_diag_ptr->real(); A_diag_ptr += m+1; // d[i] <- Re(A[i,i])
+                std::complex<T> *const dL_ptr = workspace;
                 {
                     std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(L_row_ptr[j]);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                    for (int j=0; j<i; ++j) {
+                        const std::complex<T> &L_ij = L_row_ptr[j];
+                        di -= d[j]*MathLib::Analysis::sqAbs(L_ij); // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                        dL_ptr[j] = d[j]*std::conj(L_ij); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
+                    }
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -576,13 +581,6 @@ namespace MathLib {
                 }
                 const T inv_di = 1/d[i];
                 L[MEM_OFFSET(i,i)] = ONE;
-
-                /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
-                std::complex<T> *const dL_ptr = workspace;
-                {
-                    std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {dL_ptr[j] = d[j]*std::conj(L_row_ptr[j]);}
-                }
 
                 const std::complex<T> *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
                 std::complex<T> *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
@@ -619,9 +617,14 @@ namespace MathLib {
             const T *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = *A_diag_ptr; A_diag_ptr += m+1; // d[i] <- A[i,i]
+                T *const dL_ptr = workspace;
                 {
                     T *const L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(L_row_ptr[j]);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                    for (int j=0; j<i; ++j) {
+                        const T &L_ij = L_row_ptr[j];
+                        di -= d[j]*MathLib::Analysis::sqAbs(L_ij); // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                        dL_ptr[j] = d[j]*L_ij; // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
+                    }
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -629,13 +632,6 @@ namespace MathLib {
                 }
                 const T inv_di = 1/d[i];
                 L[MEM_OFFSET(i,i)] = 1;
-
-                /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
-                T *const dL_ptr = workspace;
-                {
-                    T *const L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {dL_ptr[j] = d[j]*L_row_ptr[j];}
-                }
 
                 const T *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
                 T *L_col_ptr = &L[MEM_OFFSET(i+1,i)];

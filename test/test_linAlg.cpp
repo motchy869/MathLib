@@ -172,23 +172,39 @@ namespace {
     }
 
     TEST_F(LinAlgLibTest, scaleMat) {
-        std::complex<double> A[2][3] = {
+        const size_t m=2, n=3;
+        const std::complex<double> A[m][n] = {
             {1,2,3},
             {4,5,6},
         };
 
         const std::complex<double> a(1, 0.5);
 
-        std::complex<double> B[2][3];
+        std::complex<double> B[m][n];
 
-        const std::complex<double> B_ans[2][3] = {
+        const std::complex<double> B_ans[m][n] = {
             {{1, 0.5}, {2, 1}, {3, 1.5}},
             {{4, 2}, {5, 2.5}, {6, 3}},
         };
 
-        MathLib::LinAlg::scaleMat(2, 3, a, &A[0][0], &B[0][0]);
+        MathLib::LinAlg::scaleMat(m, n, a, &A[0][0], &B[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, n, &B[0][0], &B_ans[0][0], 1.0e-7l));
+    }
 
-        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(3, 2, &B[0][0], &B_ans[0][0], 1.0e-7l));
+    TEST_F(LinAlgLibTest, scaleMatEachRow) {
+        const size_t m=2, n=3;
+        const float A[m][n] = {
+            {1,2,3},
+            {4,5,6},
+        };
+        const float c[m] = {2,-1};
+        float B[m][n];
+        const float B_ans[m][n] = {
+            {2,4,6},
+            {-4,-5,-6},
+        };
+        MathLib::LinAlg::scaleMatEachRow(2, 3, c, &A[0][0], &B[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, n, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
     TEST_F(LinAlgLibTest, scaleVec) {

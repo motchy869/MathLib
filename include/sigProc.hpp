@@ -29,7 +29,7 @@ namespace MathLib {
          * @param[in] d "d"
          */
         template <typename T>
-        void convolve(size_t N1, size_t N2, const T *x1, const T *x2, T *y, int c, size_t d) {
+        void convolve(size_t N1, size_t N2, const T *const x1, const T *const x2, T *const y, const int c, const size_t d) {
             if (0 == N1 || 0 == N2 || 0 == d) {
                 return;
             }
@@ -44,35 +44,30 @@ namespace MathLib {
             }
             // Now, 1 <= length(v1) == N1 <= N2 == length(v2).
 
-            const size_t Ly = (c<0) ? 1 + (N1+N2-2)/d : c;
-            const T *const v1_end = v1+N1-1;
-            const T *const v2_end = v2+N2-1;
+            const size_t Ly = (c<0 ? 1 + (N1+N2-2)/d : c);
+            const int i_v1_end = N1-1;
             const T *const y_end = y+Ly-1;
             T *ptr_y = y;
             size_t i = 0;
 
             /* stage 1 */
             for (const size_t i_end = (N2-1)/d; i<=i_end && ptr_y<=y_end; ++i) {
-                const T *ptr_v1 = v1, *ptr_v2 = v2+i*d;
                 T sum = ZERO;
-                while (ptr_v1 <= v1_end && ptr_v2 >= v2) {
-                    sum += (*ptr_v1)*(*ptr_v2);
-                    ++ptr_v1; --ptr_v2;
+                const int i_v2_end=0;
+                for (int i_v1=0, i_v2 = i*d; i_v1<=i_v1_end && i_v2>=i_v2_end; ++i_v1, --i_v2) {
+                    sum += v1[i_v1]*v2[i_v2];
                 }
-                *ptr_y = sum;
-                ++ptr_y;
+                *ptr_y = sum; ++ptr_y;
             }
 
             /* stage 2*/
             for (const size_t i_end = (N1+N2-2)/d; i<=i_end && ptr_y<=y_end; ++i) {
-                const T *ptr_v1 = (v1+i*d+1)-N2, *ptr_v2 = v2_end;
                 T sum = ZERO;
-                while (ptr_v1 <= v1_end) {
-                    sum += (*ptr_v1)*(*ptr_v2);
-                    ++ptr_v1; --ptr_v2;
+                sum = ZERO;
+                for (int i_v1=i*d+1-N2, i_v2=N2-1; i_v1<=i_v1_end; ++i_v1, --i_v2) {
+                    sum += v1[i_v1]*v2[i_v2];
                 }
-                *ptr_y = sum;
-                ++ptr_y;
+                *ptr_y = sum; ++ptr_y;
             }
         }
 
@@ -151,13 +146,10 @@ namespace MathLib {
         template <typename T>
         void convolve_type2(size_t L1, const T *x1, const T *x2, T *y, size_t N, size_t d=1) {
             constexpr T ZERO = static_cast<T>(0);
-
             for (size_t n=0; n<N; ++n) {
                 T sum = ZERO;
-                for (size_t k=0; k<L1; ++k) {
-                    const size_t nd = n*d;
-                    sum += x1[k]*x2[nd-k];
-                }
+                const T *const x2_ptr = &x2[n*d];
+                for (size_t k=0; k<L1; ++k) {sum += x1[k]*x2_ptr[-k];}
                 y[n] = sum;
             }
         }

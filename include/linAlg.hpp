@@ -112,12 +112,10 @@ namespace MathLib {
          * @retval false A and B are not equal.
          */
         template <typename T1, typename T2>
-        bool isEqualMat(size_t m, size_t n, const T1 *A, const T1 *B, T2 epsilon) {
-            const T1 *ptr_A = A, *ptr_B = B;
+        bool isEqualMat(const size_t m, const size_t n, const T1 *const A, const T1 *const B, const T2 epsilon) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {
-                if (std::abs(*ptr_A - *ptr_B) > epsilon) {return false;}
-                ++ptr_A; ++ptr_B;
+                if (std::abs(A[i] - B[i]) > epsilon) {return false;}
             }
             return true;
         }
@@ -136,7 +134,7 @@ namespace MathLib {
          * @retval false "a" and "b" are not equal.
          */
         template <typename T1, typename T2>
-        bool isEqualVec(size_t m, const T1 *a, const T1 *b, T2 epsilon) {
+        bool isEqualVec(const size_t m, const T1 *const a, const T1 *const b, const T2 epsilon) {
             return isEqualMat(1, m, a, b, epsilon);
         }
 
@@ -151,13 +149,10 @@ namespace MathLib {
          * @param[out] A output buffer for "A"
          */
         template <typename T>
-        void complexMat(size_t m, size_t n, const T *A_real, const T *A_imag, std::complex<T> *A) {
-            const T *ptr_A_real = A_real, *ptr_A_imag = A_imag;
-            std::complex<T> *ptr_A = A;
+        void complexMat(const size_t m, const size_t n, const T *const A_real, const T *const A_imag, std::complex<T> *const A) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {
-                ptr_A->real(*ptr_A_real); ptr_A->imag(*ptr_A_imag);
-                ++ptr_A_real; ++ptr_A_imag; ++ptr_A;
+                A[i].real(A_real[i]); A[i].imag(A_imag[i]);
             }
         }
 
@@ -171,7 +166,7 @@ namespace MathLib {
          * @param[out] x output buffer for "x"
          */
         template <typename T>
-        void complexVec(size_t m, const T *x_real, const T *x_imag, std::complex<T> *x) {
+        void complexVec(const size_t m, const T *const x_real, const T *const x_imag, std::complex<T> *const x) {
             complexMat(m, 1, x_real, x_imag, x);
         }
 
@@ -186,8 +181,7 @@ namespace MathLib {
          */
         template <typename T>
         void setDiag(const size_t m, const T *const d, T *const A) {
-            const T *d_ptr = d; T *A_ptr = A;
-            for (size_t r=0; r<m; ++r) {*A_ptr = *d_ptr++; A_ptr += m+1;}
+            for (size_t r=0; r<m; ++r) {A[r*m+r] = d[r];}
         }
 
         /**
@@ -200,8 +194,7 @@ namespace MathLib {
          */
         template <typename T>
         void addDiag(const size_t m, const T *const d, T *const A) {
-            const T *d_ptr = d; T *A_ptr = A;
-            for (size_t r=0; r<m; ++r) {*A_ptr += *d_ptr++; A_ptr += m+1;}
+            for (size_t r=0; r<m; ++r) {A[r*m+r] += d[r];}
         }
 
         /**
@@ -253,14 +246,11 @@ namespace MathLib {
          */
         template <typename T>
         void transposeMat(size_t m, size_t n, const T *A, T *B) {
-            const T *ptr_A = A;
-            T *ptr_B = B;
             for (size_t r=0; r<m; ++r) {
-                ptr_B = B + r;
+                const T *ptr_A = &A[r*n];
+                T *ptr_B = B + r;
                 for (size_t c=0; c<n; ++c) {
-                    *ptr_B = *ptr_A;
-                    ++ptr_A;
-                    ptr_B += m;
+                    ptr_B[c*m] = ptr_A[c];
                 }
             }
         }
@@ -275,13 +265,10 @@ namespace MathLib {
          * @param[out] B the matrix "B"
          */
         template <typename T>
-        void conjugateMat(size_t m, size_t n, const std::complex<T> *A, std::complex<T> *B) {
-            const std::complex<T> *ptr_A = A;
-            std::complex<T> *ptr_B = B;
+        void conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {
-                *ptr_B = std::conj(*ptr_A);
-                ++ptr_A; ++ptr_B;
+                B[i] = std::conj(A[i]);
             }
         }
 
@@ -294,7 +281,7 @@ namespace MathLib {
          * @param[out] y the vector "y"
          */
         template <typename T>
-        void conjugateVec(size_t m, const std::complex<T> *x, std::complex<T> *y) {
+        void conjugateVec(const size_t m, const std::complex<T> *const x, std::complex<T> *const y) {
             conjugateMat(m, 1, x, y);
         }
 
@@ -308,14 +295,9 @@ namespace MathLib {
          * @param[in] B the matrix "B"
          */
         template <typename T>
-        void addMat_inplace(size_t m, size_t n, T *A, const T *B) {
-            T *ptr_A = A;
-            const T *ptr_B = B;
+        void addMat_inplace(const size_t m, const size_t n, T *const A, const T *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {
-                *ptr_A += *ptr_B;
-                ++ptr_A; ++ptr_B;
-            }
+            for (size_t i=0; i<L; ++i) {A[i] += B[i];}
         }
 
         /**
@@ -327,7 +309,7 @@ namespace MathLib {
          * @param[in] y the vector "y"
          */
         template <typename T>
-        void addVec_inplace(size_t m, T *x, const T *y) {
+        void addVec_inplace(const size_t m, T *const x, const T *const y) {
             addMat_inplace(m, 1, x, y);
         }
 
@@ -342,14 +324,9 @@ namespace MathLib {
          * @param[out] B the matrix "B"
          */
         template <typename T>
-        void scaleMat(size_t m, size_t n, T c, const T *A, T *B) {
-            const T *ptr_A = A;
-            T *ptr_B = B;
+        void scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {
-                *ptr_B = c*(*ptr_A);
-                ++ptr_A; ++ptr_B;
-            }
+            for (size_t i=0; i<L; ++i) {B[i] = c*A[i];}
         }
 
         /**
@@ -366,14 +343,13 @@ namespace MathLib {
          * @param[out] B the output matrix "B"
          */
         template <typename Tc, typename TA, typename TB>
-        void scaleMatEachRow(size_t m, size_t n, const Tc *c, const TA *A, TB *B) {
-            const TA *ptr_A = A;
-            TB *ptr_B = B;
+        void scaleMatEachRow(const size_t m, const size_t n, const Tc *const c, const TA *const A, TB *const B) {
             for (size_t i=0; i<m; ++i) {
+                const TA *const ptr_A = &A[i*n];
+                TB *const ptr_B = &B[i*n];
                 const Tc ci = c[i];
                 for (size_t j=0; j<n; ++j) {
-                    *ptr_B = ci*(*ptr_A);
-                    ++ptr_A; ++ptr_B;
+                    ptr_B[j] = ci*ptr_A[j];
                 }
             }
         }
@@ -388,7 +364,7 @@ namespace MathLib {
          * @param[out] b the vector "b"
          */
         template <typename T>
-        void scaleVec(size_t m, T c, const T *a, T *b) {
+        void scaleVec(const size_t m, const T c, const T *const a, T *const b) {
             scaleMat(1, m, c, a, b);
         }
 
@@ -409,22 +385,14 @@ namespace MathLib {
         void vecSelfOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             #define MEM_OFFSET(row,col) ((row)*M+col)
-            /* Calculate diagonal part. */
-            {
-                auto inputPtr = x;
-                auto outputPtr = X;
-                for (int m=0; m<M; ++m) {
-                    *outputPtr = (*inputPtr)*(*inputPtr);
-                    ++inputPtr;
-                    outputPtr += M+1;
-                }
-            }
+            for (int m=0; m<M; ++m) {X[m*(M+1)] = Analysis::sqAbs(x[m]);} // Calculate diagonal part.
 
             /* Calculate lower part. */
             if (LUA == 'L' || LUA == 'A') {
                 for (int r=1; r<M; ++r) {
+                    T *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=0; c<r; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*x[c];
+                        X_ptr[c] = x[r]*x[c];
                     }
                 }
             }
@@ -432,14 +400,17 @@ namespace MathLib {
             /* Calculate upper part. */
             if (LUA == 'U') {
                 for (int r=0; r<M-1; ++r) {
+                    T *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*x[c];
+                        X_ptr[c] = x[r]*x[c];
                     }
                 }
             } else if (LUA == 'A') { // The lower part is already calculated.
                 for (int r=0; r<M-1; ++r) {
+                    T *const X_ptr = &X[MEM_OFFSET(r,0)];
+                    const T *const X_T_ptr = &X[MEM_OFFSET(0,r)];
                     for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = X[MEM_OFFSET(c,r)];
+                        X_ptr[c] = X_T_ptr[c*M];
                     }
                 }
             }
@@ -463,27 +434,18 @@ namespace MathLib {
         template <typename T>
         void vecSelfOuterProd(const int M, const std::complex<T> *const x, std::complex<T> *const X, std::complex<T> *const workspace, const char LUA='A') {
             #define MEM_OFFSET(row,col) ((row)*M+col)
-            /* Calculate diagonal part. */
-            {
-                auto inputPtr = x;
-                auto outputPtr = X;
-                for (int m=0; m<M; ++m) {
-                    *outputPtr = Analysis::sqAbs(*inputPtr++);
-                    outputPtr += M+1;
-                }
-            }
+            for (int m=0; m<M; ++m) {X[m*(M+1)] = Analysis::sqAbs(x[m]);} // Calculate diagonal part.
 
             /* Pre-calculate conj(x) */
             std::complex<T> *const conj_x = workspace;
-            for (int i=0; i<M; ++i) {
-                conj_x[i] = std::conj(x[i]);
-            }
+            for (int i=0; i<M; ++i) {conj_x[i] = std::conj(x[i]);}
 
             /* Calculate lower part. */
             if (LUA == 'L' || LUA == 'A') {
                 for (int r=1; r<M; ++r) {
+                    std::complex<T> *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=0; c<r; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*conj_x[c];
+                        X_ptr[c] = x[r]*conj_x[c];
                     }
                 }
             }
@@ -491,14 +453,17 @@ namespace MathLib {
             /* Calculate upper part. */
             if (LUA == 'U') {
                 for (int r=0; r<M-1; ++r) {
+                    std::complex<T> *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = x[r]*conj_x[c];
+                        X_ptr[c] = x[r]*conj_x[c];
                     }
                 }
             } else if (LUA == 'A') { // The lower part is already calculated.
                 for (int r=0; r<M-1; ++r) {
+                    std::complex<T> *const X_ptr = &X[MEM_OFFSET(r,0)];
+                    const std::complex<T> *const X_T_ptr = &X[MEM_OFFSET(0,r)];
                     for (int c=r+1; c<M; ++c) {
-                        X[MEM_OFFSET(r,c)] = Analysis::conj(X[MEM_OFFSET(c,r)]);
+                        X_ptr[c] = Analysis::conj(X_T_ptr[c*M]);
                     }
                 }
             }
@@ -517,25 +482,20 @@ namespace MathLib {
          * @param[out] C the matrix C
          */
         template <typename T>
-        void mulMat(size_t l, size_t m, size_t n, const T *A, const T *B, T *C) {
+        void mulMat(const size_t l, const size_t m, const size_t n, const T *const A, const T *const B, T *const C) {
             T *ptr_C = C;
             for (size_t r=0; r<l; ++r) {
                 for (size_t c=0; c<n; ++c) {
                     T sum = static_cast<T>(0);
-                    const T *ptr_A = A + r*m, *ptr_B = B + c;
-                    for (size_t i=0; i<m; ++i) {
-                        sum += (*ptr_A)*(*ptr_B);
-                        ++ptr_A;
-                        ptr_B += n;
-                    }
-                    *ptr_C = sum;
-                    ++ptr_C;
+                    const T *const ptr_A = A + r*m, *const ptr_B = B + c;
+                    for (size_t i=0; i<m; ++i) {sum += ptr_A[i]*ptr_B[i*n];}
+                    *ptr_C = sum; ++ptr_C;
                 }
             }
         }
 
         /**
-         * @brief Calculates Hermitian inner product of given 2 vectors "x", "y".
+         * @brief Calculates Hermitian inner product of given 2 complex vectors "x", "y".
          * Hermitian inner product of "x" and "y" is defined as "<x^*, y>"", where "^*" represents conjugate and "<,>" represents inner product.
          *
          * @tparam T value type of complex number
@@ -547,16 +507,9 @@ namespace MathLib {
          * @return the Hermitian inner product of 2 input vectors
          */
         template <typename T>
-        std::complex<T> hermitianInnerProduct(size_t N, const std::complex<T> *vec1, const std::complex<T> *vec2, size_t stride1, size_t stride2) {
+        std::complex<T> hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
             auto sum = std::complex<T>(0, 0);
-            const std::complex<T> *ptr1 = vec1, *ptr2 = vec2;
-
-            for (size_t n=0; n<N; ++n) {
-                sum += std::conj((*ptr1))*(*ptr2);
-                ptr1 += stride1;
-                ptr2 += stride2;
-            }
-
+            for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {sum += std::conj(vec1[n1])*vec2[n2];}
             return sum;
         }
 
@@ -572,7 +525,7 @@ namespace MathLib {
          * @return the Hermitian inner product of 2 input vectors
          */
         template <typename T>
-        std::complex<T> hermitianInnerProduct(size_t N, const std::complex<T> *vec1, const std::complex<T> *vec2, size_t stride=1) {
+        std::complex<T> hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride=1) {
             return hermitianInnerProduct(N, vec1, vec2, stride, stride);
         }
 
@@ -586,7 +539,7 @@ namespace MathLib {
          * @return the L-2 norm of input vector
          */
         template <typename T>
-        T l2Norm(size_t N, const std::complex<T> *vec, size_t stride=1) {
+        T l2Norm(const size_t N, const std::complex<T> *const vec, const size_t stride=1) {
             return std::sqrt(hermitianInnerProduct(N, vec, vec, stride).real());
         }
 
@@ -614,8 +567,8 @@ namespace MathLib {
             for (int i=0; i<m; ++i) {
                 T di = A_diag_ptr->real(); A_diag_ptr += m+1; // d[i] <- Re(A[i,i])
                 {
-                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(*(L_row_ptr++));} // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                    std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(L_row_ptr[j]);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -625,21 +578,18 @@ namespace MathLib {
                 L[MEM_OFFSET(i,i)] = ONE;
 
                 /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
-                std::complex<T> *dL_ptr = workspace;
+                std::complex<T> *const dL_ptr = workspace;
                 {
-                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {*dL_ptr++ = d[j]*std::conj(*L_row_ptr++);}
+                    std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {dL_ptr[j] = d[j]*std::conj(L_row_ptr[j]);}
                 }
 
                 const std::complex<T> *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
                 std::complex<T> *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
                 for (int k=i+1; k<m; ++k) {
                     std::complex<T> L_ki = *A_col_ptr; A_col_ptr += m; // L[k,i] <- A[k,i]
-                    dL_ptr = workspace;
-                    std::complex<T> *L_row_ptr = &L[MEM_OFFSET(k,0)];
-                    for (int j=0; j<i; ++j) {
-                        L_ki -= (*L_row_ptr++)*(*dL_ptr++); // L[k,i] <- L[k,i] - L[k,j]d[j]*conj(L[i,j])
-                    }
+                    std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(k,0)];
+                    for (int j=0; j<i; ++j) {L_ki -= L_row_ptr[j]*dL_ptr[j];} // L[k,i] <- L[k,i] - L[k,j]d[j]*conj(L[i,j])
                     *L_col_ptr = inv_di*L_ki; L_col_ptr += m; // L[k,i] <- L[k,i]/d[i]
                 }
             }
@@ -670,8 +620,8 @@ namespace MathLib {
             for (int i=0; i<m; ++i) {
                 T di = *A_diag_ptr; A_diag_ptr += m+1; // d[i] <- A[i,i]
                 {
-                    T *L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(*L_row_ptr++);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                    T *const L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {di -= d[j]*MathLib::Analysis::sqAbs(L_row_ptr[j]);} // d[i] <- d[i] - d[j]*|L[i,j]|^2
                 }
                 d[i] = di;
                 if (std::abs(di) < epsilon) {
@@ -681,21 +631,18 @@ namespace MathLib {
                 L[MEM_OFFSET(i,i)] = 1;
 
                 /* Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)" */
-                T *dL_ptr = workspace;
+                T *const dL_ptr = workspace;
                 {
-                    T *L_row_ptr = &L[MEM_OFFSET(i,0)];
-                    for (int j=0; j<i; ++j) {*dL_ptr++ = d[j]*(*L_row_ptr++);}
+                    T *const L_row_ptr = &L[MEM_OFFSET(i,0)];
+                    for (int j=0; j<i; ++j) {dL_ptr[j] = d[j]*L_row_ptr[j];}
                 }
 
                 const T *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
                 T *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
                 for (int k=i+1; k<m; ++k) {
                     T L_ki = *A_col_ptr; A_col_ptr += m; // L[k,i] <- A[k,i]
-                    dL_ptr = workspace;
-                    T *L_row_ptr = &L[MEM_OFFSET(k,0)];
-                    for (int j=0; j<i; ++j) {
-                        L_ki -= (*L_row_ptr++)*(*dL_ptr++); // L[k,i] <- L[k,i] - L[k,j]d[j]*L[i,j]
-                    }
+                    T *const L_row_ptr = &L[MEM_OFFSET(k,0)];
+                    for (int j=0; j<i; ++j) {L_ki -= L_row_ptr[j]*dL_ptr[j];} // L[k,i] <- L[k,i] - L[k,j]d[j]*L[i,j]
                     *L_col_ptr = inv_di*L_ki; L_col_ptr += m; // L[k,i] <- L[k,i]/d[i]
                 }
             }
@@ -716,9 +663,8 @@ namespace MathLib {
          * @param[out] workspace The pointer to a continuous memory space whose size is "m*(m+1)*sizeof(T) + m*sizeof(size_t)" bytes. This space is used for the extended-matrix "[A, b]" and the row exchanging table.
          */
         template <typename T>
-        void solveLinearEquation(size_t m, const T *A, const T *b, T *x, char *workspace) {
+        void solveLinearEquation(const size_t m, const T *const A, const T *const b, T *const x, char *workspace) {
             #define MEM_OFFSET_E(row, col) ((row)*(m+1)+col)
-
             constexpr T ZERO = 0.0;
             constexpr T ONE = 1.0;
 
@@ -752,20 +698,15 @@ namespace MathLib {
                             maxAbsVal = currentAbsVal;
                         }
                     }
-
                     std::swap(rowExchgTable[r], rowExchgTable[r2]);
                 }
 
                 /* Normalizes current row. */
                 {
-                    T *ptr_E = E + MEM_OFFSET_E(rowExchgTable[r], r);
-                    const T E_rr = *ptr_E;
-                    *ptr_E = ONE;
-                    ++ptr_E;
-                    for (size_t c=r+1; c<m+1; ++c) {
-                        *ptr_E /= E_rr;
-                        ++ptr_E;
-                    }
+                    T *const ptr_E = E + MEM_OFFSET_E(rowExchgTable[r], 0);
+                    const T inv_E_rr = ONE/ptr_E[r];
+                    ptr_E[r] = ONE;
+                    for (size_t c=r+1; c<m+1; ++c) {ptr_E[c] *= inv_E_rr;}
                 }
 
                 /* Reduces the rows over/under current row. */
@@ -774,26 +715,18 @@ namespace MathLib {
                         if (r2 == r) {
                             continue;
                         }
-                        T *ptr2_E = E + MEM_OFFSET_E(rowExchgTable[r2], r);
-                        const T E_r2r = *ptr2_E;
-                        *ptr2_E = ZERO;
-                        ++ptr2_E;
-                        const T *ptr1_E = E + MEM_OFFSET_E(rowExchgTable[r], r+1);
-                        for (size_t c=r+1; c<m+1; ++c, ++ptr2_E, ++ptr1_E) {
-                            *ptr2_E -= E_r2r*(*ptr1_E);
+                        T *const ptr2_E = E + MEM_OFFSET_E(rowExchgTable[r2], 0);
+                        const T minus_E_r2r = -ptr2_E[r];
+                        ptr2_E[r] = ZERO;
+                        const T *const ptr1_E = E + MEM_OFFSET_E(rowExchgTable[r], 0);
+                        for (size_t c=r+1; c<m+1; ++c) {
+                            ptr2_E[c] += minus_E_r2r*ptr1_E[c];
                         }
                     }
                 }
             }
 
-            /* Stores the result. */
-            {
-                T *ptr_x = x;
-                for (size_t r=0; r<m; ++r, ++ptr_x) {
-                    *ptr_x = E[MEM_OFFSET_E(rowExchgTable[r], m)];
-                }
-            }
-
+            for (size_t r=0; r<m; ++r) {x[r] = E[MEM_OFFSET_E(rowExchgTable[r], m)];} // Stores the result.
             #undef MEM_OFFSET_E
         }
 
@@ -813,7 +746,7 @@ namespace MathLib {
          * @retval true The calculation is successfully done.
          */
         template <typename T>
-        bool solveLinEqHermitian(int m, const T *const A, const T *const b, T *const x, char *workspace) {
+        bool solveLinEqHermitian(const int m, const T *const A, const T *const b, T *const x, char *workspace) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             if (m <= 0) {
                 return true;
@@ -821,20 +754,19 @@ namespace MathLib {
 
             /* LDL decomposition */
             typedef decltype(std::real(*A)) T_real; // floating-point type "A" is ok
-            T_real *d = reinterpret_cast<T_real *>(workspace); workspace += m*sizeof(T_real);
-            T *L = reinterpret_cast<T *>(workspace); workspace += m*m*sizeof(T);
+            T_real *const d = reinterpret_cast<T_real *>(workspace); workspace += m*sizeof(T_real);
+            T *const L = reinterpret_cast<T *>(workspace); workspace += m*m*sizeof(T);
             const bool noZeroDiv = ldlDecomp(m, A, d, L, reinterpret_cast<T *>(workspace));
             if (!noZeroDiv) {
                 return false;
             }
 
             /* forward substitution (Ly == b) */
-            T *y = x; // Use "x" as a temporary buffer.
+            T *const y = x; // Use "x" as a temporary buffer.
             for (int i=0; i<m; ++i) {
                 T yi = b[i];
-                for (int j=0; j<i; ++j) {
-                    yi -= L[MEM_OFFSET(i,j)]*y[j];
-                }
+                T *const L_ptr = &L[MEM_OFFSET(i,0)];
+                for (int j=0; j<i; ++j) {yi -= L_ptr[j]*y[j];}
                 y[i] = yi;
             }
 

@@ -68,6 +68,22 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(3, 2, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, conjugateMat_inplace) {
+        std::complex<double> A[2][3] = {
+            {{1, 0.6}, {2, 0.5}, {3, 0.4}},
+            {{4, -0.3}, {5, -0.2}, {6, -0.1}},
+        };
+
+        const std::complex<double> conj_A_ans[2][3] = {
+            {{1, -0.6}, {2, -0.5}, {3, -0.4}},
+            {{4, 0.3}, {5, 0.2}, {6, 0.1}},
+        };
+
+        MathLib::LinAlg::conjugateMat(2, 3, &A[0][0]);
+
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(2, 3, &A[0][0], &conj_A_ans[0][0], 1.0e-7l));
+    }
+
     TEST_F(LinAlgLibTest, conjugateMat) {
         const std::complex<double> A[2][3] = {
             {{1, 0.6}, {2, 0.5}, {3, 0.4}},
@@ -84,6 +100,13 @@ namespace {
         MathLib::LinAlg::conjugateMat(2, 3, &A[0][0], &B[0][0]);
 
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(2, 3, &B[0][0], &B_ans[0][0], 1.0e-7l));
+    }
+
+    TEST_F(LinAlgLibTest, conjugateVec_inplace) {
+        std::complex<double> x[3] = {{1, 0.6}, {2, 0.5}, {3, 0.4}};
+        const std::complex<double> conj_x_ans[3] = {{1, -0.6}, {2, -0.5}, {3, -0.4}};
+        MathLib::LinAlg::conjugateVec(3, &x[0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &x[0], &conj_x_ans[0], 1.0e-7l));
     }
 
     TEST_F(LinAlgLibTest, conjugateVec) {

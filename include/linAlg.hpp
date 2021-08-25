@@ -256,7 +256,21 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculates conjugate of a matrix "A" as "B".
+         * @brief Calculate the conjugate of a matrix "A", and store the result to "A".
+         *
+         * @tparam T the number type of real and imaginary part of the elements of the matrix "A"
+         * @param[in] m the number of the rows in the matrix "A"
+         * @param[in] n the number of the columns in the matrix "A"
+         * @param[inout] A the matrix "A"
+         */
+        template <typename T>
+        void conjugateMat(const size_t m, const size_t n, std::complex<T> *A) {
+            const size_t L = m*n;
+            for (size_t i=0; i<L; ++i) {A[i] = std::conj(A[i]);}
+        }
+
+        /**
+         * @brief Calculate the conjugate of a matrix "A" as "B".
          *
          * @tparam T the number type of real and imaginary part of the elements of the matrices "A" and "B"'.
          * @param[in] m the number of the rows in the matrices "A" and "B"
@@ -267,13 +281,23 @@ namespace MathLib {
         template <typename T>
         void conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {
-                B[i] = std::conj(A[i]);
-            }
+            for (size_t i=0; i<L; ++i) {B[i] = std::conj(A[i]);}
         }
 
         /**
-         * @brief Calculates conjugate of a vector "x" as "y".
+         * @brief Calculate the conjugate of a vector "x", and store the result to "x".
+         *
+         * @tparam T the number type of real and imaginary part of the elements of the vector "x"
+         * @param[in] m the length of the vector "x"
+         * @param[inout] x the vector "x"
+         */
+        template <typename T>
+        void conjugateVec(const size_t m, std::complex<T> *x) {
+            conjugateMat(m, 1, x);
+        }
+
+        /**
+         * @brief Calculate the conjugate of a vector "x" as "y".
          *
          * @tparam T the number type of real and imaginary part of the elements of the vectors "x" and "y".
          * @param[in] m the length of the vector "x"

@@ -296,6 +296,15 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(2, 2, &C[0][0], &C_ans[0][0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, innerProd) {
+        const size_t m = 5;
+        const std::complex<float> x[m]= {{0.293476, -0.211899}, {0.0108039, -0.478889}, {0.350097, -0.40511}, {0.0391371, 0.156917}, {-0.494805, 0.383847}};
+        const std::complex<float> y[m]= {{-0.00120354, -0.407946}, {-0.113012, 0.285927}, {0.35409, -0.182355}, {-0.332509, -0.0444678}, {0.035946, 0.0887727}};
+        const std::complex<float> ip_ans = std::complex<float>(0.04110481688090317, -0.35358968160291226);
+        const std::complex<float> ip = MathLib::LinAlg::innerProd(m, x, y);
+        EXPECT_EQ(true, std::abs(ip-ip_ans) < 1.0e-6f);
+    }
+
     TEST_F(LinAlgLibTest, hermitianInnerProduct_2_other_strides) {
         const std::complex<double> a[6] = {1, -1, 2, -1.5, 3, -2};
         const std::complex<double> b[3] = {11, -10.5, 9};

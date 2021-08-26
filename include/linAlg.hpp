@@ -310,7 +310,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculates the sum of given two matrices "A" and "B". The result is stored in "A".
+         * @brief Calculate the sum of given two matrices "A" and "B". The result is stored in "A".
          *
          * @tparam T the number type of the elements of the matrices "A" and "B"
          * @param[in] m the number of the rows in the matrices "A" and "B"
@@ -319,13 +319,13 @@ namespace MathLib {
          * @param[in] B the matrix "B"
          */
         template <typename T>
-        void addMat_inplace(const size_t m, const size_t n, T *const A, const T *const B) {
+        void addMat(const size_t m, const size_t n, T *const A, const T *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {A[i] += B[i];}
         }
 
         /**
-         * @brief Calculates the sum of given two vector "x" and "y". The result is stored in "x".
+         * @brief Calculate the sum of given two vector "x" and "y". The result is stored in "x".
          *
          * @tparam T the number type of the elements of the vectors "x" and "y"
          * @param[in] m the length of the vector "x" and "y"
@@ -333,8 +333,8 @@ namespace MathLib {
          * @param[in] y the vector "y"
          */
         template <typename T>
-        void addVec_inplace(const size_t m, T *const x, const T *const y) {
-            addMat_inplace(m, 1, x, y);
+        void addVec(const size_t m, T *const x, const T *const y) {
+            addMat(m, 1, x, y);
         }
 
         /**

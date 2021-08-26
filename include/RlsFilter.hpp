@@ -164,9 +164,9 @@ namespace MathLib {
                     std::reverse_copy(&vec_x[n*r_T - (Ld-1)], &vec_x[n*r_T+1], m_x);
                     conjugateVec(m_p+1, m_x, m_x_conj);
                     mulMat(m_p+1, 1, m_p+1, m_x_conj, m_x, m_delta_R_x);
-                    addMat_inplace(m_p+1, m_p+1, m_R_x, m_delta_R_x);
+                    addMat(m_p+1, m_p+1, m_R_x, m_delta_R_x);
                     scaleVec(m_p+1, vec_d[n], m_x_conj, m_delta_r_d);
-                    addVec_inplace(m_p+1, m_r_d, m_delta_r_d);
+                    addVec(m_p+1, m_r_d, m_delta_r_d);
 
                     #if IS_DEBUGGING == true
                         printf("n == %d:\n", n);

@@ -165,7 +165,7 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m2, n2, &B[0][0], &B_true[0][0], 0));
     }
 
-    TEST_F(LinAlgLibTest, addMat_inplace) {
+    TEST_F(LinAlgLibTest, addMat) {
         std::complex<double> A[2][3] = {
             {1,2,3},
             {4,5,6},
@@ -181,16 +181,16 @@ namespace {
             {3.6, 4.5, 5.4},
         };
 
-        MathLib::LinAlg::addMat_inplace(2, 3, &A[0][0], &B[0][0]);
+        MathLib::LinAlg::addMat(2, 3, &A[0][0], &B[0][0]);
 
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(3, 2, &A[0][0], &A_ans[0][0], 1.0e-7l));
     }
 
-    TEST_F(LinAlgLibTest, addVec_inplace) {
+    TEST_F(LinAlgLibTest, addVec) {
         std::complex<double> x[3] = {1,2,3};
         const std::complex<double> y[3] = {0.1, 0.2, 0.3};
         const std::complex<double> y_ans[3] = {1.1, 2.2, 3.3};
-        MathLib::LinAlg::addVec_inplace(3, &x[0], &y[0]);
+        MathLib::LinAlg::addVec(3, &x[0], &y[0]);
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &x[0], &y_ans[0], 1.0e-7l));
     }
 

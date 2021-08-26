@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Speeded up `ldlDecomp` function, and consequently `solveLinEqHermitian` function is speeded up.
 - Add in-place version of `conjugateMat`.
 - Add `innerProd` function
+- Rename `addMat_inplace`, `addVec_inplace` to `addMat`, `addVec`
 
 ## [0.3.0] - 2021/8/10
 

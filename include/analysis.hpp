@@ -55,6 +55,74 @@ namespace MathLib {
         }
 
         /**
+         * @brief Add the product of two complex numbers "x1" and "x2" to "y".
+         * This function is expected to work about 20% faster than normal operation such as "y += x1*x2".@n
+         * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n
+         * N_sim = 1e8@n
+         * dt_normal_mul: 411 ms@n
+         * dt_specialMethod: 330 ms
+         *
+         * @tparam T the number type of real and complex parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y) {
+            const T *const x1_vec = reinterpret_cast<const T *>(&x1);
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            T *const y_vec = reinterpret_cast<T *>(&y);
+            y_vec[0] += x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1]; // real part
+            y_vec[1] += x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]; // imaginary part
+        }
+
+        /**
+         * @brief Add the product of two non-complex numbers "x1" and "x2" to "y".
+         * Calling this function is completely equivalent to just writing "y += x1*x2".
+         *
+         * @tparam T the number type
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) addProd(const T &x1, const T &x2, T &y) {
+            y += x1*x2;
+        }
+
+        /**
+         * @brief Subtract the product of two complex numbers "x1" and "x2" from "y"
+         * This function is expected to work about 20% faster than normal operation such as "y -= x1*x2" (see also: addProd).
+         *
+         * @tparam T the number type of real and complex parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) subtractProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y) {
+            const T *const x1_vec = reinterpret_cast<const T *>(&x1);
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            T *const y_vec = reinterpret_cast<T *>(&y);
+            y_vec[0] -= x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1]; // real part
+            y_vec[1] -= x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]; // imaginary part
+        }
+
+        /**
+         * @brief Subtract the product of two non-complex numbers "x1" and "x2" from "y".
+         * Calling this function is completely equivalent to just writing "y -= x1*x2".
+         *
+         * @tparam T the number type
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) subtractProd(const T &x1, const T &x2, T &y) {
+            y -= x1*x2;
+        }
+
+        /**
          * @brief Calculates sin(x) using 9 degree-polynomial approximation.
          * "x" must be a floating point real number.
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - sin(x))^2 \mathrm{d}x.

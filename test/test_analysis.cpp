@@ -5,6 +5,34 @@
 namespace {
     class AnalysisLibTest : public ::testing::Test{};
 
+    TEST_F(AnalysisLibTest, addComplexProd) {
+        /* test case produced using Julia */
+        constexpr int m=5;
+        const std::complex<float> vec_x[m] = {{0.734619, 0.686623}, {0.683544, 0.388953}, {0.101859, 0.298419}, {0.288473, 0.0104381}, {0.952811, 0.546041}};
+        const std::complex<float> sum_ans = {0.48406428, 1.2532825};
+
+        std::complex<float> sum = 0;
+        for (int i=0; i<m-1; ++i) {
+            MathLib::Analysis::addComplexProd(vec_x[i], vec_x[i+1], sum);
+        }
+
+        EXPECT_EQ(true, std::abs(sum - sum_ans) < 1e-6);
+    }
+
+    TEST_F(AnalysisLibTest, subtractComplexProd) {
+        /* test case produced using Julia */
+        constexpr int m=5;
+        const std::complex<float> vec_x[m] = {{0.259803, 0.960717}, {0.203663, 0.538169}, {0.358519, 0.981518}, {0.951527, 0.551323}, {0.0274041, 0.460809}};
+        const std::complex<float> minus_sum_ans = {1.3472931, -2.3135047};
+
+        std::complex<float> minus_sum = 0;
+        for (int i=0; i<m-1; ++i) {
+            MathLib::Analysis::subtractComplexProd(vec_x[i], vec_x[i+1], minus_sum);
+        }
+
+        EXPECT_EQ(true, std::abs(minus_sum - minus_sum_ans) < 1e-6);
+    }
+
     TEST_F(AnalysisLibTest, sin_polyApprox) {
         constexpr size_t N = 20;
         const double vec_x[N] = {-5.422284533254419, -8.368253325506895, 7.230370357282717, 8.540266743128377, 8.796032571059138, -9.0058423693436, -4.1458323100147165, 6.6625543111462315, 4.714898106104982, -6.991907637267804, -4.039460886872965, -8.222201344331197, -6.5703506066193365, 1.5968050614449092, -2.7632828820450843, 6.233630363227799, -1.805797535337036, 4.069744312298307, -8.991169132560007, -9.276178027269587};

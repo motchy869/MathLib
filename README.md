@@ -42,7 +42,14 @@ You can clean output files by running `doClean.sh` / `doClean.bat`.
 
 * It is assumed that the entries of any matrix are aligned on memory in row-oriented order (so called C-style array).
 
-## 5. Bug Hunting Mode
+## 5. Performance option
+
+`include/common.hpp` has a macro constant `MATH_LIB_INLINE_AGGRESSIVELY`, which is defined as `true` in default.
+When this macro is defined as `true`, some relatively-small functions are FORCIBLY in-line expanded.
+You can find which functions are expanded by searching `#if MATH_LIB_INLINE_AGGRESSIVELY` in MathLib `include` directory.
+You may have to switch this macro to `false` when you have to keep the program size small due to lack of memory space.
+
+## 6. Bug Hunting Mode
 
 `include/common.hpp` has a macro constant `MATH_LIB_ENABLE_BUG_HUNTING_MODE`, which is defined as `false` in default.
 When this macro is defined as `true`, the functions in MathLib performs costly parameter validations such as range check, and when encounter invalid parameters, the functions print error message to `std::cerr` and exit with `EXIT_FAILURE`.

@@ -310,6 +310,7 @@ namespace {
         const std::complex<double> b[3] = {11, -10.5, 9};
         const std::complex<double> c = MathLib::LinAlg::hermitianInnerProduct(3, &a[0], &b[0], 2, 1);
         const std::complex<double> c_ans = 17;
+        std::cout << "c" << c << std::endl;
         EXPECT_EQ(true, std::abs(c_ans-c) < 1.0e-7l);
     }
 

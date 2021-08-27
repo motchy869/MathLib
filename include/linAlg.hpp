@@ -548,9 +548,16 @@ namespace MathLib {
          * @return the Hermitian inner product of 2 input vectors
          */
         template <typename T>
-        std::complex<T> hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
-            auto sum = std::complex<T>(0, 0);
-            for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {sum += std::conj(vec1[n1])*vec2[n2];}
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static std::complex<T> __attribute__((always_inline))
+        #else
+        std::complex<T>
+        #endif
+        hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
+            std::complex<T> sum(0, 0);
+            for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {
+                Analysis::addProd(std::conj(vec1[n1]), vec2[n2], sum); // faster than "sum += std::conj(vec1[n1])*vec2[n2]"
+            }
             return sum;
         }
 
@@ -566,7 +573,12 @@ namespace MathLib {
          * @return the Hermitian inner product of 2 input vectors
          */
         template <typename T>
-        std::complex<T> hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride=1) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static std::complex<T> __attribute__((always_inline))
+        #else
+        std::complex<T>
+        #endif
+        hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride=1) {
             return hermitianInnerProduct(N, vec1, vec2, stride, stride);
         }
 
@@ -628,7 +640,9 @@ namespace MathLib {
                 for (int k=i+1; k<m; ++k) {
                     std::complex<T> L_ki = *A_col_ptr; A_col_ptr += m; // L[k,i] <- A[k,i]
                     std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(k,0)];
-                    for (int j=0; j<i; ++j) {L_ki -= L_row_ptr[j]*dL_ptr[j];} // L[k,i] <- L[k,i] - L[k,j]d[j]*conj(L[i,j])
+                    for (int j=0; j<i; ++j) { // L[k,i] <- L[k,i] - L[k,j]d[j]*conj(L[i,j])
+                        Analysis::subtractProd(L_row_ptr[j], dL_ptr[j], L_ki); // faster than "L_ki -= L_row_ptr[j]*dL_ptr[j]"
+                    }
                     *L_col_ptr = inv_di*L_ki; L_col_ptr += m; // L[k,i] <- L[k,i]/d[i]
                 }
             }
@@ -803,7 +817,9 @@ namespace MathLib {
             for (int i=0; i<m; ++i) {
                 T yi = b[i];
                 T *const L_ptr = &L[MEM_OFFSET(i,0)];
-                for (int j=0; j<i; ++j) {yi -= L_ptr[j]*y[j];}
+                for (int j=0; j<i; ++j) {
+                    Analysis::subtractProd(L_ptr[j], y[j], yi); // higher performance than "yi -= L_ptr[j]*y[j]" for complex numbers
+                }
                 y[i] = yi;
             }
 
@@ -811,7 +827,7 @@ namespace MathLib {
             for (int i=m-1; i>=0; --i) {
                 T xi = y[i]/d[i];
                 for (int j=i+1; j<m; ++j) {
-                    xi -= MathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];
+                    Analysis::subtractProd(Analysis::conj(L[MEM_OFFSET(j,i)]), x[j], xi); // higher performance than "xi -= MathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];" for complex numbers
                 }
                 x[i] = xi;
             }

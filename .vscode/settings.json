@@ -69,6 +69,7 @@
         "bit": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "cassert": "cpp"
     }
 }

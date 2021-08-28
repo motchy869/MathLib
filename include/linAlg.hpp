@@ -624,7 +624,7 @@ namespace MathLib {
                     std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
                     for (int j=0; j<i; ++j) {
                         const std::complex<T> &L_ij = L_row_ptr[j];
-                        di -= d[j]*MathLib::Analysis::sqAbs(L_ij); // d[i] <- d[i] - d[j]*|L[i,j]|^2
+                        Analysis::subtractProd(d[j], Analysis::sqAbs(L_ij), di); // d[i] <- d[i] - d[j]*|L[i,j]|^2
                         dL_ptr[j] = d[j]*std::conj(L_ij); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
                     }
                 }

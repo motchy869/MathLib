@@ -5,7 +5,7 @@
 namespace {
     class AnalysisLibTest : public ::testing::Test{};
 
-    TEST_F(AnalysisLibTest, addComplexProd) {
+    TEST_F(AnalysisLibTest, addProd) {
         /* test case produced using Julia */
         constexpr int m=5;
         const std::complex<float> vec_x[m] = {{0.734619, 0.686623}, {0.683544, 0.388953}, {0.101859, 0.298419}, {0.288473, 0.0104381}, {0.952811, 0.546041}};
@@ -13,23 +13,33 @@ namespace {
 
         std::complex<float> sum = 0;
         for (int i=0; i<m-1; ++i) {
-            MathLib::Analysis::addComplexProd(vec_x[i], vec_x[i+1], sum);
+            MathLib::Analysis::addProd(vec_x[i], vec_x[i+1], sum);
         }
 
         EXPECT_EQ(true, std::abs(sum - sum_ans) < 1e-6);
     }
 
-    TEST_F(AnalysisLibTest, subtractComplexProd) {
+    TEST_F(AnalysisLibTest, subtractProd_complex_complex) {
         /* test case produced using Julia */
         constexpr int m=5;
         const std::complex<float> vec_x[m] = {{0.259803, 0.960717}, {0.203663, 0.538169}, {0.358519, 0.981518}, {0.951527, 0.551323}, {0.0274041, 0.460809}};
         const std::complex<float> minus_sum_ans = {1.3472931, -2.3135047};
-
         std::complex<float> minus_sum = 0;
         for (int i=0; i<m-1; ++i) {
-            MathLib::Analysis::subtractComplexProd(vec_x[i], vec_x[i+1], minus_sum);
+            MathLib::Analysis::subtractProd(vec_x[i], vec_x[i+1], minus_sum);
         }
+        EXPECT_EQ(true, std::abs(minus_sum - minus_sum_ans) < 1e-6);
+    }
 
+    TEST_F(AnalysisLibTest, subtractProd_float_complex) {
+        constexpr int m=5;
+        const float vec_x1[m] = {0.309286, 0.660707, 0.620851, 0.448405, 0.886714};
+        const std::complex<float> vec_x2[m] = {{0.259803, 0.960717}, {0.203663, 0.538169}, {0.358519, 0.981518}, {0.951527, 0.551323}, {0.0274041, 0.460809}};
+        const std::complex<float> minus_sum_ans = {-0.8884709436304, -1.9179065568040001};
+        std::complex<float> minus_sum = 0;
+        for (int i=0; i<m; ++i) {
+            MathLib::Analysis::subtractProd(vec_x1[i], vec_x2[i], minus_sum);
+        }
         EXPECT_EQ(true, std::abs(minus_sum - minus_sum_ans) < 1e-6);
     }
 

@@ -39,7 +39,7 @@ namespace MathLib {
          * @param[in] x "x"
          */
         template <typename T>
-        T sqAbs(std::complex<T> x) {
+        inline static T __attribute__((always_inline)) sqAbs(std::complex<T> x) {
             return (std::conj(x)*x).real();
         }
 
@@ -50,7 +50,7 @@ namespace MathLib {
          * @param[in] x "x"
          */
         template <typename T>
-        T sqAbs(T x) {
+        inline static T __attribute__((always_inline)) sqAbs(T x) {
             return x*x;
         }
 
@@ -106,6 +106,22 @@ namespace MathLib {
             T *const y_vec = reinterpret_cast<T *>(&y);
             y_vec[0] -= x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1]; // real part
             y_vec[1] -= x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]; // imaginary part
+        }
+
+        /**
+         * @brief Subtract the product of a floating point number "x1" and a complex number "x2" from "y"
+         *
+         * @tparam T the number type of "x1" and real and complex parts of "x2"
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) subtractProd(const T &x1, const std::complex<T> &x2, std::complex<T> &y) {
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            T *const y_vec = reinterpret_cast<T *>(&y);
+            y_vec[0] -=  x1*x2_vec[0];
+            y_vec[1] -=  x1*x2_vec[1];
         }
 
         /**

@@ -469,7 +469,7 @@ namespace MathLib {
                 for (int r=1; r<M; ++r) {
                     std::complex<T> *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=0; c<r; ++c) {
-                        X_ptr[c] = x[r]*conj_x[c];
+                        X_ptr[c] = Analysis::prod(x[r], conj_x[c]);
                     }
                 }
             }
@@ -479,7 +479,7 @@ namespace MathLib {
                 for (int r=0; r<M-1; ++r) {
                     std::complex<T> *const X_ptr = &X[MEM_OFFSET(r,0)];
                     for (int c=r+1; c<M; ++c) {
-                        X_ptr[c] = x[r]*conj_x[c];
+                        X_ptr[c] = Analysis::prod(x[r], conj_x[c]);
                     }
                 }
             } else if (LUA == 'A') { // The lower part is already calculated.

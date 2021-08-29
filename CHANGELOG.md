@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Speeded up `sqAbs`, `innerProd`, `vecSelfOuterProd`, `ldlDecomp` (for complex number matrix), `solveLinEqHermitian` and `hermitianInnerProduct` function.
+- Speeded up following functions:
+  - `Analysis::`
+    - `sqAbs`
+  - `LinAlg::`
+    - `innerProd`, `vecSelfOuterProd`, `mulMat`, `ldlDecomp`, `solveLinEqHermitian`, `hermitianInnerProduct`
 - Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
 
 ## [0.4.0] - 2021/8/27

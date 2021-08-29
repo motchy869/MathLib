@@ -507,12 +507,13 @@ namespace MathLib {
          */
         template <typename T>
         void mulMat(const size_t l, const size_t m, const size_t n, const T *const A, const T *const B, T *const C) {
+            constexpr T ZERO = static_cast<T>(0);
             T *ptr_C = C;
             for (size_t r=0; r<l; ++r) {
                 for (size_t c=0; c<n; ++c) {
-                    T sum = static_cast<T>(0);
+                    T sum(ZERO);
                     const T *const ptr_A = A + r*m, *const ptr_B = B + c;
-                    for (size_t i=0; i<m; ++i) {sum += ptr_A[i]*ptr_B[i*n];}
+                    for (size_t i=0; i<m; ++i) {Analysis::addProd(ptr_A[i], ptr_B[i*n], sum);}
                     *ptr_C = sum; ++ptr_C;
                 }
             }

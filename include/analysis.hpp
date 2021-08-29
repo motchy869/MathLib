@@ -40,7 +40,7 @@ namespace MathLib {
          */
         template <typename T>
         inline static T __attribute__((always_inline)) sqAbs(std::complex<T> x) {
-            return (std::conj(x)*x).real();
+            return x.real()*x.real() + x.imag()*x.imag();
         }
 
         /**
@@ -51,6 +51,7 @@ namespace MathLib {
          */
         template <typename T>
         inline static T __attribute__((always_inline)) sqAbs(T x) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             return x*x;
         }
 

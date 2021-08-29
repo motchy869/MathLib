@@ -56,7 +56,25 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculate the product of 2 complex numbers "x1" and "x2"
+         * @brief Calculate the product of 2 complex numbers "x1" and "x2".
+         * This function is expected to work about 7 times faster than normal operation such as "y = x1*x2".@n
+         * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n
+         * N = 1e8@n
+         * normal: 350 ms@n
+         * this method: 51 ms
+         *
+         * @tparam T the number type of real and complex parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         */
+        template <typename T>
+        inline static std::complex<T> __attribute__((always_inline)) prod(const T &x1, const std::complex<T> &x2) {
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            return std::move(std::complex<T>(x1*x2_vec[0], x1*x2_vec[1]));
+        }
+
+        /**
+         * @brief Calculate the product of a floating point number "x1" and a complex number "x2".
          * This function is expected to work about 7 times faster than normal operation such as "y = x1*x2".@n
          * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n
          * N = 1e8@n

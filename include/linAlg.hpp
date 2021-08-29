@@ -630,7 +630,7 @@ namespace MathLib {
                     for (int j=0; j<i; ++j) {
                         const std::complex<T> &L_ij = L_row_ptr[j];
                         Analysis::subtractProd(d[j], Analysis::sqAbs(L_ij), di); // d[i] <- d[i] - d[j]*|L[i,j]|^2
-                        dL_ptr[j] = d[j]*std::conj(L_ij); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
+                        dL_ptr[j] = Analysis::prod(d[j], std::conj(L_ij)); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
                     }
                 }
                 d[i] = di;

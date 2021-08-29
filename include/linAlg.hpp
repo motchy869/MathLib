@@ -528,10 +528,15 @@ namespace MathLib {
          * @return the inner product of "x" and "y"
          */
         template <typename T>
-        T innerProd(const size_t N, const T *x, const T*y) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static T __attribute__((always_inline))
+        #else
+        T
+        #endif
+        innerProd(const size_t N, const T * const x, const T *const y) {
             constexpr T ZERO = static_cast<T>(0);
-            T sum = ZERO;
-            for (size_t n=0; n<N; ++n) {sum += x[n]*y[n];}
+            T sum(ZERO);
+            for (size_t n=0; n<N; ++n) {Analysis::addProd(x[n], y[n], sum);}
             return sum;
         }
 

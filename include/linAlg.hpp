@@ -777,7 +777,7 @@ namespace MathLib {
                         ptr2_E[r] = ZERO;
                         const T *const ptr1_E = E + MEM_OFFSET_E(rowExchgTable[r], 0);
                         for (size_t c=r+1; c<m+1; ++c) {
-                            ptr2_E[c] += minus_E_r2r*ptr1_E[c];
+                            Analysis::addProd(minus_E_r2r, ptr1_E[c], ptr2_E[c]);
                         }
                     }
                 }

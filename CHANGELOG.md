@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `sqAbs`
   - `LinAlg::`
     - `innerProd`, `vecSelfOuterProd`, `mulMat`, `ldlDecomp`, `solveLinearEquation`, `solveLinEqHermitian`, `hermitianInnerProduct`
+  - `SigProc::`
+    - `convolve`, `convolve_type2`
 - Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
 
 ## [0.4.0] - 2021/8/27

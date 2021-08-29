@@ -55,7 +55,7 @@ namespace MathLib {
                 T sum = ZERO;
                 const int i_v2_end=0;
                 for (int i_v1=0, i_v2 = i*d; i_v1<=i_v1_end && i_v2>=i_v2_end; ++i_v1, --i_v2) {
-                    sum += v1[i_v1]*v2[i_v2];
+                    Analysis::addProd(v1[i_v1], v2[i_v2], sum);
                 }
                 *ptr_y = sum; ++ptr_y;
             }
@@ -65,7 +65,7 @@ namespace MathLib {
                 T sum = ZERO;
                 sum = ZERO;
                 for (int i_v1=i*d+1-N2, i_v2=N2-1; i_v1<=i_v1_end; ++i_v1, --i_v2) {
-                    sum += v1[i_v1]*v2[i_v2];
+                    Analysis::addProd(v1[i_v1], v2[i_v2], sum);
                 }
                 *ptr_y = sum; ++ptr_y;
             }
@@ -104,7 +104,7 @@ namespace MathLib {
             for (size_t n=0; n<N; ++n) {
                 T sum = ZERO;
                 const T *const x2_ptr = &x2[n*d];
-                for (size_t k=0; k<L1; ++k) {sum += x1[k]*x2_ptr[-k];}
+                for (size_t k=0; k<L1; ++k) {Analysis::addProd(x1[k], x2_ptr[-k], sum);}
                 y[n] = sum;
             }
         }

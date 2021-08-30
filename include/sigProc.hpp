@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <type_traits>
 #include "common.hpp"
+#include "analysis.hpp"
 
 namespace MathLib {
     namespace SigProc {

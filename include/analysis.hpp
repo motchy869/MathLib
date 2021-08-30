@@ -2,8 +2,7 @@
  * @author motchy (motchy869[at]gmail.com)
  * @brief Analysis library
  */
-#ifndef __MATH_LIB__ANALYSIS_HPP__
-#define __MATH_LIB__ANALYSIS_HPP__
+#pragma once
 
 #include <cmath>
 #include <complex>
@@ -342,5 +341,3 @@ namespace MathLib {
         #endif
     }
 }
-
-#endif // __MATH_LIB__ANALYSIS_HPP__

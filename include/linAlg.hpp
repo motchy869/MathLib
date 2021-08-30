@@ -2,8 +2,7 @@
  * @author motchy (motchy869[at]gmail.com)
  * @brief Linear Algebra library
  */
-#ifndef __MATH_LIB__LINALG_HPP__
-#define __MATH_LIB__LINALG_HPP__
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -843,5 +842,3 @@ namespace MathLib {
         }
     }
 }
-
-#endif // __MATH_LIB__LINALG_HPP__

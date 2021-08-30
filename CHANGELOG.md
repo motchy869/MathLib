@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
 - Speeded up following functions:
   - `Analysis::`
     - `sqAbs`
@@ -14,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `innerProd`, `vecSelfOuterProd`, `mulMat`, `ldlDecomp`, `solveLinearEquation`, `solveLinEqHermitian`, `hermitianInnerProduct`
   - `SigProc::`
     - `convolve`, `convolve_type2`
-- Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
+- Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.
 
 ## [0.4.0] - 2021/8/27
 

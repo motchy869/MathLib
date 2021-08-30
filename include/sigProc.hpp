@@ -2,8 +2,7 @@
  * @author motchy (motchy869[at]gmail.com)
  * @brief Signal Processing library
  */
-#ifndef __MATH_LIB__SIGPROC_HPP__
-#define __MATH_LIB__SIGPROC_HPP__
+#pragma once
 
 #include <algorithm>
 #include <cstddef>
@@ -160,5 +159,3 @@ namespace MathLib {
         };
     }
 }
-
-#endif // __MATH_LIB__SIGPROC_HPP__

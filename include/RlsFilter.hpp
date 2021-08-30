@@ -2,8 +2,7 @@
  * @author motchy (motchy869[at]gmail.com)
  * @brief Recursive Least Square filter
  */
-#ifndef __MATH_LIB__RLS_FILTER_HPP__
-#define __MATH_LIB__RLS_FILTER_HPP__
+#pragma once
 
 #define ENVIRONMENT_STANDARD 0
 #define ENVIRONMENT_TI_RTOS  1
@@ -189,5 +188,3 @@ namespace MathLib {
 #undef ENVIRONMENT_STANDARD
 #undef ENVIRONMENT_TI_RTOS
 #undef ENVIRONMENT
-
-#endif // __MATH_LIB__RLS_FILTER_HPP__

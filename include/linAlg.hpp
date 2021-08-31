@@ -624,7 +624,7 @@ namespace MathLib {
             const std::complex<T> *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = A_diag_ptr->real(); A_diag_ptr += m+1; // d[i] <- Re(A[i,i])
-                std::complex<T> *const dL_ptr = workspace;
+                std::complex<T> *const __restrict__ dL_ptr = workspace;
                 {
                     std::complex<T> *const L_row_ptr = &L[MEM_OFFSET(i,0)];
                     for (int j=0; j<i; ++j) {

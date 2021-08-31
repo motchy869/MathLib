@@ -19,7 +19,9 @@ namespace MathLib {
          * @return the conjugate of "x"
          */
         template <typename T>
-        inline std::complex<T> conj(std::complex<T> x) {return std::conj(x);}
+        inline static std::complex<T> __attribute__((always_inline)) conj(std::complex<T> x) {
+            return std::move(std::complex<T>(x.real(), -x.imag()));
+        }
 
         /**
          * @brief Take the conjugate of a REAL number "x"

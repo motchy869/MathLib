@@ -130,6 +130,34 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
     }
 
+    TEST_F(LinAlgLibTest, fillLowTri_lowSubDiag) {
+        constexpr size_t m = 5;
+        int A[m][m] = {}; // initialize with 0
+        const int A_true[m][m] = {
+            {0,0,0,0,0},
+            {0,0,0,0,0},
+            {7,0,0,0,0},
+            {7,7,0,0,0},
+            {7,7,7,0,0},
+        };
+        MathLib::LinAlg::fillLowTri(m, &A[0][0], 7, -2);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
+    }
+
+    TEST_F(LinAlgLibTest, fillLowTri_upSubDiag) {
+        constexpr size_t m = 5;
+        int A[m][m] = {}; // initialize with 0
+        const int A_true[m][m] = {
+            {7,7,7,0,0},
+            {7,7,7,7,0},
+            {7,7,7,7,7},
+            {7,7,7,7,7},
+            {7,7,7,7,7},
+        };
+        MathLib::LinAlg::fillLowTri(m, &A[0][0], 7, 2);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, addDiag) {
         constexpr size_t m = 3;
         int A[m][m] = {

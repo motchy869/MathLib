@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `SigProc::`
     - `convolve`, `convolve_type2`
 - Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.
+- Added `LinAlg::fillLowTri` function.
 
 ## [0.4.0] - 2021/8/27
 

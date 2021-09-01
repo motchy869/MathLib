@@ -184,6 +184,26 @@ namespace MathLib {
         }
 
         /**
+         * @brief Fill lower triangle part of a given matrix "A" with a given value "x".
+         * The diagonal boundary is controlled by a parameter "d", defaults to 0.
+         * "d=0" corresponds to the main diagonal line.
+         * "d=k (k>0)" corresponds "k"-th upper subdiagonal line, and "d=-k (k>0)" corresponds to "k"-th lower subdiagonal line.
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static void __attribute__((always_inline))
+        #else
+        void
+        #endif
+        fillLowTri(const int m, T *const A, const T x, const int d=0) {
+            for (int r=0; r<m; ++r) {
+                const int c_end = r+d;
+                T *const A_row_ptr = &A[r*m];
+                for (int c=0; c<=c_end; ++c) {A_row_ptr[c] = x;}
+            }
+        }
+
+        /**
          * @brief Add a given vector "d" to the diagonal entries of a given square matrix "A".
          *
          * @tparam T the number type of the elements of "d, A".

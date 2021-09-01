@@ -179,7 +179,12 @@ namespace MathLib {
          * @param[out] A "A"
          */
         template <typename T>
-        void setDiag(const size_t m, const T *const d, T *const A) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static void __attribute__((always_inline))
+        #else
+        void
+        #endif
+        setDiag(const size_t m, const T *const d, T *const A) {
             for (size_t r=0; r<m; ++r) {A[r*m+r] = d[r];}
         }
 
@@ -212,7 +217,12 @@ namespace MathLib {
          * @param[out] A "A"
          */
         template <typename T>
-        void addDiag(const size_t m, const T *const d, T *const A) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static void __attribute__((always_inline))
+        #else
+        void
+        #endif
+        addDiag(const size_t m, const T *const d, T *const A) {
             for (size_t r=0; r<m; ++r) {A[r*m+r] += d[r];}
         }
 

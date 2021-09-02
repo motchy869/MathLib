@@ -94,6 +94,24 @@ namespace MathLib {
         }
 
         /**
+         * @brief Add the product of a floating point number "x1" and a complex number "x2".
+         * This function is expected to work much faster than normal operation such as "y += x1*x2".
+         * (see also: addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y))
+         *
+         * @tparam T the number type of real and complex parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) addProd(const T &x1, const std::complex<T> &x2, std::complex<T> &y) {
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            T *const y_vec = reinterpret_cast<T *>(&y);
+            y_vec[0] += x1*x2_vec[0]; // real part
+            y_vec[1] += x1*x2_vec[1]; // imaginary part
+        }
+
+        /**
          * @brief Add the product of two complex numbers "x1" and "x2" to "y".
          * This function is expected to work about 20% faster than normal operation such as "y += x1*x2".@n
          * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n

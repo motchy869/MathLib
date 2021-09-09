@@ -254,7 +254,7 @@ namespace MathLib {
 
         /**
          * @brief Calculates arc tangent of input value "x", using 9 degree-polynomial approximation.
-         * "x" must be in the range [-pi/4, pi/4], otherwise the calculation error increases.
+         * "x" must be in the range [-1, 1], otherwise the calculation error increases.
          * @details The 5 coefficients a1,a3,...,a9 were calculated as they minimize the cost function f(a1,a3,...,a9) := \int_0^1 (a1*x + a3*x^3 + ... + a9*x^9 - atan(x))^2 \mathrm{d}x.
          * The maximal absolute error is less than 2.5*10^(-5) when 0<=x<=1.
          *

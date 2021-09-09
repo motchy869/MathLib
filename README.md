@@ -5,7 +5,15 @@ This library is utilized and tested in my project, embedded base-band DSP TMS320
 
 ## 1. Prerequisites
 
+### 1.1. Essential
+
 * C++14 or above compiler
+
+### 1.2. Recommended
+
+Unit test relies on several build tools.
+If you just want to use this library, you do not have to run test case and do not have to setup the following tools.
+
 * CMake
 * [Google Test](https://github.com/google/googletest)
 
@@ -15,7 +23,7 @@ This library is utilized and tested in my project, embedded base-band DSP TMS320
 
 ## 2. Setup
 
-You only have to copy header files into your workspace and include them.
+You just have to copy header files into your workspace and include them.
 
 ## 3. Build & Run test
 

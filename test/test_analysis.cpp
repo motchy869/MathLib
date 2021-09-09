@@ -67,17 +67,39 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
     }
 
-    TEST_F(AnalysisLibTest, atan2_polyApprox_deg9) {
+    TEST_F(AnalysisLibTest, atan_polyApprox) {
+        constexpr size_t N = 11;
+        const float vec_x[N] = {-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0};
+        float result_deg7[N];
+        float result_deg9[N];
+        float ans[N];
+        for (size_t i=0; i<N; ++i) {
+            const float x = vec_x[i];
+            ans[i] = std::atan(x);
+            result_deg7[i] = MathLib::Analysis::atan_polyApprox<float, 7>(x);
+            result_deg9[i] = MathLib::Analysis::atan_polyApprox<float, 9>(x);
+        }
+
+        const bool isOk_deg7 = MathLib::LinAlg::isEqualVec(N, &result_deg7[0], &ans[0], 1.8e-4f);
+        const bool isOk_deg9 = MathLib::LinAlg::isEqualVec(N, &result_deg9[0], &ans[0], 2.5e-5f);
+        EXPECT_EQ(true, isOk_deg7 && isOk_deg9);
+    }
+
+    TEST_F(AnalysisLibTest, atan2_polyApprox) {
         constexpr size_t N = 10;
         const float vec_x[N] = {0.00124446, 0.531533, -0.953014, 0.563438, 0.0766272, -0.0719563, 0.255811, 0.06043, 0.660943, -0.824122};
         const float vec_y[N] = {-0.298056, 0.727663, 0.523291, -0.880508, 0.657289, -0.0940576, 0.130962, -0.0782994, 0.960371, 0.276083};
         const float ans[N] = {-1.56662, 0.939915, 2.63945, -1.00155, 1.45474, -2.22384, 0.473159, -0.913501, 0.968023, 2.81834};
+        float result_deg7[N];
+        float result_deg9[N];
 
-        float result[N];
         for (size_t i=0; i<N; ++i) {
-            result[i] = MathLib::Analysis::atan2_polyApprox_deg9(vec_y[i], vec_x[i]);
+            result_deg7[i] = MathLib::Analysis::atan2_polyApprox<float, 7>(vec_y[i], vec_x[i]);
+            result_deg9[i] = MathLib::Analysis::atan2_polyApprox<float, 9>(vec_y[i], vec_x[i]);
         }
 
-        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.5e-5f));
+        const bool isOk_deg7 = MathLib::LinAlg::isEqualVec(N, &result_deg7[0], &ans[0], 1.8e-4f);
+        const bool isOk_deg9 = MathLib::LinAlg::isEqualVec(N, &result_deg9[0], &ans[0], 2.5e-5f);
+        EXPECT_EQ(true, isOk_deg7 && isOk_deg9);
     }
 }

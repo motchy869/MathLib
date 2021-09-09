@@ -302,131 +302,114 @@ namespace MathLib {
             return x*(a1 + y*(a3 + y*(a5 + y*(a7 + a9*y))));
         }
 
+        /* template to call `atan_polyApprox_deg7`, `atan_polyApprox_deg9` */
+        template <typename T, int deg>
+        class functor_atan_polyApprox;
+
+        template <typename T>
+        class functor_atan_polyApprox<T, 7> {
+            public:
+                inline static T __attribute__((always_inline)) doCalc(const T &x) {
+                    return atan_polyApprox_deg7(x);
+                }
+        };
+
+        template <typename T>
+        class functor_atan_polyApprox<T, 9> {
+            public:
+                inline static T __attribute__((always_inline)) doCalc(const T &x) {
+                    return atan_polyApprox_deg9(x);
+                }
+        };
+
         /**
-         * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox_deg7` function).
+         * @brief @brief Calculates arc tangent of input value "x", using n(= 7 or 9) degree-polynomial approximation.
+         * "x" must be in the range [-1, 1], otherwise the calculation error increases.
+         * @details The 1+(n-1)/2 coefficients a1,a3,..., an were calculated as they minimize the cost function f(a1,a3,...,an) := \int_0^1 (a1*x + a3*x^3 + ... + an*x^n - atan(x))^2 \mathrm{d}x.
+         * The maximal absolute error is less than E when 0<=x<=1 where E = 1.8*10^(-4) (n=7), 2.5*10^(-5) (n=9)
+         *
+         * Performance measurement result for n=9:
+         *   CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB
+         *   iteration = 1e7 (1e7 random samples from unit disc (not include (0,0)))
+         *   std::atan2: 861 ms
+         *   atan2_polyApprox_deg9: 317 ms
+         *   max abs error: 2.32363e-05
          *
          * @tparam T the number type of the input value
+         * @tparam deg The degree of polynomial used in approximation. this must be 7 or 9.
+         * @return arc tangent of "x"
+         */
+        template <typename T, int deg>
+        inline static T __attribute__((always_inline)) atan_polyApprox(const T &x) {
+            return functor_atan_polyApprox<T, deg>::doCalc(x);
+        }
+
+        /**
+         * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox` function).
+         *
+         * @tparam T the number type of the input value
+         * @tparam deg The degree of polynomial used in approximation. this must be 7 or 9.
          * @param y "y"
          * @param x "x"
          * @return "atan2(y,x)"
          */
-        template <typename T>
-        T atan2_polyApprox_deg7(T y, T x) {
+        template <typename T, int deg>
+        T atan2_polyApprox(const T &y, const T &x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
-            constexpr T POSITIVE_ZERO = +0.0;
-            constexpr T NEGATIVE_ZERO = -0.0;
-            constexpr T pi = 3.14159265358979323846;
-            constexpr T half_pi = pi/2;
+            #if true
+                constexpr T POSITIVE_ZERO = +0.0;
+                constexpr T NEGATIVE_ZERO = -0.0;
+                constexpr T pi = 3.14159265358979323846;
+                constexpr T half_pi = pi/2;
 
-            if (x == NEGATIVE_ZERO || x == POSITIVE_ZERO) {
-                if (y >= POSITIVE_ZERO) {
-                    return half_pi;
+                if (x == NEGATIVE_ZERO || x == POSITIVE_ZERO) {
+                    if (y >= POSITIVE_ZERO) {
+                        return half_pi;
+                    }
+                    if (y <= NEGATIVE_ZERO) {
+                        return -half_pi;
+                    }
                 }
-                if (y <= NEGATIVE_ZERO) {
-                    return -half_pi;
+                if (x > POSITIVE_ZERO) {
+                    if (-x <= y && y <= x) {
+                        return atan_polyApprox<T, deg>(y/x);
+                    }
+                    if (y > x) {
+                        return half_pi - atan_polyApprox<T, deg>(x/y);
+                    } else { // y < -x
+                        return -half_pi - atan_polyApprox<T, deg>(x/y);
+                    }
+                } else { // x < NEGATIVE_ZERO
+                    if (POSITIVE_ZERO <= y && y <= -x) {
+                        return pi + atan_polyApprox<T, deg>(y/x);
+                    }
+                    if (-x < y) {
+                        return half_pi - atan_polyApprox<T, deg>(x/y);
+                    }
+                    if (x <= y && y <= NEGATIVE_ZERO) {
+                        return atan_polyApprox<T, deg>(y/x) - pi;
+                    } else { // y < x
+                        return -half_pi - atan_polyApprox<T, deg>(x/y);
+                    }
                 }
-            }
-            if (x > POSITIVE_ZERO) {
-                if (-x <= y && y <= x) {
-                    return atan_polyApprox_deg7(y/x);
+            #else // Simpler but slower than the above code.
+                static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+                constexpr T pi = 3.14159265358979323846;
+                constexpr T half_pi = pi/2;
+                const T abs_x = std::abs(x);
+                const T abs_y = std::abs(y);
+
+                if (x>=0 && abs_y<=x) { // region 1
+                    return atan_polyApprox<T, deg>(y/x);
                 }
-                if (y > x) {
-                    return half_pi - atan_polyApprox_deg7(x/y);
-                } else { // y < -x
-                    return -half_pi - atan_polyApprox_deg7(x/y);
+                if (y>=0 && abs_x<=y) { // region 2
+                    return half_pi + atan_polyApprox<T, deg>(-x/y);
                 }
-            } else { // x < NEGATIVE_ZERO
-                if (POSITIVE_ZERO <= y && y <= -x) {
-                    return pi + atan_polyApprox_deg7(y/x);
+                if (x<=0 && abs_y<=abs_x) { // region 3
+                    return atan_polyApprox<T, deg>(y/x) + (y>0 ? pi : -pi);
                 }
-                if (-x < y) {
-                    return half_pi - atan_polyApprox_deg7(x/y);
-                }
-                if (x <= y && y <= NEGATIVE_ZERO) {
-                    return atan_polyApprox_deg7(y/x) - pi;
-                } else { // y < x
-                    return -half_pi - atan_polyApprox_deg7(x/y);
-                }
-            }
+                return atan_polyApprox<T, deg>(-x/y) - half_pi; // region 4
+            #endif
         }
-
-        /**
-         * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox_deg9` function).
-         *
-         * @tparam T the number type of the input value
-         * @param y "y"
-         * @param x "x"
-         * @return "atan2(y,x)"
-         */
-        template <typename T>
-        T atan2_polyApprox_deg9(T y, T x) {
-            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
-            constexpr T POSITIVE_ZERO = +0.0;
-            constexpr T NEGATIVE_ZERO = -0.0;
-            constexpr T pi = 3.14159265358979323846;
-            constexpr T half_pi = pi/2;
-
-            if (x == NEGATIVE_ZERO || x == POSITIVE_ZERO) {
-                if (y >= POSITIVE_ZERO) {
-                    return half_pi;
-                }
-                if (y <= NEGATIVE_ZERO) {
-                    return -half_pi;
-                }
-            }
-            if (x > POSITIVE_ZERO) {
-                if (-x <= y && y <= x) {
-                    return atan_polyApprox_deg9(y/x);
-                }
-                if (y > x) {
-                    return half_pi - atan_polyApprox_deg9(x/y);
-                } else { // y < -x
-                    return -half_pi - atan_polyApprox_deg9(x/y);
-                }
-            } else { // x < NEGATIVE_ZERO
-                if (POSITIVE_ZERO <= y && y <= -x) {
-                    return pi + atan_polyApprox_deg9(y/x);
-                }
-                if (-x < y) {
-                    return half_pi - atan_polyApprox_deg9(x/y);
-                }
-                if (x <= y && y <= NEGATIVE_ZERO) {
-                    return atan_polyApprox_deg9(y/x) - pi;
-                } else { // y < x
-                    return -half_pi - atan_polyApprox_deg9(x/y);
-                }
-            }
-        }
-
-        #if false
-        /**
-         * @brief simpler-but-slow version of `atan2_polyApprox_deg9` function
-         *
-         * @tparam T the number type of the input value
-         * @param y "y"
-         * @param x "x"
-         * @return "atan2(y,x)"
-         */
-        template <typename T>
-        T atan2_polyApprox_deg9_v2(T const y, T const x) {
-            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
-            constexpr T pi = 3.14159265358979323846;
-            constexpr T half_pi = pi/2;
-            constexpr T double_pi = 2*pi;
-            const T abs_x = std::abs(x);
-            const T abs_y = std::abs(y);
-
-            if (x>=0 && abs_y<=x) { // region 1
-                return atan_polyApprox_deg9(y/x);
-            }
-            if (y>=0 && abs_x<=y) { // region 2
-                return half_pi + atan_polyApprox_deg9(-x/y);
-            }
-            if (x<=0 && abs_y<=abs_x) { // region 3
-                return atan_polyApprox_deg9(y/x) + (y>0 ? pi : -pi);
-            }
-            return atan_polyApprox_deg9(-x/y) - half_pi; // region 4
-        }
-        #endif
     }
 }

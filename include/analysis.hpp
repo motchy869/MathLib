@@ -270,7 +270,7 @@ namespace MathLib {
          * @return arc tangent of "x"
          */
         template <typename T>
-        T atan_polyApprox(T x) {
+        T atan_polyApprox_deg9(T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T a1 = 0.99988;
             constexpr T a3 = -0.330534;
@@ -303,7 +303,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox` function).
+         * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox_deg9` function).
          *
          * @tparam T the number type of the input value
          * @param y "y"
@@ -328,24 +328,24 @@ namespace MathLib {
             }
             if (x > POSITIVE_ZERO) {
                 if (-x <= y && y <= x) {
-                    return atan_polyApprox(y/x);
+                    return atan_polyApprox_deg9(y/x);
                 }
                 if (y > x) {
-                    return half_pi - atan_polyApprox(x/y);
+                    return half_pi - atan_polyApprox_deg9(x/y);
                 } else { // y < -x
-                    return -half_pi - atan_polyApprox(x/y);
+                    return -half_pi - atan_polyApprox_deg9(x/y);
                 }
             } else { // x < NEGATIVE_ZERO
                 if (POSITIVE_ZERO <= y && y <= -x) {
-                    return pi + atan_polyApprox(y/x);
+                    return pi + atan_polyApprox_deg9(y/x);
                 }
                 if (-x < y) {
-                    return half_pi - atan_polyApprox(x/y);
+                    return half_pi - atan_polyApprox_deg9(x/y);
                 }
                 if (x <= y && y <= NEGATIVE_ZERO) {
-                    return atan_polyApprox(y/x) - pi;
+                    return atan_polyApprox_deg9(y/x) - pi;
                 } else { // y < x
-                    return -half_pi - atan_polyApprox(x/y);
+                    return -half_pi - atan_polyApprox_deg9(x/y);
                 }
             }
         }
@@ -369,15 +369,15 @@ namespace MathLib {
             const T abs_y = std::abs(y);
 
             if (x>=0 && abs_y<=x) { // region 1
-                return atan_polyApprox(y/x);
+                return atan_polyApprox_deg9(y/x);
             }
             if (y>=0 && abs_x<=y) { // region 2
-                return half_pi + atan_polyApprox(-x/y);
+                return half_pi + atan_polyApprox_deg9(-x/y);
             }
             if (x<=0 && abs_y<=abs_x) { // region 3
-                return atan_polyApprox(y/x) + (y>0 ? pi : -pi);
+                return atan_polyApprox_deg9(y/x) + (y>0 ? pi : -pi);
             }
-            return atan_polyApprox(-x/y) - half_pi; // region 4
+            return atan_polyApprox_deg9(-x/y) - half_pi; // region 4
         }
         #endif
     }

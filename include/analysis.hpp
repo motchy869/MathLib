@@ -309,7 +309,7 @@ namespace MathLib {
         template <typename T>
         class functor_atan_polyApprox<T, 7> {
             public:
-                inline static T __attribute__((always_inline)) doCalc(const T &x) {
+                inline static T __attribute__((always_inline)) doCalc(const T x) {
                     return atan_polyApprox_deg7(x);
                 }
         };
@@ -317,7 +317,7 @@ namespace MathLib {
         template <typename T>
         class functor_atan_polyApprox<T, 9> {
             public:
-                inline static T __attribute__((always_inline)) doCalc(const T &x) {
+                inline static T __attribute__((always_inline)) doCalc(const T x) {
                     return atan_polyApprox_deg9(x);
                 }
         };
@@ -340,7 +340,7 @@ namespace MathLib {
          * @return arc tangent of "x"
          */
         template <typename T, int deg>
-        inline static T __attribute__((always_inline)) atan_polyApprox(const T &x) {
+        inline static T __attribute__((always_inline)) atan_polyApprox(const T x) {
             return functor_atan_polyApprox<T, deg>::doCalc(x);
         }
 
@@ -354,7 +354,7 @@ namespace MathLib {
          * @return "atan2(y,x)"
          */
         template <typename T, int deg>
-        T atan2_polyApprox(const T &y, const T &x) {
+        T atan2_polyApprox(const T y, const T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             #if true
                 constexpr T POSITIVE_ZERO = +0.0;

@@ -367,6 +367,37 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculate the sum of given two square matrices "A" and "B". The result is stored in "A".
+         *
+         * @tparam T the number type of the elements of the matrices "A" and "B"
+         * @param[in] m the number of the rows in the matrices "A" and "B"
+         * @param[inout] A the matrix "A"
+         * @param[in] B the matrix "B"
+         * @param[in] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
+         * - 'L' only diagonal and lower elements are updated
+         * - 'U' only diagonal and upper elements are updated
+         * - 'A' all elements are updated
+         * - other do nothing
+         */
+        template <typename T>
+        void addSqMat(const size_t m, T *const A, const T *const B, const char LUA='A') {
+            if (LUA == 'A') {
+                const size_t L = m*m;
+                for (size_t i=0; i<L; ++i) {A[i] += B[i];}
+            } else if (LUA == 'L') {
+                for (int r=0; r<m; ++r) {
+                    int index = r*m;
+                    for (int c=0; c<=r; ++c, ++index) {A[index] += B[index];}
+                }
+            } else if (LUA == 'U') {
+                for (int r=0; r<m; ++r) {
+                    int index = r*m+r;
+                    for (int c=r; c<m; ++c, ++index) {A[index] += B[index];}
+                }
+            }
+        }
+
+        /**
          * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
          *
          * @tparam T the number type of "c" and the elements of "A"

@@ -214,6 +214,51 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(3, 2, &A[0][0], &A_ans[0][0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, addSqMat) {
+        const int m = 3;
+        const float A[m][m] = {
+            {1,2,3},
+            {4,5,6},
+            {7,8,9},
+        };
+
+        const float B[m][m] = {
+            {0.1, 0.2, 0.3},
+            {-0.4, -0.5, -0.6},
+            {0.7, 0.8, 0.9},
+        };
+
+        float A_L[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_L[0][0]);
+        float A_U[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_U[0][0]);
+        float A_A[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_A[0][0]);
+
+        const float A_L_ans[m][m] = {
+            {1.1, 2,   3},
+            {3.6, 4.5, 6},
+            {7.7, 8.8, 9.9},
+        };
+
+        const float A_U_ans[m][m] = {
+            {1.1, 2.2, 3.3},
+            {4,   4.5, 5.4},
+            {7,   8,   9.9},
+        };
+
+        const float A_A_ans[m][m] = {
+            {1.1, 2.2, 3.3},
+            {3.6, 4.5, 5.4},
+            {7.7, 8.8, 9.9},
+        };
+
+        MathLib::LinAlg::addSqMat(m, &A_L[0][0], &B[0][0], 'L');
+        MathLib::LinAlg::addSqMat(m, &A_U[0][0], &B[0][0], 'U');
+        MathLib::LinAlg::addSqMat(m, &A_A[0][0], &B[0][0], 'A');
+
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_L[0][0], &A_L_ans[0][0], 1.0e-7f));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_U[0][0], &A_U_ans[0][0], 1.0e-7f));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_A[0][0], &A_A_ans[0][0], 1.0e-7f));
+    }
+
     TEST_F(LinAlgLibTest, addVec) {
         std::complex<double> x[3] = {1,2,3};
         const std::complex<double> y[3] = {0.1, 0.2, 0.3};

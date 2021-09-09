@@ -246,7 +246,7 @@ namespace MathLib {
          * @return cos(x)
          */
         template <typename T>
-        T cos_polyApprox(T x) {
+        inline static T __attribute__((always_inline)) cos_polyApprox(T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T HALF_PI = static_cast<T>(0.5*3.141592653589793);
             return sin_polyApprox(x + HALF_PI);
@@ -263,7 +263,12 @@ namespace MathLib {
          * @return arc tangent of "x"
          */
         template <typename T>
-        T atan_polyApprox_deg7(T x) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static T __attribute__((always_inline))
+        #else
+        T
+        #endif
+        atan_polyApprox_deg7(T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T a1 = 0.999298;
             constexpr T a3 = -0.322084;
@@ -291,7 +296,12 @@ namespace MathLib {
          * @return arc tangent of "x"
          */
         template <typename T>
-        T atan_polyApprox_deg9(T x) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+        inline static T __attribute__((always_inline))
+        #else
+        T
+        #endif
+        atan_polyApprox_deg9(T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T a1 = 0.99988;
             constexpr T a3 = -0.330534;

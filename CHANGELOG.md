@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `convolve`, `convolve_type2`
 - Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.
 - Added `LinAlg::fillLowTri` function.
+- Added `Analysis::atan_polyApprox_deg7` function.
 
 ## [0.4.0] - 2021/8/27
 

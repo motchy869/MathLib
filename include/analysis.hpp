@@ -282,6 +282,27 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculates arc tangent of input value "x", using 7 degree-polynomial approximation.
+         * "x" must be in the range [-1, 1], otherwise the calculation error increases.
+         * @details The coefficients a1,a3,...,a7 were calculated as they minimize the cost function f(a1,a3,...,a7) := \int_0^1 (a1*x + a3*x^3 + ... + a7*x^7 - atan(x))^2 \mathrm{d}x.
+         * The maximal absolute error is less than 1.8*10^(-4) when 0<=x<=1.
+         *
+         * @tparam T the number type of the input value
+         * @param[in] x input value
+         * @return arc tangent of "x"
+         */
+        template <typename T>
+        T atan_polyApprox_deg7(T x) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            constexpr T a1 = 0.999298;
+            constexpr T a3 = -0.322084;
+            constexpr T a5 = 0.148508;
+            constexpr T a7 = -0.0404899;
+            const T y = x*x;
+            return x*(a1 + y*(a3 + y*(a5 + a7*y)));
+        }
+
+        /**
          * @brief Calculates "atan2(y,x)" using polynomial approximation (internally calls `atan_polyApprox` function).
          *
          * @tparam T the number type of the input value

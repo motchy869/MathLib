@@ -69,7 +69,7 @@ namespace MathLib {
          * @param[in] x2 "x2"
          */
         template <typename T>
-        inline static std::complex<T> __attribute__((always_inline)) prod(const T &x1, const std::complex<T> &x2) {
+        inline static std::complex<T> __attribute__((always_inline)) prod(const T x1, const std::complex<T> x2) {
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             return std::move(std::complex<T>(x1*x2_vec[0], x1*x2_vec[1]));
         }
@@ -87,7 +87,7 @@ namespace MathLib {
          * @param[in] x2 "x2"
          */
         template <typename T>
-        inline static std::complex<T> __attribute__((always_inline)) prod(const std::complex<T> &x1, const std::complex<T> &x2) {
+        inline static std::complex<T> __attribute__((always_inline)) prod(const std::complex<T> x1, const std::complex<T> x2) {
             const T *const x1_vec = reinterpret_cast<const T *>(&x1);
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             return std::move(std::complex<T>(x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1], x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]));
@@ -104,7 +104,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) addProd(const T &x1, const std::complex<T> &x2, std::complex<T> &y) {
+        inline static void __attribute__((always_inline)) addProd(const T x1, const std::complex<T> x2, std::complex<T> &y) {
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             T *const y_vec = reinterpret_cast<T *>(&y);
             y_vec[0] += x1*x2_vec[0]; // real part
@@ -125,7 +125,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y) {
+        inline static void __attribute__((always_inline)) addProd(const std::complex<T> x1, const std::complex<T> x2, std::complex<T> &y) {
             const T *const x1_vec = reinterpret_cast<const T *>(&x1);
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             T *const y_vec = reinterpret_cast<T *>(&y);
@@ -143,7 +143,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) addProd(const T &x1, const T &x2, T &y) {
+        inline static void __attribute__((always_inline)) addProd(const T x1, const T x2, T &y) {
             y += x1*x2;
         }
 
@@ -157,7 +157,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) subtractProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y) {
+        inline static void __attribute__((always_inline)) subtractProd(const std::complex<T> x1, const std::complex<T> x2, std::complex<T> &y) {
             const T *const x1_vec = reinterpret_cast<const T *>(&x1);
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             T *const y_vec = reinterpret_cast<T *>(&y);
@@ -175,7 +175,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) subtractProd(const T &x1, const std::complex<T> &x2, std::complex<T> &y) {
+        inline static void __attribute__((always_inline)) subtractProd(const T x1, const std::complex<T> x2, std::complex<T> &y) {
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             T *const y_vec = reinterpret_cast<T *>(&y);
             y_vec[0] -=  x1*x2_vec[0];
@@ -192,7 +192,7 @@ namespace MathLib {
          * @param[inout] y "y"
          */
         template <typename T>
-        inline static void __attribute__((always_inline)) subtractProd(const T &x1, const T &x2, T &y) {
+        inline static void __attribute__((always_inline)) subtractProd(const T x1, const T x2, T &y) {
             y -= x1*x2;
         }
 

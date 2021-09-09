@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `LinAlg::fillLowTri` function.
 - Added `Analysis::atan_polyApprox_deg7` function.
 - Renamed `Analysis::atan_polyApprox` to `Analysis::atan_polyApprox_deg9`.
+- Renamed `Analysis::atan2_polyApprox` to `Analysis::atan2_polyApprox_deg9`.
 
 ## [0.4.0] - 2021/8/27
 

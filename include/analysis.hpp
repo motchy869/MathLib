@@ -262,7 +262,7 @@ namespace MathLib {
          *   CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB
          *   iteration = 1e7 (1e7 random samples from unit disc (not include (0,0)))
          *   std::atan2: 861 ms
-         *   atan2_polyApprox: 317 ms
+         *   atan2_polyApprox_deg9: 317 ms
          *   max abs error: 2.32363e-05
          *
          * @tparam T the number type of the input value
@@ -311,7 +311,7 @@ namespace MathLib {
          * @return "atan2(y,x)"
          */
         template <typename T>
-        T atan2_polyApprox(T y, T x) {
+        T atan2_polyApprox_deg9(T y, T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T POSITIVE_ZERO = +0.0;
             constexpr T NEGATIVE_ZERO = -0.0;
@@ -352,7 +352,7 @@ namespace MathLib {
 
         #if false
         /**
-         * @brief simpler-but-slow version of `atan2_polyApprox` function
+         * @brief simpler-but-slow version of `atan2_polyApprox_deg9` function
          *
          * @tparam T the number type of the input value
          * @param y "y"
@@ -360,7 +360,7 @@ namespace MathLib {
          * @return "atan2(y,x)"
          */
         template <typename T>
-        T atan2_polyApprox_v2(T const y, T const x) {
+        T atan2_polyApprox_deg9_v2(T const y, T const x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             constexpr T pi = 3.14159265358979323846;
             constexpr T half_pi = pi/2;

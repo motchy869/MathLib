@@ -67,7 +67,7 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.0e-6l));
     }
 
-    TEST_F(AnalysisLibTest, atan2_polyApprox) {
+    TEST_F(AnalysisLibTest, atan2_polyApprox_deg9) {
         constexpr size_t N = 10;
         const float vec_x[N] = {0.00124446, 0.531533, -0.953014, 0.563438, 0.0766272, -0.0719563, 0.255811, 0.06043, 0.660943, -0.824122};
         const float vec_y[N] = {-0.298056, 0.727663, 0.523291, -0.880508, 0.657289, -0.0940576, 0.130962, -0.0782994, 0.960371, 0.276083};
@@ -75,7 +75,7 @@ namespace {
 
         float result[N];
         for (size_t i=0; i<N; ++i) {
-            result[i] = MathLib::Analysis::atan2_polyApprox(vec_y[i], vec_x[i]);
+            result[i] = MathLib::Analysis::atan2_polyApprox_deg9(vec_y[i], vec_x[i]);
         }
 
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &result[0], &ans[0], 2.5e-5f));

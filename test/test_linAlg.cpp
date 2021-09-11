@@ -267,6 +267,21 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &x[0], &y_ans[0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, scaleMat_inplace) {
+        const size_t m=2, n=3;
+        std::complex<double> A[m][n] = {
+            {1,2,3},
+            {4,5,6},
+        };
+        const std::complex<double> a(1, 0.5);
+        const std::complex<double> A_ans[m][n] = {
+            {{1, 0.5}, {2, 1}, {3, 1.5}},
+            {{4, 2}, {5, 2.5}, {6, 3}},
+        };
+        MathLib::LinAlg::scaleMat(m, n, a, &A[0][0]);
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, n, &A[0][0], &A_ans[0][0], 1.0e-7l));
+    }
+
     TEST_F(LinAlgLibTest, scaleMat) {
         const size_t m=2, n=3;
         const std::complex<double> A[m][n] = {

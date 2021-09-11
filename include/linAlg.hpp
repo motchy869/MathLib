@@ -111,7 +111,12 @@ namespace MathLib {
          * @retval false A and B are not equal.
          */
         template <typename T1, typename T2>
-        bool isEqualMat(const size_t m, const size_t n, const T1 *const A, const T1 *const B, const T2 epsilon) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static bool __attribute__((always_inline))
+        #else
+            bool
+        #endif
+        isEqualMat(const size_t m, const size_t n, const T1 *const A, const T1 *const B, const T2 epsilon) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {
                 if (std::abs(A[i] - B[i]) > epsilon) {return false;}
@@ -133,7 +138,7 @@ namespace MathLib {
          * @retval false "a" and "b" are not equal.
          */
         template <typename T1, typename T2>
-        bool isEqualVec(const size_t m, const T1 *const a, const T1 *const b, const T2 epsilon) {
+        inline static bool __attribute__((always_inline)) isEqualVec(const size_t m, const T1 *const a, const T1 *const b, const T2 epsilon) {
             return isEqualMat(1, m, a, b, epsilon);
         }
 
@@ -148,7 +153,12 @@ namespace MathLib {
          * @param[out] A output buffer for "A"
          */
         template <typename T>
-        void complexMat(const size_t m, const size_t n, const T *const A_real, const T *const A_imag, std::complex<T> *const A) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        complexMat(const size_t m, const size_t n, const T *const A_real, const T *const A_imag, std::complex<T> *const A) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {
                 A[i].real(A_real[i]); A[i].imag(A_imag[i]);
@@ -165,7 +175,7 @@ namespace MathLib {
          * @param[out] x output buffer for "x"
          */
         template <typename T>
-        void complexVec(const size_t m, const T *const x_real, const T *const x_imag, std::complex<T> *const x) {
+        inline static void __attribute__((always_inline)) complexVec(const size_t m, const T *const x_real, const T *const x_imag, std::complex<T> *const x) {
             complexMat(m, 1, x_real, x_imag, x);
         }
 
@@ -293,7 +303,12 @@ namespace MathLib {
          * @param[inout] A the matrix "A"
          */
         template <typename T>
-        void conjugateMat(const size_t m, const size_t n, std::complex<T> *A) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        conjugateMat(const size_t m, const size_t n, std::complex<T> *A) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {A[i] = std::conj(A[i]);}
         }
@@ -308,7 +323,12 @@ namespace MathLib {
          * @param[out] B the matrix "B"
          */
         template <typename T>
-        void conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {B[i] = std::conj(A[i]);}
         }
@@ -321,7 +341,7 @@ namespace MathLib {
          * @param[inout] x the vector "x"
          */
         template <typename T>
-        void conjugateVec(const size_t m, std::complex<T> *x) {
+        inline static void __attribute__((always_inline)) conjugateVec(const size_t m, std::complex<T> *x) {
             conjugateMat(m, 1, x);
         }
 
@@ -334,7 +354,7 @@ namespace MathLib {
          * @param[out] y the vector "y"
          */
         template <typename T>
-        void conjugateVec(const size_t m, const std::complex<T> *const x, std::complex<T> *const y) {
+        inline static void __attribute__((always_inline)) conjugateVec(const size_t m, const std::complex<T> *const x, std::complex<T> *const y) {
             conjugateMat(m, 1, x, y);
         }
 
@@ -348,7 +368,12 @@ namespace MathLib {
          * @param[in] B the matrix "B"
          */
         template <typename T>
-        void addMat(const size_t m, const size_t n, T *const A, const T *const B) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        addMat(const size_t m, const size_t n, T *const A, const T *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {A[i] += B[i];}
         }
@@ -362,7 +387,7 @@ namespace MathLib {
          * @param[in] y the vector "y"
          */
         template <typename T>
-        void addVec(const size_t m, T *const x, const T *const y) {
+        inline static void __attribute__((always_inline)) addVec(const size_t m, T *const x, const T *const y) {
             addMat(m, 1, x, y);
         }
 
@@ -408,7 +433,12 @@ namespace MathLib {
          * @param[out] B the matrix "B"
          */
         template <typename T>
-        void scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {B[i] = c*A[i];}
         }
@@ -448,7 +478,7 @@ namespace MathLib {
          * @param[out] b the vector "b"
          */
         template <typename T>
-        void scaleVec(const size_t m, const T c, const T *const a, T *const b) {
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const T c, const T *const a, T *const b) {
             scaleMat(1, m, c, a, b);
         }
 
@@ -658,7 +688,7 @@ namespace MathLib {
          * @return the L-2 norm of input vector
          */
         template <typename T>
-        T l2Norm(const size_t N, const std::complex<T> *const vec, const size_t stride=1) {
+        inline static T __attribute__((always_inline)) l2Norm(const size_t N, const std::complex<T> *const vec, const size_t stride=1) {
             return std::sqrt(hermitianInnerProduct(N, vec, vec, stride).real());
         }
 

@@ -423,6 +423,27 @@ namespace MathLib {
         }
 
         /**
+         * @brief Overrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
+         *
+         * @tparam T the number type of "c" and the elements of "A"
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[in] n the number of the columns in the input matrix "A"
+         * @param[in] c the scalar "c"
+         * @param[in] A the matrix "A"
+         * @param[out] B the matrix "B"
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        scaleMat(const size_t m, const size_t n, const T c, const T *const A) {
+            const size_t L = m*n;
+            for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
+        }
+
+        /**
          * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
          *
          * @tparam T the number type of "c" and the elements of "A"

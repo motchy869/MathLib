@@ -57,7 +57,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculate the product of 2 complex numbers "x1" and "x2".
+         * @brief Calculate the product of a floating point number "x1" and a complex number "x2".
          * This function is expected to work about 7 times faster than normal operation such as "y = x1*x2".@n
          * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n
          * N = 1e8@n
@@ -75,7 +75,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Calculate the product of a floating point number "x1" and a complex number "x2".
+         * @brief Calculate the product of 2 complex numbers "x1" and "x2".
          * This function is expected to work about 7 times faster than normal operation such as "y = x1*x2".@n
          * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n
          * N = 1e8@n

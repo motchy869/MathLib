@@ -107,7 +107,9 @@ namespace MathLib {
         inline static std::complex<T> __attribute__((always_inline)) prod(const std::complex<T> x1, const std::complex<T> x2) {
             const T *const x1_vec = reinterpret_cast<const T *>(&x1);
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
-            return std::move(std::complex<T>(x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1], x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]));
+            const T real = x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1];
+            const T imag = x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0];
+            return std::move(std::complex<T>(real, imag));
         }
 
         /**

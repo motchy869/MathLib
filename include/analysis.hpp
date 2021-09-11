@@ -136,7 +136,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Add the product of two non-complex numbers "x1" and "x2" to "y".
+         * @brief Add the product of two floating point numbers "x1" and "x2" to "y".
          * Calling this function is completely equivalent to just writing "y += x1*x2".
          *
          * @tparam T the number type
@@ -146,6 +146,7 @@ namespace MathLib {
          */
         template <typename T>
         inline static void __attribute__((always_inline)) addProd(const T x1, const T x2, T &y) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             y += x1*x2;
         }
 

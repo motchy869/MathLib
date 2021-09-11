@@ -423,7 +423,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Overrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
+         * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
          *
          * @tparam T the number type of "c" and the elements of "A"
          * @param[in] m the number of the rows in the input matrix "A"

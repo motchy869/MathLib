@@ -218,9 +218,9 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static void __attribute__((always_inline))
+            inline static void __attribute__((always_inline))
         #else
-        void
+            void
         #endif
         addDiag(const size_t m, const T *const d, T *const A) {
             for (size_t r=0; r<m; ++r) {A[r*m+r] += d[r];}
@@ -590,9 +590,9 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static T __attribute__((always_inline))
+            inline static T __attribute__((always_inline))
         #else
-        T
+            T
         #endif
         innerProd(const size_t N, const T * const x, const T *const y) {
             constexpr T ZERO = static_cast<T>(0);
@@ -615,9 +615,9 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static std::complex<T> __attribute__((always_inline))
+            inline static std::complex<T> __attribute__((always_inline))
         #else
-        std::complex<T>
+            std::complex<T>
         #endif
         hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
             std::complex<T> sum(0, 0);
@@ -640,9 +640,9 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static std::complex<T> __attribute__((always_inline))
+            inline static std::complex<T> __attribute__((always_inline))
         #else
-        std::complex<T>
+            std::complex<T>
         #endif
         hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride=1) {
             return hermitianInnerProduct(N, vec1, vec2, stride, stride);

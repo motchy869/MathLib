@@ -438,7 +438,7 @@ namespace MathLib {
         #else
             void
         #endif
-        scaleMat(const size_t m, const size_t n, const T c, const T *const A) {
+        scaleMat(const size_t m, const size_t n, const T c, T *const A) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
         }

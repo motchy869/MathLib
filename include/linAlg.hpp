@@ -423,22 +423,22 @@ namespace MathLib {
         }
 
         /**
-         * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
+         * @brief Overwrite a given floating-point number matrix "A" by its scaled version "cA" where "c" is a floating-point number.
          *
-         * @tparam T the number type of "c" and the elements of "A"
+         * @tparam Tc the number type of "c"
+         * @tparam TA the number type of the entries of "A"
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] n the number of the columns in the input matrix "A"
          * @param[in] c the scalar "c"
          * @param[in] A the matrix "A"
-         * @param[out] B the matrix "B"
          */
-        template <typename T>
+        template <typename Tc, typename TA>
         #if MATH_LIB_INLINE_AGGRESSIVELY
             inline static void __attribute__((always_inline))
         #else
             void
         #endif
-        scaleMat(const size_t m, const size_t n, const T c, T *const A) {
+        scaleMat(const size_t m, const size_t n, const Tc c, TA *const A) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
         }
@@ -656,7 +656,7 @@ namespace MathLib {
          * @brief Calculates Hermitian inner product of given 2 complex vectors "x", "y".
          * Hermitian inner product of "x" and "y" is defined as "<x^*, y>"", where "^*" represents conjugate and "<,>" represents inner product.
          *
-         * @tparam T value type of complex number
+         * @tparam T the number type of the real and imaginary parts of complex number
          * @param[in] N vector length
          * @param[in] vec1 1st input vector, "x"
          * @param[in] vec2 2nd input vector, "y"

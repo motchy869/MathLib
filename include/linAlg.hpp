@@ -405,7 +405,12 @@ namespace MathLib {
          * - other do nothing
          */
         template <typename T>
-        void addSqMat(const size_t m, T *const A, const T *const B, const char LUA='A') {
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline)) // Internal conditional branch will be optimized out when `LUA` is compile-time constant.
+        #else
+            void
+        #endif
+        addSqMat(const size_t m, T *const A, const T *const B, const char LUA='A') {
             if (LUA == 'A') {
                 const size_t L = m*m;
                 for (size_t i=0; i<L; ++i) {A[i] += B[i];}
@@ -480,7 +485,7 @@ namespace MathLib {
          */
         template <typename Tc, typename TA>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-            inline static void __attribute__((always_inline))
+            inline static void __attribute__((always_inline)) // Internal conditional branch will be optimized out when `LUA` is compile-time constant.
         #else
             void
         #endif

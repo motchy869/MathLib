@@ -57,6 +57,21 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculate the product of 2 floating point numbers "x1" and "x2".
+         * Calling this function is completely equivalent to just writing "x1*x2".
+         *
+         * @tparam T the number type of "x1" and "x2"
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @return "x1*x2"
+         */
+        template <typename T>
+        inline static T __attribute__((always_inline)) prod(const T x1, const T x2) {
+            static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
+            return x1*x2;
+        }
+
+        /**
          * @brief Calculate the product of a floating point number "x1" and a complex number "x2".
          * This function is expected to work about 7 times faster than normal operation such as "y = x1*x2".@n
          * CPU: Core 2 Quad Q9650, RAM: DDR2 800MHz 8GiB@n

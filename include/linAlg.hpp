@@ -440,7 +440,7 @@ namespace MathLib {
         #endif
         scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {B[i] = c*A[i];}
+            for (size_t i=0; i<L; ++i) {B[i] = Analysis::prod(c, A[i]);}
         }
 
         /**
@@ -463,7 +463,7 @@ namespace MathLib {
                 TB *const ptr_B = &B[i*n];
                 const Tc ci = c[i];
                 for (size_t j=0; j<n; ++j) {
-                    ptr_B[j] = ci*ptr_A[j];
+                    ptr_B[j] = Analysis::prod(ci, ptr_A[j]);
                 }
             }
         }

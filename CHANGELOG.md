@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Analysis::`
     - `conj`, `sqAbs`
   - `LinAlg::`
-    - `innerProd`, `vecSelfOuterProd`, `mulMat`, `ldlDecomp`, `solveLinearEquation`, `solveLinEqHermitian`, `hermitianInnerProduct`
+    - `scaleMat`, `scaleMatEachRow`, `innerProd`, `vecSelfOuterProd`, `mulMat`, `ldlDecomp`, `solveLinearEquation`, `solveLinEqHermitian`, `hermitianInnerProduct`
   - `SigProc::`
     - `convolve`, `convolve_type2`
 - Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.

@@ -16,13 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `SigProc::`
     - `convolve`, `convolve_type2`
 - Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.
-- Added `LinAlg::fillLowTri` function.
+- Added `LinAlg::fillLowTri`, `LinAlg::addSqMat` function.
 - Refactored polynomial approximation of arc tangent:
   - Added `atan_polyApprox_deg7` function.
   - Renamed `atan_polyApprox` to `atan_polyApprox_deg9`.
   - Add template function `atan_polyApprox` which is reduced to `atan_polyApprox_deg7` or `atan_polyApprox_deg9` according to its template parameter.
   - Add template function `atan2_polyApprox` whose polynomial degree is determined at compile-time
-- Added `addSqMat` function.
 - Made the following small functions target of aggressive inline-expansion:
   - `LinAlg::`
     - `isEqualMat`, `complexMat`, `conjugateMat`, `addMat`, `scaleMat`

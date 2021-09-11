@@ -302,6 +302,46 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, n, &B[0][0], &B_ans[0][0], 1.0e-7l));
     }
 
+    TEST_F(LinAlgLibTest, scaleSqMat_inplace) {
+        const size_t m=3;
+        const float c=1.5f;
+        const float A[m][m] = {
+            {1,2,3},
+            {-4,-5,-6},
+            {7,8,9},
+        };
+
+        const float A_L_ans[m][m] = {
+            {1.5,  2,    3},
+            {-6,   -7.5, -6},
+            {10.5, 12,   13.5},
+        };
+
+        const float A_U_ans[m][m] = {
+            {1.5, 3,    4.5},
+            {-4,  -7.5, -9},
+            {7,   8,    13.5},
+        };
+
+        const float A_A_ans[m][m] = {
+            {1.5,  3,    4.5},
+            {-6,   -7.5, -9},
+            {10.5, 12,   13.5},
+        };
+
+        float A_L[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_L[0][0]);
+        float A_U[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_U[0][0]);
+        float A_A[m][m]; std::copy(&A[0][0], &A[m-1][m], &A_A[0][0]);
+
+        MathLib::LinAlg::scaleSqMat(m, c, &A_L[0][0], 'L');
+        MathLib::LinAlg::scaleSqMat(m, c, &A_U[0][0], 'U');
+        MathLib::LinAlg::scaleSqMat(m, c, &A_A[0][0], 'A');
+
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_L[0][0], &A_L_ans[0][0], 1.0e-7f));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_U[0][0], &A_U_ans[0][0], 1.0e-7f));
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A_A[0][0], &A_A_ans[0][0], 1.0e-7f));
+    }
+
     TEST_F(LinAlgLibTest, scaleMatEachRow) {
         const size_t m=2, n=3;
         const float A[m][n] = {

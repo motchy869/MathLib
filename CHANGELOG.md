@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added a new function `LinAlg::scaleSqMat`.
+
+## [0.5.0] - 2021/9/13
+
 - Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
 - Speeded up following functions:
   - `Analysis::`

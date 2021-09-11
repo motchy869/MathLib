@@ -465,6 +465,43 @@ namespace MathLib {
         }
 
         /**
+         * @brief Overwrite a given square matrix "A" by its scaled version "cA" where "c" is a scalar.
+         *
+         * @tparam Tc the number type of "c"
+         * @tparam TA the number type of the entries of "A"
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[in] c the scalar "c"
+         * @param[in] A the matrix "A"
+         * @param[in] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
+         * - 'L' only diagonal and lower elements are updated
+         * - 'U' only diagonal and upper elements are updated
+         * - 'A' all elements are updated
+         * - other do nothing
+         */
+        template <typename Tc, typename TA>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        scaleSqMat(const size_t m, const Tc c, TA *const A, const char LUA='A') {
+            if (LUA == 'A') {
+                const size_t L = m*m;
+                for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
+            } else if (LUA == 'L') {
+                for (int row=0; row<m; ++row) {
+                    int index = row*m;
+                    for (int col=0; col<=row; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
+                }
+            } else if (LUA == 'U') {
+                for (int row=0; row<m; ++row) {
+                    int index = row*m+row;
+                    for (int col=row; col<m; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
+                }
+            }
+        }
+
+        /**
          * @brief Multiply each row of a given "m x n" matrix "A", and store result to "B"
          * Multiply c[i] to the i-th row of "A" where "c" is a vector with length "m".
          *

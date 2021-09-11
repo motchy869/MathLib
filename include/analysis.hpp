@@ -67,6 +67,7 @@ namespace MathLib {
          * @tparam T the number type of real and complex parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
+         * @return "x1*x2"
          */
         template <typename T>
         inline static std::complex<T> __attribute__((always_inline)) prod(const T x1, const std::complex<T> x2) {
@@ -85,6 +86,7 @@ namespace MathLib {
          * @tparam T the number type of real and complex parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
+         * @return "x1*x2"
          */
         template <typename T>
         inline static std::complex<T> __attribute__((always_inline)) prod(const std::complex<T> x1, const std::complex<T> x2) {

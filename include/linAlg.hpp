@@ -423,7 +423,7 @@ namespace MathLib {
         }
 
         /**
-         * @brief Overwrite a given floating-point number matrix "A" by its scaled version "cA" where "c" is a floating-point number.
+         * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
          *
          * @tparam Tc the number type of "c"
          * @tparam TA the number type of the entries of "A"

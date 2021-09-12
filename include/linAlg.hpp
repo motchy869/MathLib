@@ -212,7 +212,8 @@ namespace MathLib {
         #endif
         fillLowTri(const int m, T *const A, const T x, const int d=0) {
             for (int r=0; r<m; ++r) {
-                const int c_end = r+d;
+                const int c_end_temp = r+d;
+                const int c_end = (c_end_temp < m ? c_end_temp : m-1);
                 T *const A_row_ptr = &A[r*m];
                 for (int c=0; c<=c_end; ++c) {A_row_ptr[c] = x;}
             }

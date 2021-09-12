@@ -136,7 +136,7 @@ namespace MathLib {
              * @attention vec_x[-p], ..., vec_x[-1] must be valid data.
              * @attention When `Ld < 1`, this function does nothing and returns immediately in release build, aborts in debug build.
              */
-            void trainHard(const T *vec_d, const T *vec_x, int Ld, T *w_opt) {
+            void trainHard(const T *const vec_d, const T *const vec_x, const int Ld, T *const w_opt) {
                 #define IS_DEBUGGING false
                 assert(Ld >= 1);
                 if (Ld < 1) {

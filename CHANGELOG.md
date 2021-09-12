@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Added a new function `LinAlg::scaleSqMat`.
-- Added compiler options for secure programming
-  - `-Wextra`, `-Wold-style-cast`, `-Wredundant-decls`, `-Wshadow`, `-Wswitch-default`, `-Wswitch-enum` (debug/release build)
-  - `-fstack-protector`, `-ftrapv` (debug build)
-
-## [0.5.0] - 2021/9/13
-
 - Added `MATH_LIB_INLINE_AGGRESSIVELY` option.
 - Speeded up following functions:
   - `Analysis::`
@@ -23,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `SigProc::`
     - `convolve`, `convolve_type2`
 - Improved include-guard: replaced old-style guard using `#ifndef` with `#pragma once`.
-- Added `LinAlg::fillLowTri`, `LinAlg::addSqMat` function.
+- Added `LinAlg::fillLowTri`, `LinAlg::addSqMat`, `LinAlg::scaleSqMat` function.
 - Refactored polynomial approximation of arc tangent:
   - Added `atan_polyApprox_deg7` function.
   - Renamed `atan_polyApprox` to `atan_polyApprox_deg9`.
@@ -35,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Forcibly inline-expand the following small functions:
   - `LinAlg::`
     - `isEqualVec`, `complexVec`, `conjugateVec`, `addVec`, `scaleVec`, `l2Norm`
+- Added compiler options for secure programming
+  - `-Wextra`, `-Wold-style-cast`, `-Wredundant-decls`, `-Wshadow`, `-Wswitch-default`, `-Wswitch-enum` (debug/release build)
+  - `-fstack-protector`, `-ftrapv` (debug build)
 
 ## [0.4.0] - 2021/8/27
 

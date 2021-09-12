@@ -415,14 +415,14 @@ namespace MathLib {
                 const size_t L = m*m;
                 for (size_t i=0; i<L; ++i) {A[i] += B[i];}
             } else if (LUA == 'L') {
-                for (int r=0; r<m; ++r) {
-                    int index = r*m;
-                    for (int c=0; c<=r; ++c, ++index) {A[index] += B[index];}
+                for (size_t r=0; r<m; ++r) {
+                    size_t index = r*m;
+                    for (size_t c=0; c<=r; ++c, ++index) {A[index] += B[index];}
                 }
             } else if (LUA == 'U') {
-                for (int r=0; r<m; ++r) {
-                    int index = r*m+r;
-                    for (int c=r; c<m; ++c, ++index) {A[index] += B[index];}
+                for (size_t r=0; r<m; ++r) {
+                    size_t index = r*m+r;
+                    for (size_t c=r; c<m; ++c, ++index) {A[index] += B[index];}
                 }
             }
         }
@@ -494,14 +494,14 @@ namespace MathLib {
                 const size_t L = m*m;
                 for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
             } else if (LUA == 'L') {
-                for (int row=0; row<m; ++row) {
-                    int index = row*m;
-                    for (int col=0; col<=row; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
+                for (size_t row=0; row<m; ++row) {
+                    size_t index = row*m;
+                    for (size_t col=0; col<=row; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
                 }
             } else if (LUA == 'U') {
-                for (int row=0; row<m; ++row) {
-                    int index = row*m+row;
-                    for (int col=row; col<m; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
+                for (size_t row=0; row<m; ++row) {
+                    size_t index = row*m+row;
+                    for (size_t col=row; col<m; ++col, ++index) {A[index] = Analysis::prod(c, A[index]);}
                 }
             }
         }

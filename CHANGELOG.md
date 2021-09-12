@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - Added a new function `LinAlg::scaleSqMat`.
+- Added compiler options for secure programming
+  - `-Wextra` (debug/release build)
+  - `-fstack-protector`, `-ftrapv` (debug build)
 
 ## [0.5.0] - 2021/9/13
 

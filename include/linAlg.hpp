@@ -616,7 +616,7 @@ namespace MathLib {
 
             /* Pre-calculate conj(x) */
             std::complex<T> *const conj_x = workspace;
-            for (int i=0; i<M; ++i) {conj_x[i] = std::conj(x[i]);}
+            for (int i=0; i<M; ++i) {conj_x[i] = Analysis::conj(x[i]);}
 
             /* Calculate lower part. */
             if (LUA == 'L' || LUA == 'A') {

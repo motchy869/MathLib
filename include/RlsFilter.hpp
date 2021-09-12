@@ -160,7 +160,7 @@ namespace MathLib {
 
                 for (int n=0; n<Ld; ++n) {
                     using namespace MathLib::LinAlg;
-                    std::reverse_copy(&vec_x[n*r_T - (Ld-1)], &vec_x[n*r_T+1], m_x);
+                    std::reverse_copy(&vec_x[n*r_T - m_p], &vec_x[n*r_T+1], m_x);
                     conjugateVec(m_p+1, m_x, m_x_conj);
                     mulMat(m_p+1, 1, m_p+1, m_x_conj, m_x, m_delta_R_x);
                     addMat(m_p+1, m_p+1, m_R_x, m_delta_R_x);

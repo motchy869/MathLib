@@ -2,6 +2,7 @@
     "cSpell.words": [
         "cerr",
         "Doxywizard",
+        "fsanitize",
         "fstack",
         "gmock",
         "googletest",

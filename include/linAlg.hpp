@@ -190,9 +190,9 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static void __attribute__((always_inline))
+            inline static void __attribute__((always_inline))
         #else
-        void
+            void
         #endif
         setDiag(const size_t m, const T *const d, T *const A) {
             for (size_t r=0; r<m; ++r) {A[r*m+r] = d[r];}
@@ -206,13 +206,14 @@ namespace MathLib {
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
-        inline static void __attribute__((always_inline))
+            inline static void __attribute__((always_inline))
         #else
-        void
+            void
         #endif
         fillLowTri(const int m, T *const A, const T x, const int d=0) {
             for (int r=0; r<m; ++r) {
-                const int c_end = r+d;
+                const int c_end_temp = r+d;
+                const int c_end = (c_end_temp < m ? c_end_temp : m-1);
                 T *const A_row_ptr = &A[r*m];
                 for (int c=0; c<=c_end; ++c) {A_row_ptr[c] = x;}
             }

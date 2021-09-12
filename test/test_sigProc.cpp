@@ -22,7 +22,7 @@ namespace {
         const std::complex<double> x2[5] = {-1.36, 3.74, -3.97, 4.64, -3.88};
         std::complex<double> y[10+5-1];
         const std::complex<double> y_ans[10+5-1] = {-5.4808, 21.1106, -26.2807, 24.0622, -26.6141, 1.0675, 8.4943, -6.4678, 22.6594, -18.183, 23.68, -7.5533, 1.2216, 10.2044};
-        MathLib::SigProc::convolve(5, 10, &x1[0], &x2[0], &y[0]);
+        MathLib::SigProc::convolve(10, 5, &x1[0], &x2[0], &y[0]);
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(3, &y[0], &y_ans[0], 1.0e-7l));
     }
 

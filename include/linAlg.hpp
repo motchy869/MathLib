@@ -716,7 +716,7 @@ namespace MathLib {
         hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
             std::complex<T> sum(0, 0);
             for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {
-                Analysis::addProd(std::conj(vec1[n1]), vec2[n2], sum); // faster than "sum += std::conj(vec1[n1])*vec2[n2]"
+                Analysis::addConjProd(vec1[n1], vec2[n2], sum); // faster than "sum += std::conj(vec1[n1])*vec2[n2]"
             }
             return sum;
         }

@@ -560,7 +560,7 @@ namespace MathLib {
          * - other do nothing
          */
         template <typename T>
-        void vecSelfOuterProd(const int M, const T *const x, T *const X, const char LUA='A') {
+        void vecSelfOuterProd(const int M, const T *const __restrict__ x, T *const __restrict__ X, const char LUA='A') {
             static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
             #define MEM_OFFSET(row,col) ((row)*M+col)
             for (int m=0; m<M; ++m) {X[m*(M+1)] = Analysis::sqAbs(x[m]);} // Calculate diagonal part.
@@ -610,7 +610,7 @@ namespace MathLib {
          * - other do nothing
          */
         template <typename T>
-        void vecSelfOuterProd(const int M, const std::complex<T> *const x, std::complex<T> *const X, std::complex<T> *const workspace, const char LUA='A') {
+        void vecSelfOuterProd(const int M, const std::complex<T> *const __restrict__ x, std::complex<T> *const __restrict__ X, std::complex<T> *const workspace, const char LUA='A') {
             #define MEM_OFFSET(row,col) ((row)*M+col)
             for (int m=0; m<M; ++m) {X[m*(M+1)] = Analysis::sqAbs(x[m]);} // Calculate diagonal part.
 

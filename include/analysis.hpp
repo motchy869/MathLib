@@ -182,8 +182,8 @@ namespace MathLib {
             const T *const x1_vec = reinterpret_cast<const T *>(&x1);
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             T *const y_vec = reinterpret_cast<T *>(&y);
-            y_vec[0] += x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1]; // real part
-            y_vec[1] += x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]; // imaginary part
+            y_vec[0] += x1_vec[0]*x2_vec[0] + x1_vec[1]*x2_vec[1]; // real part
+            y_vec[1] += x1_vec[0]*x2_vec[1] - x1_vec[1]*x2_vec[0]; // imaginary part
         }
 
         /**

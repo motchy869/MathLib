@@ -79,7 +79,7 @@ namespace MathLib {
          * normal: 350 ms@n
          * this method: 51 ms
          *
-         * @tparam T the number type of real and complex parts
+         * @tparam T the number type of real and imaginary parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @return "x1*x2"
@@ -98,7 +98,7 @@ namespace MathLib {
          * normal: 350 ms@n
          * this method: 51 ms
          *
-         * @tparam T the number type of real and complex parts
+         * @tparam T the number type of real and imaginary parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @return "x1*x2"
@@ -117,7 +117,7 @@ namespace MathLib {
          * This function is expected to work much faster than normal operation such as "y += x1*x2".
          * (see also: addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y))
          *
-         * @tparam T the number type of real and complex parts
+         * @tparam T the number type of real and imaginary parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @param[inout] y "y"
@@ -138,7 +138,7 @@ namespace MathLib {
          * normal: 411 ms@n
          * this method: 330 ms
          *
-         * @tparam T the number type of real and complex parts
+         * @tparam T the number type of real and imaginary parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @param[inout] y "y"
@@ -168,10 +168,29 @@ namespace MathLib {
         }
 
         /**
+         * @brief Add the product of two complex numbers "conj(x1)" and "x2" to "y".
+         * This function is expected to work about 20% faster than normal operation such as "y += std::conj(x1)*x2".@n
+         * (see also: addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y))
+         *
+         * @tparam T the number type of real and imaginary parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @param[inout] y "y"
+         */
+        template <typename T>
+        inline static void __attribute__((always_inline)) addConjProd(const std::complex<T> x1, const std::complex<T> x2, std::complex<T> &y) {
+            const T *const x1_vec = reinterpret_cast<const T *>(&x1);
+            const T *const x2_vec = reinterpret_cast<const T *>(&x2);
+            T *const y_vec = reinterpret_cast<T *>(&y);
+            y_vec[0] += x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1]; // real part
+            y_vec[1] += x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0]; // imaginary part
+        }
+
+        /**
          * @brief Subtract the product of two complex numbers "x1" and "x2" from "y"
          * This function is expected to work about 20% faster than normal operation such as "y -= x1*x2" (see also: addProd).
          *
-         * @tparam T the number type of real and complex parts
+         * @tparam T the number type of real and imaginary parts
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @param[inout] y "y"
@@ -189,7 +208,7 @@ namespace MathLib {
          * @brief Subtract the product of a floating point number "x1" and a complex number "x2" from "y"
          * This function is expected to work much faster than normal operation such as "y -= x1*x2" (see also: addProd).
          *
-         * @tparam T the number type of "x1" and real and complex parts of "x2"
+         * @tparam T the number type of "x1" and real and imaginary parts of "x2"
          * @param[in] x1 "x1"
          * @param[in] x2 "x2"
          * @param[inout] y "y"

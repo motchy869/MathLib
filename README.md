@@ -41,7 +41,7 @@ On Windows Power Shell
 ./scripts/doTest.bat
 ```
 
-You can clean output files by running `doClean.sh` / `doClean.bat`.
+You can clean output files by running `doClean.sh` / `doClean.bat`, or simply deleting `./build` directory.
 
 ## 4. files
 
@@ -64,10 +64,10 @@ When this macro is defined as `true`, some relatively-small functions are FORCIB
 You can find which functions are expanded by searching `#if MATH_LIB_INLINE_AGGRESSIVELY` in MathLib `include` directory.
 You may have to switch this macro to `false` when you have to keep the program size small due to lack of memory space.
 
-## 7. Bug Hunting Mode
+## 7. Canary Mode
 
-`include/common.hpp` has a macro constant `MATH_LIB_ENABLE_BUG_HUNTING_MODE`, which is defined as `false` in default.
+`include/common.hpp` has a macro constant `MATH_LIB_ENABLE_CANARY_MODE`, which is defined as `false` in default.
 When this macro is defined as `true`, the functions in MathLib performs costly parameter validations such as range check, and when encounter invalid parameters, the functions print error message to `std::cerr` and exit with `EXIT_FAILURE`.
 
 When the validity of parameters are guaranteed, parameter validations are just waste of time.
-It is recommended to enable bug hunting mode in experimental stage, and disable when the application becomes stable.
+It is recommended to enable Canary mode in experimental stage, and disable when the application becomes stable.

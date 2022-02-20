@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Rename Bug Hunting Mode to Canary Mode.
+- Added `SqrtTable`.
 
 ## [0.5.0] - 2021/9/15
 

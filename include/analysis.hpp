@@ -7,6 +7,7 @@
 #include <cmath>
 #include <complex>
 #include <type_traits>
+#include <vector>
 #include "common.hpp"
 
 namespace MathLib {
@@ -234,6 +235,87 @@ namespace MathLib {
         inline static void __attribute__((always_inline)) subtractProd(const T x1, const T x2, T &y) {
             y -= x1*x2;
         }
+
+        /**
+         * @brief table-based fast square root calculation
+         * @details Calculate the square root of "x" (sqrt(x)) using table lookup and linear interpolation.
+         * This algorithm takes 2 parameters:
+         * - max: the maximum value of "x"
+         * - N: the number of the table entries
+         * The 0-th table entry corresponds to 0, and the (N-1)-th corresponds to sqrt(x).
+         * The approximation always be under estimation.
+         * The error gets larger as "x" gets close to 0, so this method can be used only when error caused by small values of "x" is acceptable.
+         * @note Modern CPUs in personal computers can perform floating point number division very fast, and `std::sqrt` is faster than this method.
+         * This method wins against `std::sqrt` on only a few embedded CPUs.
+         * Following is performance report:
+         * - condition: max=3, N=100
+         * - Intel Core i5-1035G7
+         *   - iteration: 1e6
+         *   - `std::sqrt`:       9 ms
+         *   - `SqrtTable.calc`: 41 ms
+         * - TMS320C6748
+         *   - iteration: 1e4
+         *   - `std::sqrt`:      10.1 ms
+         *   - `SqrtTable.calc`: 4.83 ms
+         *
+         * @tparam T the number type of the input
+         */
+        template<typename T>
+        class SqrtTable {
+            static_assert(std::is_floating_point<T>::value, "Type parameter must be floating point number.");
+
+            private:
+                const T max, m_inv_max;
+                const int m_N, m_Nm1;
+                const T m_Nm1_T;
+                std::vector<T> m_table;
+
+            public:
+                /**
+                 * @brief constructor
+                 *
+                 * @param[in] max the maximum value of "x"
+                 * @param[in] N the number of the table entries
+                 */
+                SqrtTable(const T max, const int N) : max(max), m_inv_max(1/max), m_N(N), m_Nm1(N-1), m_Nm1_T(N-1), m_table(N) {
+                    #if MATH_LIB_ENABLE_CANARY_MODE
+                        if (max <= 0 || N < 2) {
+                            std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                    #endif
+
+                    const T sqrt_max = std::sqrt(max);
+                    const T inv_Nm1 = 1/static_cast<T>(N-1);
+                    for (int i=0; i<N; ++i) {
+                        m_table[i] = sqrt_max*sqrt(static_cast<T>(i)*inv_Nm1); // approximates sqrt(max) * sqrt(x/max)
+                    }
+                }
+
+                /**
+                * @brief Calculate the square root of "x" (sqrt(x)) using table lookup.
+                *
+                * @param[in] x the input value
+                * @return approximated sqrt(x)
+                */
+                T calc(const T x) {
+                    const T idx_f = x*m_Nm1_T*m_inv_max;
+                    const int idx = static_cast<int>(idx_f);
+                    const int idx2 = idx + 1;
+                    const bool cond1 = (0 <= idx), cond2 = (idx2 <= static_cast<int>(m_Nm1));
+                    if (cond1 && cond2) {
+                        const T w2 = idx_f - idx;
+                        const T w1 = 1 - w2;
+                        return w1*m_table[idx] + w2*m_table[idx2];
+                    }
+                    /* saturation */
+                    else if (!cond1) {
+                        return 0;
+                    } else { // !cond2
+                        return m_table[m_N-1];
+                    }
+                }
+        };
 
         /**
          * @brief Calculates sin(x) using 9 degree-polynomial approximation.

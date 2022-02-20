@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <gtest/gtest.h>
 #include "../include/analysis.hpp"
 #include "../include/linAlg.hpp"
@@ -41,6 +42,22 @@ namespace {
             MathLib::Analysis::subtractProd(vec_x1[i], vec_x2[i], minus_sum);
         }
         EXPECT_EQ(true, std::abs(minus_sum - minus_sum_ans) < 1e-6);
+    }
+
+    TEST_F(AnalysisLibTest, SqrtTable) {
+        const float max = 3;
+        const int N = 100;
+        MathLib::Analysis::SqrtTable<float> sqrtTable(max, N);
+        EXPECT_EQ(0, sqrtTable.calc(-1));
+        EXPECT_EQ(true, (sqrtTable.calc(max+1) - sqrt(max)) < 1e-6);
+
+        const int N2 = 1000;
+        std::vector<float> errors(N2);
+        for (int i=1; i<N2; ++i) {
+            const float x = max*static_cast<float>(i)/(N2-1);
+            errors[i] = sqrtTable.calc(x) - std::sqrt(x);
+        }
+        EXPECT_EQ(true, abs(*std::max_element(errors.begin(), errors.end(), [](const float &a, const float &b) { return std::abs(a) < std::abs(b); })) < 0.05);
     }
 
     TEST_F(AnalysisLibTest, sin_polyApprox) {

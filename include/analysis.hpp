@@ -454,7 +454,7 @@ namespace MathLib {
         };
 
         /**
-         * @brief @brief Calculates arc tangent of input value "x", using n(= 7 or 9) degree-polynomial approximation.
+         * @brief Calculates arc tangent of input value "x", using n(= 7 or 9) degree-polynomial approximation.
          * "x" must be in the range [-1, 1], otherwise the calculation error increases.
          * @details The 1+(n-1)/2 coefficients a1,a3,..., an were calculated as they minimize the cost function f(a1,a3,...,an) := \int_0^1 (a1*x + a3*x^3 + ... + an*x^n - atan(x))^2 \mathrm{d}x.
          * The maximal absolute error is less than E when 0<=x<=1 where E = 1.8*10^(-4) (n=7), 2.5*10^(-5) (n=9)

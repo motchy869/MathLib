@@ -293,11 +293,11 @@ namespace MathLib {
                 }
 
                 /**
-                * @brief Calculate the square root of "x" (sqrt(x)) using table lookup.
-                *
-                * @param[in] x the input value
-                * @return approximated sqrt(x)
-                */
+                 * @brief Calculate the square root of "x" (sqrt(x)) using table lookup.
+                 *
+                 * @param[in] x the input value
+                 * @return approximated sqrt(x)
+                 */
                 T calc(const T x) {
                     const T idx_f = x*m_Nm1_T*m_inv_max;
                     const int idx = static_cast<int>(idx_f);

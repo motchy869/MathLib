@@ -13,6 +13,18 @@
 namespace MathLib {
     namespace Analysis {
         /**
+         * @brief Set real and imaginary part of complex number without creating a temporary object.
+         *
+         * @tparam T the number type of the real part
+         */
+        template<typename T>
+        inline void __attribute__((always_inline)) setReIm(std::complex<T> &dst, const T real, const T imag) {
+            auto dst2 = reinterpret_cast<float *>(&dst);
+            dst2[0] = real;
+            dst2[1] = imag;
+        }
+
+        /**
          * @brief Take the conjugate of a complex number "x"
          *
          * @tparam T the number type of the real part of "x"

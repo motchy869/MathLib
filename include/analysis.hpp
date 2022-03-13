@@ -126,6 +126,24 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculate the product of two complex numbers "conj(x1)" and "x2".
+         * This function is expected to work faster, on embedded processor with poor compiler, than normal operation such as "x1*x2".
+         *
+         * @tparam T the number type of real and imaginary parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @return "conj(x1)*x2"
+         */
+        template <typename T>
+        inline static std::complex<T> __attribute__((always_inline)) conjProd(const std::complex<T> x1, const std::complex<T> x2) {
+            auto x1_vec = reinterpret_cast<const T (&)[2]>(x1);
+            auto x2_vec = reinterpret_cast<const T (&)[2]>(x2);
+            const T real = x1_vec[0]*x2_vec[0] + x1_vec[1]*x2_vec[1];
+            const T imag = x1_vec[0]*x2_vec[1] - x1_vec[1]*x2_vec[0];
+            return std::move(std::complex<T>(real, imag));
+        }
+
+        /**
          * @brief Add the product of a floating point number "x1" and a complex number "x2".
          * This function is expected to work much faster than normal operation such as "y += x1*x2".
          * (see also: addProd(const std::complex<T> &x1, const std::complex<T> &x2, std::complex<T> &y))

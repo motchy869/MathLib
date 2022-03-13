@@ -19,7 +19,7 @@ namespace MathLib {
          */
         template<typename T>
         inline void __attribute__((always_inline)) setReIm(std::complex<T> &dst, const T real, const T imag) {
-            auto dst2 = reinterpret_cast<float *>(&dst);
+            auto dst2 = reinterpret_cast<float (&)[2]>(dst);
             dst2[0] = real;
             dst2[1] = imag;
         }

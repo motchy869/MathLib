@@ -295,7 +295,7 @@ namespace MathLib {
             static_assert(std::is_floating_point<T>::value, "Type parameter must be floating point number.");
 
             private:
-                const T max, m_inv_max;
+                const T m_max, m_inv_max;
                 const int m_N, m_Nm1;
                 const T m_Nm1_T;
                 std::vector<T> m_table;
@@ -307,7 +307,7 @@ namespace MathLib {
                  * @param[in] max the maximum value of "x"
                  * @param[in] N the number of the table entries
                  */
-                SqrtTable(const T max, const int N) : max(max), m_inv_max(1/max), m_N(N), m_Nm1(N-1), m_Nm1_T(N-1), m_table(N) {
+                SqrtTable(const T max, const int N) : m_max(max), m_inv_max(1/max), m_N(N), m_Nm1(N-1), m_Nm1_T(N-1), m_table(N) {
                     #if MATH_LIB_ENABLE_CANARY_MODE
                         if (max <= 0 || N < 2) {
                             std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;

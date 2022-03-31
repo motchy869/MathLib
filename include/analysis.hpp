@@ -13,6 +13,18 @@
 namespace MathLib {
     namespace Analysis {
         /**
+         * @brief Set real and imaginary part of complex number without creating a temporary object.
+         *
+         * @tparam T the number type of the real part
+         */
+        template<typename T>
+        inline void __attribute__((always_inline)) setReIm(std::complex<T> &dst, const T real, const T imag) {
+            auto dst2 = reinterpret_cast<float (&)[2]>(dst);
+            dst2[0] = real;
+            dst2[1] = imag;
+        }
+
+        /**
          * @brief Take the conjugate of a complex number "x"
          *
          * @tparam T the number type of the real part of "x"
@@ -110,6 +122,24 @@ namespace MathLib {
             const T *const x2_vec = reinterpret_cast<const T *>(&x2);
             const T real = x1_vec[0]*x2_vec[0] - x1_vec[1]*x2_vec[1];
             const T imag = x1_vec[0]*x2_vec[1] + x1_vec[1]*x2_vec[0];
+            return std::move(std::complex<T>(real, imag));
+        }
+
+        /**
+         * @brief Calculate the product of two complex numbers "conj(x1)" and "x2".
+         * This function is expected to work faster, on embedded processor with poor compiler, than normal operation such as "x1*x2".
+         *
+         * @tparam T the number type of real and imaginary parts
+         * @param[in] x1 "x1"
+         * @param[in] x2 "x2"
+         * @return "conj(x1)*x2"
+         */
+        template <typename T>
+        inline static std::complex<T> __attribute__((always_inline)) conjProd(const std::complex<T> x1, const std::complex<T> x2) {
+            auto x1_vec = reinterpret_cast<const T (&)[2]>(x1);
+            auto x2_vec = reinterpret_cast<const T (&)[2]>(x2);
+            const T real = x1_vec[0]*x2_vec[0] + x1_vec[1]*x2_vec[1];
+            const T imag = x1_vec[0]*x2_vec[1] - x1_vec[1]*x2_vec[0];
             return std::move(std::complex<T>(real, imag));
         }
 
@@ -265,7 +295,7 @@ namespace MathLib {
             static_assert(std::is_floating_point<T>::value, "Type parameter must be floating point number.");
 
             private:
-                const T max, m_inv_max;
+                const T m_max, m_inv_max;
                 const int m_N, m_Nm1;
                 const T m_Nm1_T;
                 std::vector<T> m_table;
@@ -277,7 +307,7 @@ namespace MathLib {
                  * @param[in] max the maximum value of "x"
                  * @param[in] N the number of the table entries
                  */
-                SqrtTable(const T max, const int N) : max(max), m_inv_max(1/max), m_N(N), m_Nm1(N-1), m_Nm1_T(N-1), m_table(N) {
+                SqrtTable(const T max, const int N) : m_max(max), m_inv_max(1/max), m_N(N), m_Nm1(N-1), m_Nm1_T(N-1), m_table(N) {
                     #if MATH_LIB_ENABLE_CANARY_MODE
                         if (max <= 0 || N < 2) {
                             std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
@@ -293,11 +323,11 @@ namespace MathLib {
                 }
 
                 /**
-                * @brief Calculate the square root of "x" (sqrt(x)) using table lookup.
-                *
-                * @param[in] x the input value
-                * @return approximated sqrt(x)
-                */
+                 * @brief Calculate the square root of "x" (sqrt(x)) using table lookup.
+                 *
+                 * @param[in] x the input value
+                 * @return approximated sqrt(x)
+                 */
                 T calc(const T x) {
                     const T idx_f = x*m_Nm1_T*m_inv_max;
                     const int idx = static_cast<int>(idx_f);
@@ -454,7 +484,7 @@ namespace MathLib {
         };
 
         /**
-         * @brief @brief Calculates arc tangent of input value "x", using n(= 7 or 9) degree-polynomial approximation.
+         * @brief Calculates arc tangent of input value "x", using n(= 7 or 9) degree-polynomial approximation.
          * "x" must be in the range [-1, 1], otherwise the calculation error increases.
          * @details The 1+(n-1)/2 coefficients a1,a3,..., an were calculated as they minimize the cost function f(a1,a3,...,an) := \int_0^1 (a1*x + a3*x^3 + ... + an*x^n - atan(x))^2 \mathrm{d}x.
          * The maximal absolute error is less than E when 0<=x<=1 where E = 1.8*10^(-4) (n=7), 2.5*10^(-5) (n=9)

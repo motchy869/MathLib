@@ -6,6 +6,13 @@
 namespace {
     class AnalysisLibTest : public ::testing::Test{};
 
+    TEST_F(AnalysisLibTest, setReIm) {
+        std::complex<float> x[2];
+        x[0] = std::complex<float>(1.0, -1.0);
+        MathLib::Analysis::setReIm<float>(x[1], 1, -1);
+        EXPECT_EQ(x[0], x[1]);
+    }
+
     TEST_F(AnalysisLibTest, addProd) {
         /* test case produced using Julia */
         constexpr int m=5;

@@ -4,6 +4,8 @@ if (UNIX)
     set(CMAKE_CXX_COMPILER "clang++")
 elseif (WIN32)
     set(CMAKE_CXX_COMPILER "g++")
+else ()
+    message(FATAL_ERROR "Unkkown platform.")
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)

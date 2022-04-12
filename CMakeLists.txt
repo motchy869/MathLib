@@ -5,7 +5,7 @@ if (UNIX)
 elseif (WIN32)
     set(CMAKE_CXX_COMPILER "g++")
 else ()
-    message(FATAL_ERROR "Unkkown platform.")
+    message(FATAL_ERROR "Unknown platform.")
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)

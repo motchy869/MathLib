@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
 if (UNIX)
     set(CMAKE_CXX_COMPILER "clang++")
-    set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-fsanitize=address")
+    string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address")
 elseif (WIN32)
     set(CMAKE_CXX_COMPILER "g++")
 else ()
@@ -10,9 +10,9 @@ else ()
 endif ()
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wfatal-errors -Winline -Wold-style-cast -Wredundant-decls -Wshadow -Wswitch-default -Wswitch-enum -Wundef")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fstack-protector -ftrapv")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wfatal-errors -Winline -Wold-style-cast -Wredundant-decls -Wshadow -Wswitch-default -Wswitch-enum -Wundef")
+string(APPEND CMAKE_CXX_FLAGS_DEBUG " -O0 -g -fstack-protector -ftrapv")
+string(APPEND CMAKE_CXX_FLAGS_RELEASE " -O3 -DNDEBUG")
 
 # Set the project name and language.
 project(MathLib CXX)

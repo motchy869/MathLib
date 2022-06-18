@@ -21,10 +21,10 @@ link_directories(${CMAKE_GMOCK_LIB_DIR})
 add_executable(test_analysis ${CMAKE_CURRENT_SOURCE_DIR}/test_analysis.cpp)
 add_executable(test_linAlg ${CMAKE_CURRENT_SOURCE_DIR}/test_linAlg.cpp)
 add_executable(test_sigProc ${CMAKE_CURRENT_SOURCE_DIR}/test_sigProc.cpp)
-add_executable(test_rlsFilter ${CMAKE_CURRENT_SOURCE_DIR}/test_rlsFilter.cpp)
+add_executable(test_RlsFilter ${CMAKE_CURRENT_SOURCE_DIR}/test_RlsFilter.cpp)
 
 # Link libraries
 target_link_libraries(test_analysis motchyMathLib gtest gtest_main pthread)
 target_link_libraries(test_linAlg motchyMathLib gtest gtest_main pthread)
 target_link_libraries(test_sigProc motchyMathLib gtest gtest_main pthread)
-target_link_libraries(test_rlsFilter motchyMathLib gtest gtest_main pthread)
+target_link_libraries(test_RlsFilter motchyMathLib gtest gtest_main pthread)

@@ -2,6 +2,7 @@
     "cSpell.words": [
         "cerr",
         "Doxywizard",
+        "Exchg",
         "fsanitize",
         "fstack",
         "gmock",
@@ -12,6 +13,7 @@
         "libgtest",
         "libiconv",
         "SUBDIRS",
+        "tparam",
         "UNDOC",
         "Wextra",
         "Wfatal",

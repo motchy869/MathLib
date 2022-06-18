@@ -202,7 +202,7 @@ namespace MathLib {
          * @brief Fill lower triangle part of a given matrix "A" with a given value "x".
          * The diagonal boundary is controlled by a parameter "d", defaults to 0.
          * "d=0" corresponds to the main diagonal line.
-         * "d=k (k>0)" corresponds "k"-th upper subdiagonal line, and "d=-k (k>0)" corresponds to "k"-th lower subdiagonal line.
+         * "d=k (k>0)" corresponds "k"-th upper sub-diagonal line, and "d=-k (k>0)" corresponds to "k"-th lower sub-diagonal line.
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
@@ -222,18 +222,19 @@ namespace MathLib {
         /**
          * @brief Add a given vector "d" to the diagonal entries of a given square matrix "A".
          *
-         * @tparam T the number type of the elements of "d, A".
+         * @tparam T1 the number type of the elements of "d"
+         * @tparam T2 the number type of the elements of "A"
          * @param[in] m the number of the rows in the matrices "A"
          * @param[in] d "d"
          * @param[out] A "A"
          */
-        template <typename T>
+        template <typename T1, typename T2>
         #if MATH_LIB_INLINE_AGGRESSIVELY
             inline static void __attribute__((always_inline))
         #else
             void
         #endif
-        addDiag(const size_t m, const T *const d, T *const A) {
+        addDiag(const size_t m, const T1 *const d, T2 *const A) {
             for (size_t r=0; r<m; ++r) {A[r*m+r] += d[r];}
         }
 

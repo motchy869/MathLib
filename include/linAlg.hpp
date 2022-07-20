@@ -199,10 +199,14 @@ namespace MathLib {
         }
 
         /**
-         * @brief Fill lower triangle part of a given matrix "A" with a given value "x".
+         * @brief Fill lower triangle part of a given square matrix "A" with a given value "x".
          * The diagonal boundary is controlled by a parameter "d", defaults to 0.
          * "d=0" corresponds to the main diagonal line.
          * "d=k (k>0)" corresponds "k"-th upper sub-diagonal line, and "d=-k (k>0)" corresponds to "k"-th lower sub-diagonal line.
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[out] A "A"
+         * @param[in] x "x"
+         * @param[in] d "d"
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY

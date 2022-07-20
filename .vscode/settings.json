@@ -24,6 +24,7 @@
         "Wundef"
     ],
     "files.associations": {
+        "*.m": "matlab",
         "cmath": "cpp",
         "stdexcept": "cpp",
         "any": "cpp",
@@ -79,6 +80,12 @@
         "compare": "cpp",
         "concepts": "cpp",
         "ranges": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp"
     }
 }

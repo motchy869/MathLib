@@ -158,6 +158,25 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_true[0][0], 0));
     }
 
+    TEST_F(LinAlgLibTest, copyLowTri) {
+        constexpr size_t m = 5;
+        int A[m][m] = {
+            { 1,  2,  3,  4},
+            { 5,  6,  7,  8},
+            { 9, 10, 11, 12},
+            {13, 14, 15, 16},
+        };
+        MathLib::LinAlg::copyLowTri(m, &A[0][0], 2);
+
+        const int A_postProc_true[m][m] = {
+            { 1,  2,  9, 13},
+            { 5,  6,  7, 14},
+            { 9, 10, 11, 12},
+            {13, 14, 15, 16},
+        };
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_postProc_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, addDiag) {
         constexpr size_t m = 3;
         int A[m][m] = {

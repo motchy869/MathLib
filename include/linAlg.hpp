@@ -215,11 +215,47 @@ namespace MathLib {
             void
         #endif
         fillLowTri(const int m, T *const A, const T x, const int d=0) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < -m+1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
             for (int r=0; r<m; ++r) {
                 const int c_end_temp = r+d;
                 const int c_end = (c_end_temp < m ? c_end_temp : m-1);
                 T *const A_row_ptr = &A[r*m];
                 for (int c=0; c<=c_end; ++c) {A_row_ptr[c] = x;}
+            }
+        }
+
+        /**
+         * @brief Copy lower triangle part of a given square matrix "A" to upper triangle part of "A".
+         * The diagonal boundary is controlled by a parameter "d", defaults to 1.
+         * "d=k (0<k<m)" corresponds to the "k"-th lower sub-diagonal line.
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        copyLowTri(const int m, T *const A, const int d=1) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < 1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
+            T *A_row_head_ptr = &A[d*m];
+            for (int i=d; i<m; ++i) {
+                T *dst_ptr = &A[i];
+                T *src_ptr = A_row_head_ptr;
+                for (int j=0; j<=i-d; ++j) {
+                    *dst_ptr = *(src_ptr++);
+                    dst_ptr += m;
+                }
+                A_row_head_ptr += m;
             }
         }
 

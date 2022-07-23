@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - missing doxygen comment for `LinAlg::fillLowTri` function
 - Added
   - `LinAlg::copyLowTri` function
+  - `LinAlg::copyConjLowTri` function
 
 ## [v0.9.0] - 2022-06-18
 

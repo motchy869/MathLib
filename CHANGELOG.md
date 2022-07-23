@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed
   - missing doxygen comment for `LinAlg::fillLowTri` function
+- Improved
+  - automatic data type promotion for some functions in `LinAlg` namespace
 - Added
   - `LinAlg::copyLowTri` function
   - `LinAlg::copyConjLowTri` function

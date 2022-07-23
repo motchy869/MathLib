@@ -177,6 +177,26 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_postProc_true[0][0], 0));
     }
 
+    TEST_F(LinAlgLibTest, copyConjLowTri) {
+        constexpr size_t m = 5;
+        std::complex<float> A[m][m] = {
+            { 1,      2,     3,       4},
+            { 5.0Fi, 6.0Fi,  7.0Fi,   8.0Fi},
+            { 9,     10,     11,      12},
+            {13.0Fi, 14.0Fi, 15.0Fi, 16.0Fi},
+        };
+        MathLib::LinAlg::copyConjLowTri(m, &A[0][0], 2);
+
+        const std::complex<float> A_postProc_true[m][m] = {
+            { 1,     2,      9,      -13.0Fi},
+            { 5.0Fi, 6.0Fi,  7.0Fi,  -14.0Fi},
+            { 9,     10,     11,     12},
+            {13.0Fi, 14.0Fi, 15.0Fi, 16.0Fi},
+        };
+        MathLib::LinAlg::Debug::printComplexMat(4, 4, &A[0][0], "%g + %g im");
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualMat(m, m, &A[0][0], &A_postProc_true[0][0], 0));
+    }
+
     TEST_F(LinAlgLibTest, addDiag) {
         constexpr size_t m = 3;
         int A[m][m] = {

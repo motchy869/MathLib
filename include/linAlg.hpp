@@ -263,6 +263,39 @@ namespace MathLib {
         }
 
         /**
+         * @brief Copy the conjugate-transpose of lower triangle part of a given square matrix "A" to upper triangle part of "A".
+         * The diagonal boundary is controlled by a parameter "d", defaults to 1.
+         * "d=k (0<k<m)" corresponds to the "k"-th lower sub-diagonal line.
+         * @details
+         * For example, let `A = {{1,2,3,4},{5i,6i,7i,8i},{9,10,11,12},{13i,14i,15i,16i}}`.
+         * Then `copyLowTri(4, A, B, 2)` yields `B = {{1,2,9,-13i},{5i,6i,7i,-14i},{9,10,11,12},{13i,14i,15i,16i}}`.
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        copyConjLowTri(const int m, std::complex<T> *const A, const int d=1) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < 1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
+            auto *A_row_head_ptr = &A[d*m];
+            for (int i=d; i<m; ++i) {
+                auto *dst_ptr = &A[i];
+                auto *src_ptr = A_row_head_ptr;
+                for (int j=0; j<=i-d; ++j) {
+                    *dst_ptr = std::conj(*(src_ptr++));
+                    dst_ptr += m;
+                }
+                A_row_head_ptr += m;
+            }
+        }
+
+        /**
          * @brief Add a given vector "d" to the diagonal entries of a given square matrix "A".
          *
          * @tparam T1 the number type of the elements of "d"

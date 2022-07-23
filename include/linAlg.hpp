@@ -528,21 +528,23 @@ namespace MathLib {
 
         /**
          * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
+         * The data type of "B" will be the promoted data type of "c" and "A".
          *
-         * @tparam T the number type of "c" and the elements of "A"
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the elements of "A"
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] n the number of the columns in the input matrix "A"
          * @param[in] c the scalar "c"
          * @param[in] A the matrix "A"
          * @param[out] B the matrix "B"
          */
-        template <typename T>
+        template <typename Tc, typename TA, typename TB = decltype(std::declval<Tc>()*std::declval<TA>())>
         #if MATH_LIB_INLINE_AGGRESSIVELY
             inline static void __attribute__((always_inline))
         #else
             void
         #endif
-        scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
+        scaleMat(const size_t m, const size_t n, const Tc c, const TA *const A, TB *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {B[i] = Analysis::prod(c, A[i]);}
         }
@@ -587,17 +589,17 @@ namespace MathLib {
         /**
          * @brief Multiply each row of a given "m x n" matrix "A", and store result to "B"
          * Multiply c[i] to the i-th row of "A" where "c" is a vector with length "m".
+         * The data type of "B" will be the promoted data type of "c" and "A".
          *
-         * @tparam Tc the number type of the elements of "c"
-         * @tparam TA the number type of the elements of "A"
-         * @tparam TB the number type of the elements of "B"
+         * @tparam Tc the data type of the elements of "c"
+         * @tparam TA the data type of the elements of "A"
          * @param[in] m the number of the rows in the matrix "A"
          * @param[in] n the number of the columns in the matrix "A"
          * @param[in] c the vector "m"
          * @param[in] A the matrix "A"
          * @param[out] B the output matrix "B"
          */
-        template <typename Tc, typename TA, typename TB>
+        template <typename Tc, typename TA, typename TB = decltype(std::declval<Tc>()*std::declval<TA>())>
         void scaleMatEachRow(const size_t m, const size_t n, const Tc *const c, const TA *const A, TB *const B) {
             for (size_t i=0; i<m; ++i) {
                 const TA *const ptr_A = &A[i*n];
@@ -611,22 +613,24 @@ namespace MathLib {
 
         /**
          * @brief Calculates a scaled vector "ca" as "b" where "a" is a vector and "c" is a scalar.
+         * The data type of "b" will be the promoted data type of "c" and "a".
          *
-         * @tparam T the number type of "c" and the elements of "a"
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the elements of "a"
          * @param[in] m the length of the vector "a"
          * @param[in] c the scalar "c"
          * @param[in] a the vector "a"
          * @param[out] b the vector "b"
          */
-        template <typename T>
-        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const T c, const T *const a, T *const b) {
+        template <typename Tc, typename TA, typename Tb = decltype(std::declval<Tc>()*std::declval<TA>())>
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, const TA *const a, Tb *const b) {
             scaleMat(1, m, c, a, b);
         }
 
         /**
          * @brief Calculate a self outer product of a given real vector "x".
          *
-         * @tparam T the number type of the entries of "x"
+         * @tparam T the data type of the entries of "x"
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer

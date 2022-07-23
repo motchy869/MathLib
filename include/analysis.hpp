@@ -32,7 +32,7 @@ namespace MathLib {
          * @return the conjugate of "x"
          */
         template <typename T>
-        inline static std::complex<T> __attribute__((always_inline)) conj(std::complex<T> x) {
+        inline static std::complex<T> __attribute__((always_inline)) conj(const std::complex<T> x) {
             return std::move(std::complex<T>(x.real(), -x.imag()));
         }
 
@@ -53,7 +53,7 @@ namespace MathLib {
          * @param[in] x "x"
          */
         template <typename T>
-        inline static T __attribute__((always_inline)) sqAbs(std::complex<T> x) {
+        inline static T __attribute__((always_inline)) sqAbs(const std::complex<T> x) {
             return x.real()*x.real() + x.imag()*x.imag();
         }
 
@@ -64,7 +64,7 @@ namespace MathLib {
          * @param[in] x "x"
          */
         template <typename T>
-        inline static T __attribute__((always_inline)) sqAbs(T x) {
+        inline static T __attribute__((always_inline)) sqAbs(const T x) {
             static_assert(std::is_floating_point<T>::value, "argument type must be floating point number.");
             return x*x;
         }

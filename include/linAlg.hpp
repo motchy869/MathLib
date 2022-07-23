@@ -627,6 +627,20 @@ namespace MathLib {
         }
 
         /**
+         * @brief Overwrite a given vector "a" by its scaled version "ca" where "c" is a scalar.
+         *
+         * @tparam Tc the data type of "c"
+         * @tparam Ta the data type of the elements of "a"
+         * @param[in] m the length of the vector "a"
+         * @param[in] c the scalar "c"
+         * @param[inout] a the vector "a"
+         */
+        template <typename Tc, typename Ta>
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, Ta *const a) {
+            scaleVec(m, c, a, a);
+        }
+
+        /**
          * @brief Calculate a self outer product of a given real vector "x".
          *
          * @tparam T the data type of the entries of "x"

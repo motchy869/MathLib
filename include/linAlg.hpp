@@ -250,10 +250,10 @@ namespace MathLib {
                     exit(EXIT_FAILURE);
                 }
             #endif
-            T *A_row_head_ptr = &A[d*m];
+            auto *A_row_head_ptr = &A[d*m];
             for (int i=d; i<m; ++i) {
-                T *dst_ptr = &A[i];
-                T *src_ptr = A_row_head_ptr;
+                auto *dst_ptr = &A[i];
+                auto *src_ptr = A_row_head_ptr;
                 for (int j=0; j<=i-d; ++j) {
                     *dst_ptr = *(src_ptr++);
                     dst_ptr += m;

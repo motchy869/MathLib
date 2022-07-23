@@ -506,27 +506,6 @@ namespace MathLib {
         }
 
         /**
-         * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
-         *
-         * @tparam Tc the data type of "c"
-         * @tparam TA the data type of the entries of "A"
-         * @param[in] m the number of the rows in the input matrix "A"
-         * @param[in] n the number of the columns in the input matrix "A"
-         * @param[in] c the scalar "c"
-         * @param[in] A the matrix "A"
-         */
-        template <typename Tc, typename TA>
-        #if MATH_LIB_INLINE_AGGRESSIVELY
-            inline static void __attribute__((always_inline))
-        #else
-            void
-        #endif
-        scaleMat(const size_t m, const size_t n, const Tc c, TA *const A) {
-            const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
-        }
-
-        /**
          * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
          * The data type of "B" will be the promoted data type of "c" and "A".
          *
@@ -547,6 +526,26 @@ namespace MathLib {
         scaleMat(const size_t m, const size_t n, const Tc c, const TA *const A, TB *const B) {
             const size_t L = m*n;
             for (size_t i=0; i<L; ++i) {B[i] = Analysis::prod(c, A[i]);}
+        }
+
+        /**
+         * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
+         *
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the entries of "A"
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[in] n the number of the columns in the input matrix "A"
+         * @param[in] c the scalar "c"
+         * @param[in] A the matrix "A"
+         */
+        template <typename Tc, typename TA>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        scaleMat(const size_t m, const size_t n, const Tc c, TA *const A) {
+            scaleMat(m, n, c, A, A);
         }
 
         /**

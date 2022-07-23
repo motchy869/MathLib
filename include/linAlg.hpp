@@ -230,9 +230,12 @@ namespace MathLib {
         }
 
         /**
-         * @brief Copy lower triangle part of a given square matrix "A" to upper triangle part of "A".
+         * @brief Copy the transpose of lower triangle part of a given square matrix "A" to upper triangle part of "A".
          * The diagonal boundary is controlled by a parameter "d", defaults to 1.
          * "d=k (0<k<m)" corresponds to the "k"-th lower sub-diagonal line.
+         * @details
+         * For example, let `A = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16}}`.
+         * Then `copyLowTri(4, A, B, 2)` yields `B = {{1,2,9,13},{5,6,7,14},{9,10,11,12},{13,14,15,16}}`.
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY

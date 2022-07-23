@@ -288,7 +288,7 @@ namespace MathLib {
                 auto *dst_ptr = &A[i];
                 auto *src_ptr = A_row_head_ptr;
                 for (int j=0; j<=i-d; ++j) {
-                    *dst_ptr = std::conj(*(src_ptr++));
+                    *dst_ptr = Analysis::conj(*(src_ptr++));
                     dst_ptr += m;
                 }
                 A_row_head_ptr += m;
@@ -388,7 +388,7 @@ namespace MathLib {
         #endif
         conjugateMat(const size_t m, const size_t n, std::complex<T> *A) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {A[i] = std::conj(A[i]);}
+            for (size_t i=0; i<L; ++i) {A[i] = Analysis::conj(A[i]);}
         }
 
         /**
@@ -408,7 +408,7 @@ namespace MathLib {
         #endif
         conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {B[i] = std::conj(A[i]);}
+            for (size_t i=0; i<L; ++i) {B[i] = Analysis::conj(A[i]);}
         }
 
         /**
@@ -793,7 +793,7 @@ namespace MathLib {
         hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
             std::complex<T> sum(0, 0);
             for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {
-                Analysis::addConjProd(vec1[n1], vec2[n2], sum); // faster than "sum += std::conj(vec1[n1])*vec2[n2]"
+                Analysis::addConjProd(vec1[n1], vec2[n2], sum); // faster than "sum += Analysis::conj(vec1[n1])*vec2[n2]"
             }
             return sum;
         }
@@ -862,7 +862,7 @@ namespace MathLib {
                     for (int j=0; j<i; ++j) {
                         const std::complex<T> &L_ij = L_row_ptr[j];
                         Analysis::subtractProd(d[j], Analysis::sqAbs(L_ij), di); // d[i] <- d[i] - d[j]*|L[i,j]|^2
-                        dL_ptr[j] = Analysis::prod(d[j], std::conj(L_ij)); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
+                        dL_ptr[j] = Analysis::prod(d[j], Analysis::conj(L_ij)); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
                     }
                 }
                 d[i] = di;

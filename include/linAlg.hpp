@@ -616,14 +616,14 @@ namespace MathLib {
          * The data type of "b" will be the promoted data type of "c" and "a".
          *
          * @tparam Tc the data type of "c"
-         * @tparam TA the data type of the elements of "a"
+         * @tparam Ta the data type of the elements of "a"
          * @param[in] m the length of the vector "a"
          * @param[in] c the scalar "c"
          * @param[in] a the vector "a"
          * @param[out] b the vector "b"
          */
-        template <typename Tc, typename TA, typename Tb = decltype(std::declval<Tc>()*std::declval<TA>())>
-        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, const TA *const a, Tb *const b) {
+        template <typename Tc, typename Ta, typename Tb = decltype(std::declval<Tc>()*std::declval<Ta>())>
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, const Ta *const a, Tb *const b) {
             scaleMat(1, m, c, a, b);
         }
 

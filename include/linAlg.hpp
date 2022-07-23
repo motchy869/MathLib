@@ -556,7 +556,7 @@ namespace MathLib {
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] c the scalar "c"
          * @param[in] A the matrix "A"
-         * @param[in] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
+         * @param[inout] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
          * - 'L' only diagonal and lower elements are updated
          * - 'U' only diagonal and upper elements are updated
          * - 'A' all elements are updated

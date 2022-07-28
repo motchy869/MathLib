@@ -71,7 +71,7 @@ namespace MathLib {
         #endif
 
         /**
-         * @brief division, just for MathLib internal use.
+         * @brief A division operation. Under certain `PROCESSOR_TYPE` configurations such as PROCESSOR_TYPE_TMS320C6748, hardware accelerated operation will be used.
          * @param[in] num numerator
          * @param[in] den denominator
          */

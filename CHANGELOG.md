@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added
   - `LinAlg::copyLowTri` function
   - `LinAlg::copyConjLowTri` function
+  - fast floating point number reciprocal computation using TMS320C6748 DSP instructions `RCPSP` and `RCPDP`.
 
 ## [v0.9.0] - 2022-06-18
 

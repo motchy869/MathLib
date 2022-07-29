@@ -94,8 +94,22 @@ namespace MathLib {
              * @param[in] num numerator
              * @param[in] den denominator
              */
-            float __attribute__((always_inline)) division(const float num, const float den) {
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<float>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const float den) {
                 return num*fastRecipF32(den);
+            }
+
+            /**
+             * @brief floating-point complex number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<std::complex<float>>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const std::complex<float> den) {
+                const float a = real(den), b = imag(den);
+                const float power = a*a + b*b;
+                const float inv_power = fastRecipF32(power);
+                return num*std::complex<float>(a*inv_power, -b*inv_power);
             }
 
             /**
@@ -103,8 +117,22 @@ namespace MathLib {
              * @param[in] num numerator
              * @param[in] den denominator
              */
-            double __attribute__((always_inline)) division(const double num, const double den) {
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<double>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const double den) {
                 return num*fastRecipF64(den);
+            }
+
+            /**
+             * @brief floating-point complex number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<std::complex<double>>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const std::complex<double> den) {
+                const double a = real(den), b = imag(den);
+                const double power = a*a + b*b;
+                const double inv_power = fastRecipF64(power);
+                return num*std::complex<double>(a*inv_power, -b*inv_power);
             }
 
             /**

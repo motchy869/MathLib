@@ -20,7 +20,7 @@ namespace MathLib {
             /**
              * @brief Prints real matrix "A" in standard output.
              *
-             * @tparam T the number type of the elements of "A"
+             * @tparam T the data type of the elements of "A"
              * @param[in] m the number of the rows in "A"
              * @param[in] n the number of the columns in "A"
              * @param[in] A the matrix "A"
@@ -45,7 +45,7 @@ namespace MathLib {
             /**
              * @brief Prints real vector in standard output.
              *
-             * @tparam T the number type of the elements of the input vector
+             * @tparam T the data type of the elements of the input vector
              * @param[in] m the length of the input vector
              * @param[in] vec the input vector
              * @param[in] format format string which is applied to each element in the input vector
@@ -59,7 +59,7 @@ namespace MathLib {
             /**
              * @brief Prints complex matrix "A" in standard output.
              *
-             * @tparam T the number type of the real and imaginary part of the elements of "A"
+             * @tparam T the data type of the real and imaginary part of the elements of "A"
              * @param[in] m the number of the rows in "A"
              * @param[in] n the number of the columns in "A"
              * @param[in] A the matrix "A"
@@ -84,7 +84,7 @@ namespace MathLib {
             /**
              * @brief Prints complex vector in standard output.
              *
-             * @tparam T the number type of the real and imaginary part of the elements of the input vector
+             * @tparam T the data type of the real and imaginary part of the elements of the input vector
              * @param[in] m the length of the input vector
              * @param[in] vec the input vector
              * @param[in] format format string which is applied to each element in the input vector
@@ -100,8 +100,8 @@ namespace MathLib {
          * @brief Checks whether given two matrices "A" and "B" are equal or not.
          * @details "A" and "B" are considered to be equal if and only if the absolute value of all the element of "A-B" is strictly less than a given number, epsilon.
          *
-         * @tparam T1 the number type of the elements of A and B
-         * @tparam T2 the number type of the elements of epsilon
+         * @tparam T1 the data type of the elements of A and B
+         * @tparam T2 the data type of the elements of epsilon
          * @param[in] m the number of the rows in the input matrices
          * @param[in] n the number of the columns in the input matrices
          * @param[in] A the matrix A
@@ -128,8 +128,8 @@ namespace MathLib {
          * @brief Checks whether given two vectors "a" and "b" are equal or not.
          * @details "a" and "b" are considered to be equal if and only if the absolute value of all the element of "a-b" is strictly less than a given number, epsilon.
          *
-         * @tparam T1 the number type of the elements of "a" and "b"
-         * @tparam T2 the number type of the elements of epsilon
+         * @tparam T1 the data type of the elements of "a" and "b"
+         * @tparam T2 the data type of the elements of epsilon
          * @param[in] m the length of the input vectors
          * @param[in] a the vector "a"
          * @param[in] b the vector "b"
@@ -145,7 +145,7 @@ namespace MathLib {
         /**
          * @brief Construct complex matrix "A" from real part "A_real" and imaginary part "A_imag".
          *
-         * @tparam T the number type of "A_real" and "A_imag"
+         * @tparam T the data type of "A_real" and "A_imag"
          * @param[in] m the number of the rows in the input matrices
          * @param[in] n the number of the columns in the input matrices
          * @param[in] A_real the real part of "A"
@@ -168,7 +168,7 @@ namespace MathLib {
         /**
          * @brief Construct complex vector "x" from real part "x_real" and imaginary part "x_imag".
          *
-         * @tparam T the number type of "x_real" and "x_imag"
+         * @tparam T the data type of "x_real" and "x_imag"
          * @param[in] m the length of the vector "x"
          * @param[in] x_real the real part of "x"
          * @param[in] x_imag the imaginary part of "x"
@@ -183,7 +183,7 @@ namespace MathLib {
          * @brief Set a given vector "d" to the diagonal entries of a given square matrix "A".
          * The length of "d" must be equal to the number of the rows of "A".
          *
-         * @tparam T the number type of the elements of "d, A".
+         * @tparam T the data type of the elements of "d, A".
          * @param[in] m the number of the rows in the matrices "A"
          * @param[in] d "d"
          * @param[out] A "A"
@@ -199,10 +199,14 @@ namespace MathLib {
         }
 
         /**
-         * @brief Fill lower triangle part of a given matrix "A" with a given value "x".
+         * @brief Fill lower triangle part of a given square matrix "A" with a given value "x".
          * The diagonal boundary is controlled by a parameter "d", defaults to 0.
          * "d=0" corresponds to the main diagonal line.
          * "d=k (k>0)" corresponds "k"-th upper sub-diagonal line, and "d=-k (k>0)" corresponds to "k"-th lower sub-diagonal line.
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[out] A "A"
+         * @param[in] x "x"
+         * @param[in] d "d"
          */
         template <typename T>
         #if MATH_LIB_INLINE_AGGRESSIVELY
@@ -211,6 +215,12 @@ namespace MathLib {
             void
         #endif
         fillLowTri(const int m, T *const A, const T x, const int d=0) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < -m+1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
             for (int r=0; r<m; ++r) {
                 const int c_end_temp = r+d;
                 const int c_end = (c_end_temp < m ? c_end_temp : m-1);
@@ -220,10 +230,76 @@ namespace MathLib {
         }
 
         /**
+         * @brief Copy the transpose of lower triangle part of a given square matrix "A" to upper triangle part of "A".
+         * The diagonal boundary is controlled by a parameter "d", defaults to 1.
+         * "d=k (0<k<m)" corresponds to the "k"-th lower sub-diagonal line.
+         * @details
+         * For example, let `A = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16}}`.
+         * Then `copyLowTri(4, A, B, 2)` yields `B = {{1,2,9,13},{5,6,7,14},{9,10,11,12},{13,14,15,16}}`.
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        copyLowTri(const int m, T *const A, const int d=1) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < 1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
+            auto *A_row_head_ptr = &A[d*m];
+            for (int i=d; i<m; ++i) {
+                auto *dst_ptr = &A[i];
+                auto *src_ptr = A_row_head_ptr;
+                for (int j=0; j<=i-d; ++j) {
+                    *dst_ptr = *(src_ptr++);
+                    dst_ptr += m;
+                }
+                A_row_head_ptr += m;
+            }
+        }
+
+        /**
+         * @brief Copy the conjugate-transpose of lower triangle part of a given square matrix "A" to upper triangle part of "A".
+         * The diagonal boundary is controlled by a parameter "d", defaults to 1.
+         * "d=k (0<k<m)" corresponds to the "k"-th lower sub-diagonal line.
+         * @details
+         * For example, let `A = {{1,2,3,4},{5i,6i,7i,8i},{9,10,11,12},{13i,14i,15i,16i}}`.
+         * Then `copyLowTri(4, A, B, 2)` yields `B = {{1,2,9,-13i},{5i,6i,7i,-14i},{9,10,11,12},{13i,14i,15i,16i}}`.
+         */
+        template <typename T>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        copyConjLowTri(const int m, std::complex<T> *const A, const int d=1) {
+            #if MATH_LIB_ENABLE_CANARY_MODE
+                if (d < 1 || d > m-1) {
+                    std::cerr << "BUG, FILE: " << __FILE__ << ", LINE: " << __LINE__ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            #endif
+            auto *A_row_head_ptr = &A[d*m];
+            for (int i=d; i<m; ++i) {
+                auto *dst_ptr = &A[i];
+                auto *src_ptr = A_row_head_ptr;
+                for (int j=0; j<=i-d; ++j) {
+                    *dst_ptr = Analysis::conj(*(src_ptr++));
+                    dst_ptr += m;
+                }
+                A_row_head_ptr += m;
+            }
+        }
+
+        /**
          * @brief Add a given vector "d" to the diagonal entries of a given square matrix "A".
          *
-         * @tparam T1 the number type of the elements of "d"
-         * @tparam T2 the number type of the elements of "A"
+         * @tparam T1 the data type of the elements of "d"
+         * @tparam T2 the data type of the elements of "A"
          * @param[in] m the number of the rows in the matrices "A"
          * @param[in] d "d"
          * @param[out] A "A"
@@ -243,7 +319,7 @@ namespace MathLib {
          * The "r1, r1+1, ..., r2"-th rows and "c1, c1+1, ..., c2"-th columns are dropped, where "0<=r1<=r2<=m-1, 0<=c1<=c2<=n-1".
          * Parameter check for "r1, r2, c1, c2" is performed ONLY under bug hunting mode.
          *
-         * @tparam T the number type of the elements of "A".
+         * @tparam T the data type of the elements of "A".
          * @param[in] m the number of the rows in the matrices "A"
          * @param[in] n the number of the columns in the matrices "A"
          * @param[in] r1 "r1"
@@ -279,7 +355,7 @@ namespace MathLib {
         /**
          * @brief Calculates transpose of a matrix "A" as "B".
          *
-         * @tparam T the number type of the elements of input matrix
+         * @tparam T the data type of the elements of input matrix
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] n the number of the columns in the input matrix "A"
          * @param[in] A the input matrix
@@ -299,7 +375,7 @@ namespace MathLib {
         /**
          * @brief Calculate the conjugate of a matrix "A", and store the result to "A".
          *
-         * @tparam T the number type of real and imaginary part of the elements of the matrix "A"
+         * @tparam T the data type of real and imaginary part of the elements of the matrix "A"
          * @param[in] m the number of the rows in the matrix "A"
          * @param[in] n the number of the columns in the matrix "A"
          * @param[inout] A the matrix "A"
@@ -312,13 +388,13 @@ namespace MathLib {
         #endif
         conjugateMat(const size_t m, const size_t n, std::complex<T> *A) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {A[i] = std::conj(A[i]);}
+            for (size_t i=0; i<L; ++i) {A[i] = Analysis::conj(A[i]);}
         }
 
         /**
          * @brief Calculate the conjugate of a matrix "A" as "B".
          *
-         * @tparam T the number type of real and imaginary part of the elements of the matrices "A" and "B"'.
+         * @tparam T the data type of real and imaginary part of the elements of the matrices "A" and "B"'.
          * @param[in] m the number of the rows in the matrices "A" and "B"
          * @param[in] n the number of the columns in the matrices "A" and "B"
          * @param[in] A the matrix "A"
@@ -332,13 +408,13 @@ namespace MathLib {
         #endif
         conjugateMat(const size_t m, const size_t n, const std::complex<T> *const A, std::complex<T> *const B) {
             const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {B[i] = std::conj(A[i]);}
+            for (size_t i=0; i<L; ++i) {B[i] = Analysis::conj(A[i]);}
         }
 
         /**
          * @brief Calculate the conjugate of a vector "x", and store the result to "x".
          *
-         * @tparam T the number type of real and imaginary part of the elements of the vector "x"
+         * @tparam T the data type of real and imaginary part of the elements of the vector "x"
          * @param[in] m the length of the vector "x"
          * @param[inout] x the vector "x"
          */
@@ -350,7 +426,7 @@ namespace MathLib {
         /**
          * @brief Calculate the conjugate of a vector "x" as "y".
          *
-         * @tparam T the number type of real and imaginary part of the elements of the vectors "x" and "y".
+         * @tparam T the data type of real and imaginary part of the elements of the vectors "x" and "y".
          * @param[in] m the length of the vector "x"
          * @param[in] x the vector "x"
          * @param[out] y the vector "y"
@@ -363,7 +439,7 @@ namespace MathLib {
         /**
          * @brief Calculate the sum of given two matrices "A" and "B". The result is stored in "A".
          *
-         * @tparam T the number type of the elements of the matrices "A" and "B"
+         * @tparam T the data type of the elements of the matrices "A" and "B"
          * @param[in] m the number of the rows in the matrices "A" and "B"
          * @param[in] n the number of the columns in the matrices "A" and "B"
          * @param[inout] A the matrix "A"
@@ -383,7 +459,7 @@ namespace MathLib {
         /**
          * @brief Calculate the sum of given two vector "x" and "y". The result is stored in "x".
          *
-         * @tparam T the number type of the elements of the vectors "x" and "y"
+         * @tparam T the data type of the elements of the vectors "x" and "y"
          * @param[in] m the length of the vector "x" and "y"
          * @param[inout] x  the vector "x"
          * @param[in] y the vector "y"
@@ -396,7 +472,7 @@ namespace MathLib {
         /**
          * @brief Calculate the sum of given two square matrices "A" and "B". The result is stored in "A".
          *
-         * @tparam T the number type of the elements of the matrices "A" and "B"
+         * @tparam T the data type of the elements of the matrices "A" and "B"
          * @param[in] m the number of the rows in the matrices "A" and "B"
          * @param[inout] A the matrix "A"
          * @param[in] B the matrix "B"
@@ -430,10 +506,33 @@ namespace MathLib {
         }
 
         /**
+         * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
+         * The data type of "B" will be the promoted data type of "c" and "A".
+         *
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the elements of "A"
+         * @param[in] m the number of the rows in the input matrix "A"
+         * @param[in] n the number of the columns in the input matrix "A"
+         * @param[in] c the scalar "c"
+         * @param[in] A the matrix "A"
+         * @param[out] B the matrix "B"
+         */
+        template <typename Tc, typename TA, typename TB = decltype(std::declval<Tc>()*std::declval<TA>())>
+        #if MATH_LIB_INLINE_AGGRESSIVELY
+            inline static void __attribute__((always_inline))
+        #else
+            void
+        #endif
+        scaleMat(const size_t m, const size_t n, const Tc c, const TA *const A, TB *const B) {
+            const size_t L = m*n;
+            for (size_t i=0; i<L; ++i) {B[i] = Analysis::prod(c, A[i]);}
+        }
+
+        /**
          * @brief Overwrite a given matrix "A" by its scaled version "cA" where "c" is a scalar.
          *
-         * @tparam Tc the number type of "c"
-         * @tparam TA the number type of the entries of "A"
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the entries of "A"
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] n the number of the columns in the input matrix "A"
          * @param[in] c the scalar "c"
@@ -446,40 +545,18 @@ namespace MathLib {
             void
         #endif
         scaleMat(const size_t m, const size_t n, const Tc c, TA *const A) {
-            const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {A[i] = Analysis::prod(c, A[i]);}
-        }
-
-        /**
-         * @brief Calculates a scaled matrix "cA" as "B" where "A" is a matrix and "c" is a scalar.
-         *
-         * @tparam T the number type of "c" and the elements of "A"
-         * @param[in] m the number of the rows in the input matrix "A"
-         * @param[in] n the number of the columns in the input matrix "A"
-         * @param[in] c the scalar "c"
-         * @param[in] A the matrix "A"
-         * @param[out] B the matrix "B"
-         */
-        template <typename T>
-        #if MATH_LIB_INLINE_AGGRESSIVELY
-            inline static void __attribute__((always_inline))
-        #else
-            void
-        #endif
-        scaleMat(const size_t m, const size_t n, const T c, const T *const A, T *const B) {
-            const size_t L = m*n;
-            for (size_t i=0; i<L; ++i) {B[i] = Analysis::prod(c, A[i]);}
+            scaleMat(m, n, c, A, A);
         }
 
         /**
          * @brief Overwrite a given square matrix "A" by its scaled version "cA" where "c" is a scalar.
          *
-         * @tparam Tc the number type of "c"
-         * @tparam TA the number type of the entries of "A"
+         * @tparam Tc the data type of "c"
+         * @tparam TA the data type of the entries of "A"
          * @param[in] m the number of the rows in the input matrix "A"
          * @param[in] c the scalar "c"
          * @param[in] A the matrix "A"
-         * @param[in] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
+         * @param[inout] LUA An option for calculation, defaults to 'A'. This option is useful when the input matrices are Hermitian and only diagonal and lower/upper parts are important.
          * - 'L' only diagonal and lower elements are updated
          * - 'U' only diagonal and upper elements are updated
          * - 'A' all elements are updated
@@ -511,17 +588,17 @@ namespace MathLib {
         /**
          * @brief Multiply each row of a given "m x n" matrix "A", and store result to "B"
          * Multiply c[i] to the i-th row of "A" where "c" is a vector with length "m".
+         * The data type of "B" will be the promoted data type of "c" and "A".
          *
-         * @tparam Tc the number type of the elements of "c"
-         * @tparam TA the number type of the elements of "A"
-         * @tparam TB the number type of the elements of "B"
+         * @tparam Tc the data type of the elements of "c"
+         * @tparam TA the data type of the elements of "A"
          * @param[in] m the number of the rows in the matrix "A"
          * @param[in] n the number of the columns in the matrix "A"
          * @param[in] c the vector "m"
          * @param[in] A the matrix "A"
          * @param[out] B the output matrix "B"
          */
-        template <typename Tc, typename TA, typename TB>
+        template <typename Tc, typename TA, typename TB = decltype(std::declval<Tc>()*std::declval<TA>())>
         void scaleMatEachRow(const size_t m, const size_t n, const Tc *const c, const TA *const A, TB *const B) {
             for (size_t i=0; i<m; ++i) {
                 const TA *const ptr_A = &A[i*n];
@@ -535,22 +612,38 @@ namespace MathLib {
 
         /**
          * @brief Calculates a scaled vector "ca" as "b" where "a" is a vector and "c" is a scalar.
+         * The data type of "b" will be the promoted data type of "c" and "a".
          *
-         * @tparam T the number type of "c" and the elements of "a"
+         * @tparam Tc the data type of "c"
+         * @tparam Ta the data type of the elements of "a"
          * @param[in] m the length of the vector "a"
          * @param[in] c the scalar "c"
          * @param[in] a the vector "a"
          * @param[out] b the vector "b"
          */
-        template <typename T>
-        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const T c, const T *const a, T *const b) {
+        template <typename Tc, typename Ta, typename Tb = decltype(std::declval<Tc>()*std::declval<Ta>())>
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, const Ta *const a, Tb *const b) {
             scaleMat(1, m, c, a, b);
+        }
+
+        /**
+         * @brief Overwrite a given vector "a" by its scaled version "ca" where "c" is a scalar.
+         *
+         * @tparam Tc the data type of "c"
+         * @tparam Ta the data type of the elements of "a"
+         * @param[in] m the length of the vector "a"
+         * @param[in] c the scalar "c"
+         * @param[inout] a the vector "a"
+         */
+        template <typename Tc, typename Ta>
+        inline static void __attribute__((always_inline)) scaleVec(const size_t m, const Tc c, Ta *const a) {
+            scaleVec(m, c, a, a);
         }
 
         /**
          * @brief Calculate a self outer product of a given real vector "x".
          *
-         * @tparam T the number type of the entries of "x"
+         * @tparam T the data type of the entries of "x"
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer
@@ -562,7 +655,7 @@ namespace MathLib {
          */
         template <typename T>
         void vecSelfOuterProd(const int M, const T *const __restrict__ x, T *const __restrict__ X, const char LUA='A') {
-            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            static_assert(std::is_floating_point<T>::value, "T must be floating point data type.");
             #define MEM_OFFSET(row,col) ((row)*M+col)
             for (int m=0; m<M; ++m) {X[m*(M+1)] = Analysis::sqAbs(x[m]);} // Calculate diagonal part.
 
@@ -599,7 +692,7 @@ namespace MathLib {
         /**
          * @brief Calculate a self outer product of a given complex vector "x".
          *
-         * @tparam T the number type of the entries of "x"
+         * @tparam T the data type of the entries of "x"
          * @param[in] M the length of "x"
          * @param[in] x "x"
          * @param[out] X the output buffer
@@ -652,7 +745,7 @@ namespace MathLib {
         /**
          * @brief Calculates matrix multiplication "AB" as "C" where "A", "B", "C" are compatible matrices.
          *
-         * @tparam T the number type of the elements of the matrices
+         * @tparam T the data type of the elements of the matrices
          * @param[in] l the number of the rows in the matrix "A"
          * @param[in] m the number of columns in the matrix "A" (= the number of the rows in the matrix "B")
          * @param[in] n the number of columns columns in the matrix "B"
@@ -677,7 +770,7 @@ namespace MathLib {
         /**
          * @brief Calculate the inner product of given 2 vectors "x" and "y".
          *
-         * @tparam T the number type of the elements of "x" and "y"
+         * @tparam T the data type of the elements of "x" and "y"
          * @param[in] N the length of vector "x" and "y"
          * @param[in] x the vector "x"
          * @param[in] y the vector "y"
@@ -700,7 +793,7 @@ namespace MathLib {
          * @brief Calculates Hermitian inner product of given 2 complex vectors "x", "y".
          * Hermitian inner product of "x" and "y" is defined as "<x^*, y>"", where "^*" represents conjugate and "<,>" represents inner product.
          *
-         * @tparam T the number type of the real and imaginary parts of complex number
+         * @tparam T the data type of the real and imaginary parts of complex number
          * @param[in] N vector length
          * @param[in] vec1 1st input vector, "x"
          * @param[in] vec2 2nd input vector, "y"
@@ -717,7 +810,7 @@ namespace MathLib {
         hermitianInnerProduct(const size_t N, const std::complex<T> *const vec1, const std::complex<T> *const vec2, const size_t stride1, const size_t stride2) {
             std::complex<T> sum(0, 0);
             for (size_t n=0, n1=0, n2=0; n<N; ++n, n1+=stride1, n2+=stride2) {
-                Analysis::addConjProd(vec1[n1], vec2[n2], sum); // faster than "sum += std::conj(vec1[n1])*vec2[n2]"
+                Analysis::addConjProd(vec1[n1], vec2[n2], sum); // faster than "sum += Analysis::conj(vec1[n1])*vec2[n2]"
             }
             return sum;
         }
@@ -726,7 +819,7 @@ namespace MathLib {
          * @brief Calculates Hermitian inner product of given 2 complex vectors "x", "y".
          * Hermitian inner product of "x" and "y" is defined as "<x^*, y>", where "^*" represents conjugate and "<,>" represents inner product.
          *
-         * @tparam T the number type of complex number's real and imaginary part
+         * @tparam T the data type of complex number's real and imaginary part
          * @param[in] N vector length
          * @param[in] vec1 1st input vector, "x"
          * @param[in] vec2 2nd input vector, "y"
@@ -746,7 +839,7 @@ namespace MathLib {
         /**
          * @brief Calculates L-2 norm of a given complex vector "x".
          *
-         * @tparam T the number type of complex number's real and imaginary part
+         * @tparam T the data type of complex number's real and imaginary part
          * @param[in] N vector length
          * @param[in] vec input vector
          * @param[in] stride The sampling interval for input vectors. "x" is represented as "x = [vec1[0], vec1[stride], ..., vec1[(N-1)*stride]]".
@@ -762,7 +855,7 @@ namespace MathLib {
          * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
          * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
          *
-         * @tparam T the number type of complex number's real and imaginary part
+         * @tparam T the data type of complex number's real and imaginary part
          * @param[in] m the number of the rows and columns in the matrix "A"
          * @param[in] A the matrix "A". Only diagonal and lower parts are needed, and upper part is not accessed.
          * @param[out] d the diagonal elements of D
@@ -775,7 +868,7 @@ namespace MathLib {
         template <typename T>
         bool ldlDecomp(const int m, const std::complex<T> *const A, T *const d, std::complex<T> *const L, std::complex<T> *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
-            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            static_assert(std::is_floating_point<T>::value, "T must be floating point data type.");
             constexpr std::complex<T> ONE = 1;
             const std::complex<T> *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
@@ -786,7 +879,7 @@ namespace MathLib {
                     for (int j=0; j<i; ++j) {
                         const std::complex<T> &L_ij = L_row_ptr[j];
                         Analysis::subtractProd(d[j], Analysis::sqAbs(L_ij), di); // d[i] <- d[i] - d[j]*|L[i,j]|^2
-                        dL_ptr[j] = Analysis::prod(d[j], std::conj(L_ij)); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
+                        dL_ptr[j] = Analysis::prod(d[j], Analysis::conj(L_ij)); // Construct "d[j]*conj(L[i,j]) (j=0,1, ..., i-1)"
                     }
                 }
                 d[i] = di;
@@ -816,7 +909,7 @@ namespace MathLib {
          * Find a lower-triangle matrix "L" and a diagonal matrix D such that "A = LDL^*".
          * The diagonal entries of "L" are all 1, and the diagonal entries of "D" are all real numbers.
          *
-         * @tparam T the number type of matrix "A"
+         * @tparam T the data type of matrix "A"
          * @param[in] m the number of the rows and columns in the matrix "A"
          * @param[in] A the matrix "A". Only diagonal and lower parts are needed, and upper part is not accessed.
          * @param[out] d the diagonal elements of D
@@ -829,7 +922,7 @@ namespace MathLib {
         template <typename T>
         bool ldlDecomp(const int m, const T *const A, T *const d, T *const L, T *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
-            static_assert(std::is_floating_point<T>::value, "T must be floating point number type.");
+            static_assert(std::is_floating_point<T>::value, "T must be floating point data type.");
             const T *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = *A_diag_ptr; A_diag_ptr += m+1; // d[i] <- A[i,i]
@@ -867,7 +960,7 @@ namespace MathLib {
          * The matrix "A" must be invertible, otherwise the behavior is undefined.
          * When "A" is known to be Hermitian, use `solveLinEqHermitian` function rather than this function, to achieve higher performance.
          *
-         * @tparam T the number type of the elements of the matrix "A", vector "b" and "x"
+         * @tparam T the data type of the elements of the matrix "A", vector "b" and "x"
          * @param[in] m the number of the rows and columns in the matrix "A"
          * @param[in] A the matrix "A"
          * @param[in] b the vector "b"
@@ -946,7 +1039,7 @@ namespace MathLib {
          * @brief Solve linear equation "Ax = b" using LDL decomposition, where "A" is a Hermitian and invertible matrix of size "m", and "b" is a vector of length "m".
          * The matrix "A" MUST be invertible.
          *
-         * @tparam T the number type of the elements of the matrix "A", vector "b" and "x"
+         * @tparam T the data type of the elements of the matrix "A", vector "b" and "x"
          * @param[in] m the number of the rows and columns in the matrix "A"
          * @param[in] A the matrix "A"
          * @param[in] b the vector "b"

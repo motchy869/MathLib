@@ -869,7 +869,8 @@ namespace MathLib {
         bool ldlDecomp(const int m, const std::complex<T> *const A, T *const d, std::complex<T> *const L, std::complex<T> *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point data type.");
-            constexpr std::complex<T> ONE = 1;
+            constexpr T FLOAT_ONE = 1;
+            constexpr std::complex<T> COMPLEX_ONE = 1;
             const std::complex<T> *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = A_diag_ptr->real(); A_diag_ptr += m+1; // d[i] <- Re(A[i,i])
@@ -886,8 +887,8 @@ namespace MathLib {
                 if (std::abs(di) < epsilon) {
                     return false;
                 }
-                const T inv_di = 1/d[i];
-                L[MEM_OFFSET(i,i)] = ONE;
+                const T inv_di = Analysis::division(FLOAT_ONE, d[i]);
+                L[MEM_OFFSET(i,i)] = COMPLEX_ONE;
 
                 const std::complex<T> *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
                 std::complex<T> *L_col_ptr = &L[MEM_OFFSET(i+1,i)];
@@ -923,6 +924,7 @@ namespace MathLib {
         bool ldlDecomp(const int m, const T *const A, T *const d, T *const L, T *const workspace, const T epsilon=1e-12) {
             #define MEM_OFFSET(row, col) ((row)*m+col)
             static_assert(std::is_floating_point<T>::value, "T must be floating point data type.");
+            constexpr T FLOAT_ONE = 1;
             const T *A_diag_ptr = A;
             for (int i=0; i<m; ++i) {
                 T di = *A_diag_ptr; A_diag_ptr += m+1; // d[i] <- A[i,i]
@@ -939,7 +941,7 @@ namespace MathLib {
                 if (std::abs(di) < epsilon) {
                     return false;
                 }
-                const T inv_di = 1/d[i];
+                const T inv_di = Analysis::division(FLOAT_ONE, d[i]);
                 L[MEM_OFFSET(i,i)] = 1;
 
                 const T *A_col_ptr = &A[MEM_OFFSET(i+1,i)];
@@ -1009,7 +1011,7 @@ namespace MathLib {
                 /* Normalizes current row. */
                 {
                     T *const ptr_E = E + MEM_OFFSET_E(rowExchgTable[r], 0);
-                    const T inv_E_rr = ONE/ptr_E[r];
+                    const T inv_E_rr = Analysis::division(ONE, ptr_E[r]);
                     ptr_E[r] = ONE;
                     for (size_t c=r+1; c<m+1; ++c) {ptr_E[c] *= inv_E_rr;}
                 }
@@ -1079,7 +1081,7 @@ namespace MathLib {
 
             /* backward substitution (DL^*x == y) */
             for (int i=m-1; i>=0; --i) {
-                T xi = y[i]/d[i];
+                T xi = Analysis::division(y[i], d[i]);
                 for (int j=i+1; j<m; ++j) {
                     Analysis::subtractProd(Analysis::conj(L[MEM_OFFSET(j,i)]), x[j], xi); // higher performance than "xi -= MathLib::Analysis::conj(L[MEM_OFFSET(j,i)])*x[j];" for complex numbers
                 }

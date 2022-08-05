@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.11.0] - 2022-08-05
+
+- Added
+  - fast floating point number reciprocal computation using TMS320C6748 DSP instructions `RCPSP` and `RCPDP`.
+  - fast floating point number reciprocal square root using TMS320C6748 DSP instructions `RSQRSP` and `RSQRDP
+
 ## [v0.10.0] - 2022-08-01
 
 - Fixed

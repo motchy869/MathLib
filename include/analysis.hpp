@@ -12,6 +12,163 @@
 
 namespace MathLib {
     namespace Analysis {
+        #if PROCESSOR_TYPE == PROCESSOR_TYPE_TMS320C6748
+            /**
+             * @brief Fast reciprocal of 32bit floating-point number using TMS320C674x DSP instruction `RCPSP`.
+             * @param[in] x the input number
+             * @param[in] r The number of the further Newton-Raphson method iteration. 0/1/2 results in the accuracy of 8/16/32 bits. Defaults to 2.
+             * Even when called with `r` greater than 2, only 2 refinement iterations are performed.
+             * When `r` is a compile-time constant, the compiler will optimize-out the internal conditional branch code used to check the Newton-Raphson method iteration count.
+             */
+            float __attribute__((always_inline)) fastRecipF32(const float x, const int r=2) {
+                float y = _rcpsp(x); // 8bit accuracy
+                if (0 == r) {return y;}
+
+                /* refinement by Newton-Raphson algorithm */
+                y = y*(2.0f - x*y); // 16bit accuracy
+                if (1 == r) {return y;}
+                y = y*(2.0f - x*y); // 32bit accuracy
+                return y;
+            }
+
+            /**
+             * @brief Fast reciprocal of 32bit floating-point number using TMS320C674x DSP instruction `RCPDP`.
+             * @param[in] x the input number
+             * @param[in] r The number of the further Newton-Raphson method iteration. 0/1/2/3 results in the accuracy of 8/16/32/52 bits. Defaults to 3.
+             * Even when called with `r` greater than 3, only 3 refinement iterations are performed.
+             * When `r` is a compile-time constant, the compiler will optimize-out the internal conditional branch code used to check the Newton-Raphson method iteration count.
+             */
+            double __attribute__((always_inline)) fastRecipF64(const double x, const int r=3) {
+                float y = _rcpdp(x); // 8bit accuracy
+                if (0 == r) {return y;}
+
+                /* refinement by Newton-Raphson algorithm */
+                y = y*(2.0f - x*y); // 16bit accuracy
+                if (1 == r) {return y;}
+                y = y*(2.0f - x*y); // 32bit accuracy
+                if (2 == r) {return y;}
+                y = y*(2.0f - x*y); // 52bit accuracy
+                return y;
+            }
+
+            /**
+             * @brief Fast square root reciprocal of 32bit floating-point number using TMS320C674x DSP instruction `RSQRSP`.
+             * @param[in] x the input number
+             * @param[in] r The number of the further Newton-Raphson method iteration. 0/1/2 results in the accuracy of 8/16/32 bits. Defaults to 2.
+             * Even when called with `r` greater than 2, only 2 refinement iterations are performed.
+             * When `r` is a compile-time constant, the compiler will optimize-out the internal conditional branch code used to check the Newton-Raphson method iteration count.
+             */
+            float __attribute__((always_inline)) fastRecipSqrtF32(const float x, const int r=2) {
+                float y = _rsqrsp(x); // 8bit accuracy
+                if (0 == r) {return y;}
+
+                /* refinement by Newton-Raphson algorithm */
+                y = y*(1.5f - (x*0.5f)*y*y); // 16bit accuracy
+                if (1 == r) {return y;}
+                y = y*(1.5f - (x*0.5f)*y*y); // 32bit accuracy
+                return y;
+            }
+
+            /**
+             * @brief Fast square root reciprocal of 32bit floating-point number using TMS320C674x DSP instruction `RSQRDP`.
+             * @param[in] x the input number
+             * @param[in] r The number of the further Newton-Raphson method iteration. 0/1/2/3 results in the accuracy of 8/16/32/52 bits. Defaults to 3.
+             * Even when called with `r` greater than 3, only 3 refinement iterations are performed.
+             * When `r` is a compile-time constant, the compiler will optimize-out the internal conditional branch code used to check the Newton-Raphson method iteration count.
+             */
+            double __attribute__((always_inline)) fastRecipSqrtF64(const double x, const int r=3) {
+                float y = _rsqrdp(x); // 8bit accuracy
+                if (0 == r) {return y;}
+
+                /* refinement by Newton-Raphson algorithm */
+                y = y*(1.5f - (x*0.5f)*y*y); // 16bit accuracy
+                if (1 == r) {return y;}
+                y = y*(1.5f - (x*0.5f)*y*y); // 32bit accuracy
+                if (2 == r) {return y;}
+                y = y*(1.5f - (x*0.5f)*y*y); // 52bit accuracy
+                return y;
+            }
+
+            /**
+             * @brief floating-point number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<float>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const float den) {
+                return num*fastRecipF32(den);
+            }
+
+            /**
+             * @brief floating-point complex number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<std::complex<float>>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const std::complex<float> den) {
+                const float a = real(den), b = imag(den);
+                const float power = a*a + b*b;
+                const float inv_power = fastRecipF32(power);
+                return num*std::complex<float>(a*inv_power, -b*inv_power);
+            }
+
+            /**
+             * @brief floating-point number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<double>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const double den) {
+                return num*fastRecipF64(den);
+            }
+
+            /**
+             * @brief floating-point complex number division, just for MathLib internal use.
+             * @param[in] num numerator
+             * @param[in] den denominator
+             */
+            template <typename T_num, typename T_out=decltype(std::declval<T_num>() / std::declval<std::complex<double>>())>
+            T_out __attribute__((always_inline)) division(const T_num num, const std::complex<double> den) {
+                const double a = real(den), b = imag(den);
+                const double power = a*a + b*b;
+                const double inv_power = fastRecipF64(power);
+                return num*std::complex<double>(a*inv_power, -b*inv_power);
+            }
+
+            /**
+             * @brief reciprocal of square-root floating-point number, just for MathLib internal use.
+             * @param[in] x the input number
+             */
+            float __attribute__((always_inline)) recipSqrt(const float x) {
+                return fastRecipSqrtF32(x);
+            }
+
+            /**
+             * @brief reciprocal of square-root floating-point number, just for MathLib internal use.
+             * @param[in] x the input number
+             */
+            double __attribute__((always_inline)) recipSqrt(const double x) {
+                return fastRecipSqrtF64(x);
+            }
+        #endif
+
+        /**
+         * @brief A division operation. Under certain `PROCESSOR_TYPE` configurations such as PROCESSOR_TYPE_TMS320C6748, hardware accelerated operation will be used.
+         * @param[in] num numerator
+         * @param[in] den denominator
+         */
+        template <typename T1, typename T2, typename T3=decltype(std::declval<T1>() / std::declval<T2>())>
+        T3 __attribute__((always_inline)) division(const T1 num, const T2 den) {return num / den;}
+
+        /**
+         * @brief A reciprocal of square root. Under certain `PROCESSOR_TYPE` configurations such as PROCESSOR_TYPE_TMS320C6748, hardware accelerated operation will be used.
+         * @param[in] x the input number
+         */
+        template <typename T>
+        T __attribute__((always_inline)) recipSqrt(const T x) {
+            return 1 / sqrt(x);
+        }
+
         /**
          * @brief Set real and imaginary part of complex number without creating a temporary object.
          *

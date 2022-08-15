@@ -690,24 +690,24 @@ namespace MathLib {
                 }
                 if (x > POSITIVE_ZERO) {
                     if (-x <= y && y <= x) {
-                        return atan_polyApprox<T, deg>(y/x);
+                        return atan_polyApprox<T, deg>(Analysis::division(y,x));
                     }
                     if (y > x) {
-                        return half_pi - atan_polyApprox<T, deg>(x/y);
+                        return half_pi - atan_polyApprox<T, deg>(Analysis::division(x,y));
                     } else { // y < -x
-                        return -half_pi - atan_polyApprox<T, deg>(x/y);
+                        return -half_pi - atan_polyApprox<T, deg>(Analysis::division(x,y));
                     }
                 } else { // x < NEGATIVE_ZERO
                     if (POSITIVE_ZERO <= y && y <= -x) {
-                        return pi + atan_polyApprox<T, deg>(y/x);
+                        return pi + atan_polyApprox<T, deg>(Analysis::division(y,x));
                     }
                     if (-x < y) {
-                        return half_pi - atan_polyApprox<T, deg>(x/y);
+                        return half_pi - atan_polyApprox<T, deg>(Analysis::division(x,y));
                     }
                     if (x <= y && y <= NEGATIVE_ZERO) {
-                        return atan_polyApprox<T, deg>(y/x) - pi;
+                        return atan_polyApprox<T, deg>(Analysis::division(y,x)) - pi;
                     } else { // y < x
-                        return -half_pi - atan_polyApprox<T, deg>(x/y);
+                        return -half_pi - atan_polyApprox<T, deg>(Analysis::division(x,y));
                     }
                 }
             #else // Simpler but slower than the above code.
@@ -718,15 +718,15 @@ namespace MathLib {
                 const T abs_y = std::abs(y);
 
                 if (x>=0 && abs_y<=x) { // region 1
-                    return atan_polyApprox<T, deg>(y/x);
+                    return atan_polyApprox<T, deg>(Analysis::division(y,x));
                 }
                 if (y>=0 && abs_x<=y) { // region 2
-                    return half_pi + atan_polyApprox<T, deg>(-x/y);
+                    return half_pi + atan_polyApprox<T, deg>(-Analysis::division(x,y));
                 }
                 if (x<=0 && abs_y<=abs_x) { // region 3
-                    return atan_polyApprox<T, deg>(y/x) + (y>0 ? pi : -pi);
+                    return atan_polyApprox<T, deg>(Analysis::division(y,x)) + (y>0 ? pi : -pi);
                 }
-                return atan_polyApprox<T, deg>(-x/y) - half_pi; // region 4
+                return atan_polyApprox<T, deg>(-Analysis::division(x,y)) - half_pi; // region 4
             #endif
         }
     }

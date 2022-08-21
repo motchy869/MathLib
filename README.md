@@ -1,7 +1,7 @@
 # MathLib
 
 This is my hobby C++ header-only math library including Analysis, Linear Algebra, Signal Processing.
-This library is utilized and tested in my project, embedded base-band DSP TMS320C6748 in on-vehicle digital radio.
+This library is utilized and tested in my several private projects.
 
 ## 1. Prerequisites
 
@@ -12,7 +12,7 @@ This library is utilized and tested in my project, embedded base-band DSP TMS320
 ### 1.2. Recommended
 
 Unit test relies on several build tools.
-If you just want to use this library, you do not have to run test case and do not have to setup the following tools.
+If you just want to use this library, you do not have to run test cases and setup the following tools.
 
 * CMake
 * [Google Test](https://github.com/google/googletest)
@@ -48,7 +48,7 @@ You can clean output files by running `doClean.sh` / `doClean.bat`, or simply de
 |file|description|
 |:---|:---|
 |include/common.hpp|common settings<ul><li>switch for bug hunting mode (default is OFF)</li></ul>|
-|include/analysis.hpp|Analysis library<ul><li>fast version of `sin`, `cos`, `atan2` with 5-coefficients polynomial approximation</li><li>fast square-root using table lookup (for embedded special processor)</li></ul>|
+|include/analysis.hpp|Analysis library<ul><li>fast version of `sin`, `cos`, `atan2` with 5,9-coefficients polynomial approximation</li><li>fast square-root using table lookup (for embedded special processor)</li></ul>|
 |include/linAlg.hpp|Linear Algebra library<ul><li>real and complex number type are supported</li><li>matrix and vector scaling, addition, multiplication, transpose, conjugate, shaping, etc.</li><li>vector inner/outer product</li><li>LDL decomposition</li><li>linear equation solver (using Gaussian elimination, LDL decomposition)</li><li>functions to print real/complex vector/matrix on console. `printRealVec`, `printComplexVec`, `printRealMat`, `printComplexMat` are useful in debug.</li></ul>|
 |include/sigProc.hpp|Signal Processing library<ul><li>convolution</li><li>exponential weighted 1st-order-IIR filter</li></ul>|
 |include/RlsFilter.hpp|Recursive Least Square filter|

@@ -90,12 +90,12 @@ namespace {
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &y[0], &y_ans[0], 1.0e-7l));
     }
 
-    TEST_F(SigProcLibTest, ExpWeightedIirFilter) {
+    TEST_F(SigProcLibTest, ExpSmoothingFilter) {
         constexpr size_t N = 8;
         const double seq_x[N] = {1,2,3,2,1,0,-1,-2};
         const double seq_y_ans[N] = {0.2, 0.56, 1.048, 1.2384, 1.19072, 0.952576, 0.562061, 0.0496486};
         double seq_y_result[N];
-        MathLib::SigProc::ExpWeightedIirFilter<double, double> filter(0.2l);
+        MathLib::SigProc::ExpSmoothingFilter<double, double> filter(0.2l);
         for (size_t i=0; i<N; ++i) {
             seq_y_result[i] = filter.apply(seq_x[i]);
         }

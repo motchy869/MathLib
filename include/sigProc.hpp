@@ -110,8 +110,8 @@ namespace MathLib {
         }
 
         /**
-         * @brief Exponential weighted IIR filter.
-         * For input "x[n]", Output "y[n]" is calculated with a tracking coefficient "lambda" as follows:
+         * @brief Exponential smoothing filter.
+         * For input "x[n]", Output "y[n]" is calculated with a smoothing coefficient "lambda" as follows:
          *   y[n] = lambda*x[n] + (1-lambda)*y[n-1]
          * where:
          *   y[-1] := static_cast<T_signal>(0)
@@ -124,7 +124,7 @@ namespace MathLib {
          * @tparam T_signal data type of x[n]
          */
         template <typename T_lambda, typename T_signal>
-        class ExpWeightedIirFilter {
+        class ExpSmoothingFilter {
             private:
                 const T_lambda m_lambda, m_co_lambda;
                 T_signal m_y;
@@ -132,9 +132,9 @@ namespace MathLib {
                 /**
                  * @brief Construct a new filter object
                  *
-                 * @param[in] lambda a tracking factor, described in class docstring.
+                 * @param[in] lambda a smoothing factor, described in class docstring.
                  */
-                ExpWeightedIirFilter(T_lambda lambda) : m_lambda(lambda), m_co_lambda(static_cast<T_lambda>(1) - lambda), m_y(static_cast<T_signal>(0)) {
+                ExpSmoothingFilter(T_lambda lambda) : m_lambda(lambda), m_co_lambda(static_cast<T_lambda>(1) - lambda), m_y(static_cast<T_signal>(0)) {
                     static_assert(std::is_floating_point<T_lambda>::value, "`lambda` must be a floating point number.");
                     assert(lambda > 0 && lambda < 1);
                 }

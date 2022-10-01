@@ -117,7 +117,7 @@ namespace MathLib {
          *   y[-1] := static_cast<T_signal>(0)
          *   0 < lambda < 1.
          *
-         * @details "y" can be set to any value in arbitrary time by calling a method "setState()".
+         * @details "y" can be set to any value in arbitrary time by calling a method `setState`.
          * One typically set "y" to "x[0]" before start inputting the sequence "x[0], x[1], ... " so that the 1st output from the filter begins with "x[0]" rather than 0.
          *
          * @tparam T_lambda data type of lambda
@@ -156,6 +156,76 @@ namespace MathLib {
                     m_y = m_lambda*x + m_co_lambda*m_y;
                     return m_y;
                 }
+        };
+
+        /**
+         * @brief Stable recursive moving average filter.
+         * This filter calculates the moving "N"-backward average of the input sequence RECURSIVELY, where "N" is a positive integer.
+         * This filter is stable against computational errors in floating point numbers.
+         * @details The system equation is:
+         *   sum[n] = alpha*sum[n-1] + u[n] - (alpha^N)*u[n-N]
+         *   y[n] = sum[n]/N
+         * The system transfer function is:
+         *    H(z) = (1 - (alpha^N)*z^(-N))/(1 - alpha*z^(-1))
+         * The block diagram of this filter is:
+         *   docs/sigProc/StableRecursiveMovAvgFilterA/block-diagram.png
+         * Where "0 < alpha < 1", "u" is an input sequence, "y" is an output sequence, and "sum" is an internal state.
+         * Usually, "alpha" is chosen to be close to 1.
+         * The calculation error that occurs in every moment is converged to 0 in the process of circulating the loop.
+         * @tparam T_alpha the data type of "alpha"
+         * @tparam T_signal the data type of the input signal
+         */
+        template <typename T_alpha, typename T_signal>
+        class StableRecursiveMovAvgFilterA {
+            private:
+                static constexpr T_alpha ONE_ALPHA = static_cast<T_alpha>(1);
+                static constexpr T_signal ZERO_SIGNAL = static_cast<T_signal>(0);
+                const int m_N;
+                const T_alpha m_inv_N;
+                const T_alpha m_alpha, m_alpha_pow_N;
+                T_signal *m_buffer;
+                int m_idx;
+                T_signal m_sum;
+
+            public:
+                /**
+                 * @brief Construct a new filter object
+                 *
+                 * @param[in] N the averaging window size
+                 * @param[in] alpha the stability factor, described in class docstring.
+                 */
+                StableRecursiveMovAvgFilterA(const int N, const T_alpha alpha) : m_N(N), m_inv_N(ONE_ALPHA/N), m_alpha(alpha), m_alpha_pow_N(std::pow(alpha, N)) {
+                    static_assert(std::is_floating_point<T_alpha>::value, "`alpha` must be a floating point number.");
+                    assert(N > 0);
+                    assert(0 < alpha && alpha < 1);
+
+                    m_buffer = new T_signal[N];
+                    reset();
+                }
+
+                /**
+                 * @brief Set the delay line and internal state to 0.
+                 */
+                void reset() {
+                    std::fill_n(m_buffer, m_N, ZERO_SIGNAL);
+                    m_idx = 0;
+                    m_sum = ZERO_SIGNAL;
+                }
+
+                /**
+                 * @brief Update the internal state with new input and get the output.
+                 * @param[in] u the input value
+                 * @return the output value
+                 */
+                T_signal step(const T_signal u) {
+                    m_sum = m_alpha*m_sum - m_alpha_pow_N*m_buffer[m_idx] + u;
+                    m_buffer[m_idx] = u;
+                    m_idx += 1;
+                    if (m_idx == m_N) {m_idx = 0;}
+                    return m_inv_N*m_sum;
+                }
+
+                ~StableRecursiveMovAvgFilterA() {delete[] m_buffer;}
         };
     }
 }

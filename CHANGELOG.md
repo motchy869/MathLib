@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.12.0] - 2022-08-15
 
-- Changed:
+- Changed
   - Renamed `ExpWeightedIirFilter` to `ExpSmoothingFIlter`
-- Improved:
+- Improved
   - Divisions in `atan2_polyApprox()` are speeded-up under TMS320C6748 DSP environment using `RCPSP` or `RCPDP` instructions.
 
 ## [v0.11.0] - 2022-08-05

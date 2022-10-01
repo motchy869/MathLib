@@ -101,4 +101,23 @@ namespace {
         }
         EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(N, &seq_y_result[0], &seq_y_ans[0], 1.0e-6l));
     }
+
+    TEST_F(SigProcLibTest, StableRecursiveMovAvgFilterA) {
+        constexpr int N = 5;
+        constexpr float alpha = 0.99f;
+        constexpr int T = 10;
+        const float u[T] = {0,0,1,0,0,0,0,0,0,0};
+        const float y_ideal[T] = {0, 0, 1.0f/N, alpha/N, std::pow(alpha,2.0f)/N, std::pow(alpha,3.0f)/N, std::pow(alpha,4.0f)/N, 0, 0, 0};
+        float y[T] = {};
+
+        MathLib::SigProc::StableRecursiveMovAvgFilterA<float, float> filter(N, alpha);
+        for (int t=0; t<T; ++t) {
+            y[t] = filter.step(u[t]);
+        }
+
+        MathLib::LinAlg::Debug::printRealVec(T, y, "%g");
+        MathLib::LinAlg::Debug::printRealVec(T, y_ideal, "%g");
+
+        EXPECT_EQ(true, MathLib::LinAlg::isEqualVec(T, &y[0], &y_ideal[0], 1.0e-6l));
+    }
 }

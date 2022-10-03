@@ -50,7 +50,7 @@ You can clean output files by running `doClean.sh` / `doClean.bat`, or simply de
 |include/common.hpp|common settings<ul><li>switch for bug hunting mode (default is OFF)</li></ul>|
 |include/analysis.hpp|Analysis library<ul><li>fast version of `sin`, `cos`, `atan2` with 5,9-coefficients polynomial approximation</li><li>fast square-root using table lookup (for embedded special processor)</li></ul>|
 |include/linAlg.hpp|Linear Algebra library<ul><li>real and complex number type are supported</li><li>matrix and vector scaling, addition, multiplication, transpose, conjugate, shaping, etc.</li><li>vector inner/outer product</li><li>LDL decomposition</li><li>linear equation solver (using Gaussian elimination, LDL decomposition)</li><li>functions to print real/complex vector/matrix on console. `printRealVec`, `printComplexVec`, `printRealMat`, `printComplexMat` are useful in debug.</li></ul>|
-|include/sigProc.hpp|Signal Processing library<ul><li>convolution</li><li>exponential weighted 1st-order-IIR filter</li></ul>|
+|include/sigProc.hpp|Signal Processing library<ul><li>convolution</li><li>exponential smoothing filter</li><li>stable recursive moving average</li></ul>|
 |include/RlsFilter.hpp|Recursive Least Square filter|
 
 ## 5. Assumptions
